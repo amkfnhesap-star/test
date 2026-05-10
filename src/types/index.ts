@@ -1,5 +1,25 @@
 export type UserRole = "customer" | "provider" | "admin";
 
+export type JobStatus = "open" | "in_progress" | "closed";
+export type JobTimeframe = "asap" | "specific_date" | "flexible";
+
+export interface Job {
+  id: string;
+  client_id: string;
+  title: string;
+  category: string;
+  description: string;
+  city: string;
+  budget: number | null;
+  timeframe: JobTimeframe;
+  scheduled_date: string | null;
+  photo_urls: string[];
+  status: JobStatus;
+  created_at: string;
+  updated_at: string;
+  profiles: { full_name: string; avatar_url: string | null } | null;
+}
+
 export type BookingStatus =
   | "pending"
   | "accepted"

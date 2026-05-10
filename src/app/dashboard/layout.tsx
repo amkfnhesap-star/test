@@ -12,6 +12,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Zap,
+  Briefcase,
+  Star,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar } from "@/components/ui/Avatar";
@@ -19,10 +21,11 @@ import { supabase } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 
 const navItems = [
-  { icon: LayoutDashboard, label: "Overview", href: "/dashboard" },
+  { icon: Briefcase, label: "My Jobs", href: "/dashboard/my-jobs" },
   { icon: Calendar, label: "My Bookings", href: "/dashboard/bookings" },
   { icon: MessageSquare, label: "Messages", href: "/dashboard/messages", badge: 3 },
   { icon: Heart, label: "Favorites", href: "/dashboard/favorites" },
+  { icon: Star, label: "Provider Profile", href: "/provider/onboarding" },
   { icon: Settings, label: "Settings", href: "/dashboard/settings" },
 ];
 

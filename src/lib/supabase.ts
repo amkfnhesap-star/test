@@ -23,9 +23,17 @@ export async function signInWithEmail(email: string, password: string) {
 export async function signUpWithEmail(
   email: string,
   password: string,
-  metadata?: Record<string, unknown>
+  metadata?: Record<string, unknown>,
+  emailRedirectTo?: string
 ) {
-  return supabase.auth.signUp({ email, password, options: { data: metadata } });
+  return supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: metadata,
+      ...(emailRedirectTo ? { emailRedirectTo } : {}),
+    },
+  });
 }
 
 export async function signInWithGoogle() {

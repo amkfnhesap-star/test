@@ -14,6 +14,7 @@ import {
   Zap,
   Bell,
   MessageSquare,
+  Plus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
@@ -26,14 +27,15 @@ const navLinks = [
     label: "Browse",
     href: "/search",
     children: [
+      { label: "Browse Pros", href: "/pros" },
       { label: "Cleaning", href: "/search?category=cleaning" },
       { label: "Handyman", href: "/search?category=handyman" },
       { label: "Moving", href: "/search?category=moving" },
       { label: "AI Services", href: "/search?category=ai-services" },
-      { label: "View All", href: "/search" },
+      { label: "View All Jobs", href: "/search" },
     ],
   },
-  { label: "For Providers", href: "/provider/dashboard" },
+  { label: "For Providers", href: "/provider/onboarding" },
   { label: "How It Works", href: "/#how-it-works" },
   { label: "Pricing", href: "/#pricing" },
 ];
@@ -163,6 +165,20 @@ export function Navbar() {
 
             {/* Right side */}
             <div className="flex items-center gap-2">
+              {/* Post a Job — visible to everyone on desktop */}
+              <Link
+                href={user ? "/jobs/new" : "/login?redirect=/jobs/new"}
+                className={cn(
+                  "hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border transition-all",
+                  scrolled || !isHome
+                    ? "border-brand-500 text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20"
+                    : "border-white/40 text-white hover:bg-white/10"
+                )}
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Post a Job
+              </Link>
+
               {/* Theme Toggle */}
               {mounted && (
                 <button
@@ -187,12 +203,23 @@ export function Navbar() {
 
               {user ? (
                 <div className="hidden md:flex items-center gap-2">
+                  <Link
+                    href="/dashboard/my-jobs"
+                    className={cn(
+                      "text-sm font-medium px-3 py-1.5 rounded-lg transition-colors",
+                      scrolled || !isHome
+                        ? "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                        : "text-white/80 hover:bg-white/10"
+                    )}
+                  >
+                    My Jobs
+                  </Link>
                   <Link href="/dashboard/messages">
                     <button className="p-2 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                       <MessageSquare className="h-4 w-4" />
                     </button>
                   </Link>
-                  <Link href="/dashboard">
+                  <Link href="/dashboard/my-jobs">
                     <Avatar
                       name={user.user_metadata?.full_name ?? user.email ?? ""}
                       size="sm"
@@ -273,12 +300,19 @@ export function Navbar() {
                   {link.label}
                 </Link>
               ))}
+              <Link
+                href={user ? "/jobs/new" : "/login?redirect=/jobs/new"}
+                className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+                Post a Job
+              </Link>
               <div className="pt-3 pb-1 border-t border-zinc-100 dark:border-zinc-800 flex gap-2">
                 {user ? (
                   <>
-                    <Link href="/dashboard" className="flex-1">
+                    <Link href="/dashboard/my-jobs" className="flex-1">
                       <Button variant="secondary" size="md" fullWidth>
-                        Dashboard
+                        My Jobs
                       </Button>
                     </Link>
                     <Button size="md" fullWidth onClick={handleSignOut}>

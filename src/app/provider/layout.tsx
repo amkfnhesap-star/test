@@ -3,6 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
+// Pages that render without the provider sidebar
+const STANDALONE_PATHS = ["/provider/onboarding", "/provider/edit"];
 import {
   LayoutDashboard,
   Briefcase,
@@ -31,6 +34,11 @@ export default function ProviderLayout({ children }: { children: React.ReactNode
   const [collapsed, setCollapsed] = useState(false);
   const [isAvailable, setIsAvailable] = useState(true);
   const pathname = usePathname();
+
+  // Onboarding and edit pages use the global layout only (no sidebar)
+  if (STANDALONE_PATHS.includes(pathname)) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 pt-16 flex">

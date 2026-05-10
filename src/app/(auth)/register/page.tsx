@@ -36,12 +36,22 @@ export default function RegisterPage() {
     setIsLoading(true);
     setError("");
 
-    const { error } = await signUpWithEmail(form.email, form.password, {
-      full_name: form.fullName,
-      role,
-      city: form.city,
-      ...(role === "provider" && { skills: form.skills }),
-    });
+    const redirectTo =
+      role === "provider"
+        ? `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/provider/onboarding`
+        : `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/dashboard`;
+
+    const { error } = await signUpWithEmail(
+      form.email,
+      form.password,
+      {
+        full_name: form.fullName,
+        role,
+        city: form.city,
+        ...(role === "provider" && { skills: form.skills }),
+      },
+      redirectTo
+    );
 
     setIsLoading(false);
 
@@ -301,17 +311,23 @@ export default function RegisterPage() {
               <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">
                 Check your email!
               </h2>
-              <p className="text-zinc-500 dark:text-zinc-400 text-sm mb-8 leading-relaxed">
+              <p className="text-zinc-500 dark:text-zinc-400 text-sm mb-2 leading-relaxed">
                 We sent a verification link to{" "}
                 <span className="font-medium text-zinc-700 dark:text-zinc-300">
                   {form.email}
                 </span>
                 . Click it to activate your account.
               </p>
+              {role === "provider" && (
+                <p className="text-xs text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20 rounded-xl px-3 py-2 mb-6">
+                  After verifying, you'll be taken directly to set up your provider profile.
+                </p>
+              )}
+              {role !== "provider" && <div className="mb-6" />}
 
-              <Link href="/dashboard">
+              <Link href={role === "provider" ? "/provider/onboarding" : "/dashboard"}>
                 <Button fullWidth size="lg">
-                  Go to Dashboard
+                  {role === "provider" ? "Set up provider profile" : "Go to Dashboard"}
                 </Button>
               </Link>
 
