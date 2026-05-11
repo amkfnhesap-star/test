@@ -234,10 +234,9 @@ export default function BrowseProvidersPage() {
                                 {name}
                               </h3>
                               {pro.is_verified && (
-                                <Shield
-                                  className="h-3 w-3 text-emerald-500 flex-shrink-0"
-                                  title="Verified provider"
-                                />
+                                <span title="Verified provider" className="flex-shrink-0">
+                                  <Shield className="h-3 w-3 text-emerald-500" />
+                                </span>
                               )}
                             </div>
                             {cat && (
