@@ -14,6 +14,7 @@ import {
   Zap,
   Briefcase,
   Star,
+  ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar } from "@/components/ui/Avatar";
@@ -114,6 +115,29 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </Link>
             );
           })}
+
+          {user?.email?.toLowerCase() ===
+            process.env.NEXT_PUBLIC_ADMIN_EMAIL?.toLowerCase() && (
+            <div className="pt-2 mt-2 border-t border-zinc-100 dark:border-zinc-800">
+              <Link
+                href="/admin"
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
+                  pathname.startsWith("/admin")
+                    ? "bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400"
+                    : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white"
+                )}
+              >
+                <ShieldCheck
+                  className={cn(
+                    "h-4 w-4 flex-shrink-0",
+                    pathname.startsWith("/admin") && "text-brand-500"
+                  )}
+                />
+                {!collapsed && <span className="truncate">Admin</span>}
+              </Link>
+            </div>
+          )}
         </nav>
 
         {/* Collapse toggle */}

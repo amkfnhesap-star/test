@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { FavoriteButton } from "@/components/ui/FavoriteButton";
 import { getJobs, type Job } from "@/lib/jobs";
+import { supabase } from "@/lib/supabase";
 import { categories } from "@/data/dummy";
 import { formatRelativeTime, cn } from "@/lib/utils";
 
@@ -43,6 +44,7 @@ export default function JobsPage() {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   const [categoryFilter, setCategoryFilter] = useState("");
   const [cityFilter, setCityFilter] = useState("");
@@ -67,6 +69,12 @@ export default function JobsPage() {
     },
     []
   );
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setCurrentUserId(session?.user?.id ?? null);
+    });
+  }, []);
 
   useEffect(() => {
     setPage(0);
@@ -245,9 +253,11 @@ export default function JobsPage() {
                         </div>
                       </div>
                     </Link>
-                    <div className="absolute top-4 right-4 z-10">
-                      <FavoriteButton targetType="job" targetId={job.id} />
-                    </div>
+                    {job.client_id !== currentUserId && (
+                      <div className="absolute top-4 right-4 z-10">
+                        <FavoriteButton targetType="job" targetId={job.id} />
+                      </div>
+                    )}
                   </motion.div>
                 );
               })}

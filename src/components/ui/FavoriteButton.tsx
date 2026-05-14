@@ -38,19 +38,22 @@ export function FavoriteButton({
     let cancelled = false;
 
     const init = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (cancelled) return;
-      setUserId(session?.user?.id ?? null);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (cancelled) return;
+        setUserId(session?.user?.id ?? null);
 
-      const { isFavorited: fav, count: cnt } =
-        targetType === "job"
-          ? await getJobFavoriteStatus(targetId)
-          : await getProviderFavoriteStatus(targetId);
+        const { isFavorited: fav, count: cnt } =
+          targetType === "job"
+            ? await getJobFavoriteStatus(targetId)
+            : await getProviderFavoriteStatus(targetId);
 
-      if (cancelled) return;
-      setIsFavorited(fav);
-      setCount(cnt);
-      setIsLoaded(true);
+        if (cancelled) return;
+        setIsFavorited(fav);
+        setCount(cnt);
+      } finally {
+        if (!cancelled) setIsLoaded(true);
+      }
     };
 
     init();

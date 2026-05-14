@@ -71,32 +71,35 @@ export async function toggleJobFavorite(jobId: string): Promise<{ isFavorited: b
     .maybeSingle();
 
   if (existing) {
-    await supabase.from("job_favorites").delete().eq("id", existing.id);
+    const { error } = await supabase.from("job_favorites").delete().eq("id", existing.id);
+    if (error) throw new Error(error.message);
     return { isFavorited: false };
   }
 
-  await supabase.from("job_favorites").insert({ user_id: userId, job_id: jobId });
+  const { error } = await supabase.from("job_favorites").insert({ user_id: userId, job_id: jobId });
+  if (error) throw new Error(error.message);
   return { isFavorited: true };
 }
 
 export async function toggleProviderFavorite(providerId: string): Promise<{ isFavorited: boolean }> {
-  const { data: { session } } = await supabase.auth.getSession();
-  const userId = session?.user?.id;
-  if (!userId) return { isFavorited: false };
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not authenticated");
 
   const { data: existing } = await supabase
     .from("provider_favorites")
     .select("id")
-    .eq("user_id", userId)
+    .eq("user_id", user.id)
     .eq("provider_id", providerId)
     .maybeSingle();
 
   if (existing) {
-    await supabase.from("provider_favorites").delete().eq("id", existing.id);
+    const { error } = await supabase.from("provider_favorites").delete().eq("id", existing.id);
+    if (error) throw new Error(error.message);
     return { isFavorited: false };
   }
 
-  await supabase.from("provider_favorites").insert({ user_id: userId, provider_id: providerId });
+  const { error } = await supabase.from("provider_favorites").insert({ user_id: user.id, provider_id: providerId });
+  if (error) throw new Error(error.message);
   return { isFavorited: true };
 }
 
