@@ -4,11 +4,12 @@ import { verifyAdmin } from "@/lib/admin-auth";
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const admin = await verifyAdmin(request);
   if (!admin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
+  const { id } = await params;
   const body = await request.json();
   const allowed = ["full_name", "city", "phone", "role", "bio", "notification_preferences"];
   const updates: Record<string, unknown> = {};
@@ -23,7 +24,7 @@ export async function PATCH(
   const { data, error } = await supabaseAdmin
     .from("profiles")
     .update(updates)
-    .eq("id", params.id)
+    .eq("id", id)
     .select()
     .single();
 
@@ -33,14 +34,15 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const admin = await verifyAdmin(request);
   if (!admin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const { error } = await supabaseAdmin.auth.admin.deleteUser(params.id);
+  const { id } = await params;
+  const { error } = await supabaseAdmin.auth.admin.deleteUser(id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  await supabaseAdmin.from("profiles").delete().eq("id", params.id);
+  await supabaseAdmin.from("profiles").delete().eq("id", id);
   return NextResponse.json({ ok: true });
 }

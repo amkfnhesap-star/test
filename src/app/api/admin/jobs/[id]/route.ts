@@ -4,11 +4,12 @@ import { verifyAdmin } from "@/lib/admin-auth";
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const admin = await verifyAdmin(request);
   if (!admin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
+  const { id } = await params;
   const body = await request.json();
   const allowed = [
     "title",
@@ -35,7 +36,7 @@ export async function PATCH(
   const { data, error } = await supabaseAdmin
     .from("jobs")
     .update(updates)
-    .eq("id", params.id)
+    .eq("id", id)
     .select()
     .single();
 
@@ -45,12 +46,13 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const admin = await verifyAdmin(request);
   if (!admin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const { error } = await supabaseAdmin.from("jobs").delete().eq("id", params.id);
+  const { id } = await params;
+  const { error } = await supabaseAdmin.from("jobs").delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ ok: true });
 }

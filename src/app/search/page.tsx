@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -74,7 +74,7 @@ function interleave(providers: ProviderProfile[], jobs: Job[]): FeedItem[] {
   return result;
 }
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
 
   const [allProviders, setAllProviders] = useState<ProviderProfile[]>([]);
@@ -606,6 +606,14 @@ export default function SearchPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense>
+      <SearchContent />
+    </Suspense>
   );
 }
 
