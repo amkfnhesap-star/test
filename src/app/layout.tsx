@@ -2,8 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
+import { ConditionalNavbar, ConditionalFooter } from "@/components/layout/ConditionalNav";
 import "./globals.css";
 
 const inter = Inter({
@@ -79,9 +78,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className={inter.variable}>
       <body className="min-h-screen flex flex-col">
         <ThemeProvider>
-          <Navbar />
+          <ConditionalNavbar />
           <main className="flex-1">{children}</main>
-          <Footer />
+          <ConditionalFooter />
           <Toaster
             position="top-right"
             toastOptions={{
