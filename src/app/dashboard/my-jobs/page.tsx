@@ -8,16 +8,17 @@ import {
   Eye,
   Pencil,
   Trash2,
-  CheckCircle,
+  XCircle,
   RotateCcw,
   MapPin,
   ImageIcon,
   Banknote,
   Clock,
   AlertTriangle,
+  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { JobStatusBadge } from "@/components/jobs/JobStatusBadge";
 import {
   getMyJobs,
   updateJobStatus,
@@ -30,16 +31,10 @@ import { categories } from "@/data/dummy";
 import { formatRelativeTime } from "@/lib/utils";
 import toast from "react-hot-toast";
 
-function StatusBadge({ status }: { status: JobStatus }) {
-  if (status === "open") return <Badge variant="success" dot>Open</Badge>;
-  if (status === "in_progress") return <Badge variant="info" dot>In Progress</Badge>;
-  return <Badge variant="default" dot>Closed</Badge>;
-}
-
 function timeframeLabel(t: string) {
-  if (t === "asap") return "ASAP";
-  if (t === "specific_date") return "Specific Date";
-  return "Flexible";
+  if (t === "asap") return "Urgent";
+  if (t === "specific_date") return "Dată specifică";
+  return "Flexibil";
 }
 
 interface DeleteModal {
@@ -50,21 +45,26 @@ interface DeleteModal {
 export default function MyJobsPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
   const [deleteModal, setDeleteModal] = useState<DeleteModal | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [togglingId, setTogglingId] = useState<string | null>(null);
 
   useEffect(() => {
     getMyJobs().then(({ jobs, error }) => {
-      if (error) toast.error("Could not load jobs.");
-      else setJobs(jobs);
+      if (error) {
+        toast.error("Nu s-au putut încărca lucrările.");
+        setFetchError(true);
+      } else {
+        setJobs(jobs);
+      }
       setLoading(false);
     });
   }, []);
 
   const handleToggleStatus = async (job: Job) => {
-    if (job.status === "in_progress") return;
-    const newStatus: JobStatus = job.status === "open" ? "closed" : "open";
+    if (job.status !== "open" && job.status !== "cancelled") return;
+    const newStatus: JobStatus = job.status === "open" ? "cancelled" : "open";
 
     setTogglingId(job.id);
     setJobs((prev) =>
@@ -76,9 +76,9 @@ export default function MyJobsPage() {
       setJobs((prev) =>
         prev.map((j) => (j.id === job.id ? { ...j, status: job.status } : j))
       );
-      toast.error("Failed to update status.");
+      toast.error("Eroare la actualizarea statusului.");
     } else {
-      toast.success(newStatus === "open" ? "Job reopened!" : "Job closed.");
+      toast.success(newStatus === "open" ? "Lucrare redeschisă." : "Lucrare anulată.");
     }
     setTogglingId(null);
   };
@@ -88,11 +88,10 @@ export default function MyJobsPage() {
     setIsDeleting(true);
     const { error } = await deleteJob(deleteModal.id);
     if (error) {
-      toast.error("Failed to delete job.");
+      toast.error("Eroare la ștergerea lucrării.");
     } else {
       setJobs((prev) => prev.filter((j) => j.id !== deleteModal.id));
-      toast.success("Job deleted.");
-      // Fire-and-forget job deletion log
+      toast.success("Lucrare ștearsă.");
       const deletedId = deleteModal.id;
       const deletedTitle = deleteModal.title;
       supabase.auth.getSession().then(({ data: { session } }) => {
@@ -121,15 +120,15 @@ export default function MyJobsPage() {
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div>
             <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-              My Jobs
+              Lucrările mele
             </h1>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
-              Jobs you&apos;ve posted — manage and track them here.
+              Lucrările postate de tine — gestionează-le și urmărește-le.
             </p>
           </div>
           <Link href="/jobs/new">
             <Button size="md" leftIcon={<Plus className="h-4 w-4" />}>
-              Post a Job
+              Postează o lucrare
             </Button>
           </Link>
         </div>
@@ -158,8 +157,26 @@ export default function MyJobsPage() {
               </div>
             ))}
           </div>
+        ) : fetchError ? (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-12 text-center"
+          >
+            <div className="h-16 w-16 rounded-2xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center mx-auto mb-4">
+              <AlertTriangle className="h-8 w-8 text-red-500" />
+            </div>
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white mb-1">
+              Eroare la încărcarea lucrărilor
+            </h2>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6 max-w-xs mx-auto">
+              Nu s-au putut prelua lucrările. Reîncarcă pagina sau încearcă din nou mai târziu.
+            </p>
+            <Button size="md" variant="secondary" onClick={() => window.location.reload()}>
+              Reîncarcă
+            </Button>
+          </motion.div>
         ) : jobs.length === 0 ? (
-          /* Empty state */
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -169,23 +186,23 @@ export default function MyJobsPage() {
               <Plus className="h-8 w-8 text-brand-500" />
             </div>
             <h2 className="text-lg font-semibold text-zinc-900 dark:text-white mb-1">
-              No jobs posted yet
+              Nicio lucrare postată încă
             </h2>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6 max-w-xs mx-auto">
-              Post your first job and let skilled professionals find you.
+              Postează prima lucrare și lasă profesioniștii să te găsească.
             </p>
             <Link href="/jobs/new">
               <Button size="lg" rightIcon={<Plus className="h-4 w-4" />}>
-                Post your first job
+                Postează prima lucrare
               </Button>
             </Link>
           </motion.div>
         ) : (
-          /* Job list */
           <div className="space-y-3">
             {jobs.map((job, i) => {
               const cat = categories.find((c) => c.slug === job.category);
               const isToggling = togglingId === job.id;
+              const canToggle = job.status === "open" || job.status === "cancelled";
 
               return (
                 <motion.div
@@ -209,9 +226,22 @@ export default function MyJobsPage() {
                       </h3>
                     </div>
                     <div className="flex-shrink-0">
-                      <StatusBadge status={job.status} />
+                      <JobStatusBadge status={job.status} />
                     </div>
                   </div>
+
+                  {/* Awarded provider chip */}
+                  {job.status === "awarded" && job.awarded_provider_profile && (
+                    <div className="mb-2">
+                      <Link
+                        href={`/pros/${job.awarded_provider_id}`}
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-violet-500/10 ring-1 ring-violet-500/20 text-violet-400 text-xs font-medium hover:bg-violet-500/15 transition-colors"
+                      >
+                        <ExternalLink className="h-3 w-3" />
+                        Acordată: {job.awarded_provider_profile.full_name}
+                      </Link>
+                    </div>
+                  )}
 
                   {/* Meta row */}
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-zinc-400 mb-4">
@@ -232,12 +262,12 @@ export default function MyJobsPage() {
                     {job.photo_urls?.length > 0 && (
                       <span className="flex items-center gap-1">
                         <ImageIcon className="h-3 w-3" />
-                        {job.photo_urls.length} photo
-                        {job.photo_urls.length !== 1 ? "s" : ""}
+                        {job.photo_urls.length}{" "}
+                        {job.photo_urls.length === 1 ? "fotografie" : "fotografii"}
                       </span>
                     )}
                     <span className="flex items-center gap-1">
-                      Posted {formatRelativeTime(job.created_at)}
+                      Postat {formatRelativeTime(job.created_at)}
                     </span>
                   </div>
 
@@ -249,7 +279,7 @@ export default function MyJobsPage() {
                         size="sm"
                         leftIcon={<Eye className="h-3.5 w-3.5" />}
                       >
-                        View
+                        Vezi
                       </Button>
                     </Link>
 
@@ -259,25 +289,25 @@ export default function MyJobsPage() {
                         size="sm"
                         leftIcon={<Pencil className="h-3.5 w-3.5" />}
                       >
-                        Edit
+                        Editează
                       </Button>
                     </Link>
 
-                    {job.status !== "in_progress" && (
+                    {canToggle && (
                       <Button
                         variant="secondary"
                         size="sm"
                         isLoading={isToggling}
                         leftIcon={
                           job.status === "open" ? (
-                            <CheckCircle className="h-3.5 w-3.5" />
+                            <XCircle className="h-3.5 w-3.5" />
                           ) : (
                             <RotateCcw className="h-3.5 w-3.5" />
                           )
                         }
                         onClick={() => handleToggleStatus(job)}
                       >
-                        {job.status === "open" ? "Close Job" : "Reopen"}
+                        {job.status === "open" ? "Anulează" : "Redeschide"}
                       </Button>
                     )}
 
@@ -289,7 +319,7 @@ export default function MyJobsPage() {
                         setDeleteModal({ id: job.id, title: job.title })
                       }
                     >
-                      Delete
+                      Șterge
                     </Button>
                   </div>
                 </motion.div>
@@ -323,10 +353,10 @@ export default function MyJobsPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-zinc-900 dark:text-white text-sm">
-                    Delete this job?
+                    Șterge această lucrare?
                   </h3>
                   <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
-                    This cannot be undone.
+                    Această acțiune nu poate fi anulată.
                   </p>
                 </div>
               </div>
@@ -341,7 +371,7 @@ export default function MyJobsPage() {
                   onClick={() => setDeleteModal(null)}
                   disabled={isDeleting}
                 >
-                  Cancel
+                  Anulează
                 </Button>
                 <Button
                   variant="danger"
@@ -350,7 +380,7 @@ export default function MyJobsPage() {
                   isLoading={isDeleting}
                   onClick={confirmDelete}
                 >
-                  Delete
+                  Șterge
                 </Button>
               </div>
             </motion.div>

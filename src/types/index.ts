@@ -1,6 +1,6 @@
 export type UserRole = "customer" | "provider" | "admin";
 
-export type JobStatus = "open" | "in_progress" | "closed";
+export type JobStatus = "open" | "awarded" | "pending_completion" | "completed" | "cancelled";
 export type JobTimeframe = "asap" | "specific_date" | "flexible";
 
 export interface Job {
@@ -18,6 +18,11 @@ export interface Job {
   created_at: string;
   updated_at: string;
   profiles: { full_name: string; avatar_url: string | null } | null;
+  awarded_provider_id?: string | null;
+  awarded_at?: string | null;
+  completion_requested_by?: string | null;
+  completion_requested_at?: string | null;
+  completed_at?: string | null;
 }
 
 export type BookingStatus =

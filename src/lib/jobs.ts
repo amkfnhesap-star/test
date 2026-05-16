@@ -1,7 +1,7 @@
 import { supabase } from "./supabase";
 
 export type JobTimeframe = "asap" | "specific_date" | "flexible";
-export type JobStatus = "open" | "in_progress" | "closed";
+export type JobStatus = "open" | "awarded" | "pending_completion" | "completed" | "cancelled";
 
 export interface Job {
   id: string;
@@ -18,6 +18,9 @@ export interface Job {
   created_at: string;
   updated_at: string;
   profiles: { full_name: string; avatar_url: string | null } | null;
+  awarded_provider_id?: string | null;
+  awarded_at?: string | null;
+  awarded_provider_profile?: { id: string; full_name: string } | null;
 }
 
 export interface CreateJobInput {
@@ -128,8 +131,38 @@ export async function getMyJobs(): Promise<{
     .eq("client_id", user.id)
     .order("created_at", { ascending: false });
 
-  if (error) return { jobs: [], error: error.message };
-  return { jobs: (data as Job[]) ?? [], error: null };
+  if (error) {
+    console.error("[getMyJobs] jobs fetch failed:", error);
+    return { jobs: [], error: error.message };
+  }
+
+  const jobs = (data ?? []) as Job[];
+
+  // Fetch awarded provider profiles separately — awarded_provider_id FK points to
+  // auth.users, not profiles, so Supabase can't resolve the join automatically.
+  const providerIds = [
+    ...new Set(jobs.map((j) => j.awarded_provider_id).filter(Boolean)),
+  ] as string[];
+
+  if (providerIds.length > 0) {
+    const { data: profiles, error: profilesError } = await supabase
+      .from("profiles")
+      .select("id, full_name")
+      .in("id", providerIds);
+
+    if (profilesError) {
+      console.error("[getMyJobs] profiles fetch failed:", profilesError);
+    } else if (profiles) {
+      const byId = new Map(profiles.map((p) => [p.id, p]));
+      for (const job of jobs) {
+        if (job.awarded_provider_id) {
+          job.awarded_provider_profile = byId.get(job.awarded_provider_id) ?? null;
+        }
+      }
+    }
+  }
+
+  return { jobs, error: null };
 }
 
 export async function updateJobStatus(

@@ -14,9 +14,9 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
 import { Avatar } from "@/components/ui/Avatar";
 import { FavoriteButton } from "@/components/ui/FavoriteButton";
+import { JobStatusBadge } from "@/components/jobs/JobStatusBadge";
 import { getJob, type Job } from "@/lib/jobs";
 import { supabase } from "@/lib/supabase";
 import { categories } from "@/data/dummy";
@@ -24,24 +24,16 @@ import { formatRelativeTime } from "@/lib/utils";
 
 function ContactButton({
   jobClientId,
+  currentUserId,
   onContact,
   isLoading,
 }: {
   jobClientId: string;
+  currentUserId: string | null | undefined;
   onContact: () => void;
   isLoading: boolean;
 }) {
-  const [currentUserId, setCurrentUserId] = useState<string | null | undefined>(undefined);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setCurrentUserId(session?.user.id ?? null);
-    });
-  }, []);
-
-  // Still loading auth state
   if (currentUserId === undefined) return null;
-  // Viewer is the job poster — hide button
   if (currentUserId === jobClientId) return null;
 
   return (
@@ -52,15 +44,15 @@ function ContactButton({
       isLoading={isLoading}
       onClick={onContact}
     >
-      Contact Client
+      Contactează clientul
     </Button>
   );
 }
 
 function timeframeLabel(t: string) {
-  if (t === "asap") return "ASAP";
-  if (t === "specific_date") return "Specific Date";
-  return "Flexible";
+  if (t === "asap") return "Urgent";
+  if (t === "specific_date") return "Dată specifică";
+  return "Flexibil";
 }
 
 export default function JobDetailPage() {
@@ -70,6 +62,13 @@ export default function JobDetailPage() {
   const [loading, setLoading] = useState(true);
   const [lightbox, setLightbox] = useState<string | null>(null);
   const [contacting, setContacting] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null | undefined>(undefined);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setCurrentUserId(session?.user.id ?? null);
+    });
+  }, []);
 
   useEffect(() => {
     if (id) {
@@ -115,7 +114,8 @@ export default function JobDetailPage() {
 
   const cat = categories.find((c) => c.slug === job?.category);
 
-  if (loading) {
+  // Wait for both job and auth to resolve before deciding access
+  if (loading || currentUserId === undefined) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="h-8 w-8 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />
@@ -126,12 +126,45 @@ export default function JobDetailPage() {
   if (!job) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 pt-16">
-        <p className="text-zinc-500 dark:text-zinc-400">Job not found.</p>
+        <p className="text-zinc-500 dark:text-zinc-400">Lucrarea nu a fost găsită.</p>
         <Link href="/jobs">
           <Button variant="ghost" size="sm">
-            Back to Jobs
+            Înapoi la lucrări
           </Button>
         </Link>
+      </div>
+    );
+  }
+
+  // Restrict non-open jobs to participants only
+  const isParticipant =
+    currentUserId === job.client_id || currentUserId === job.awarded_provider_id;
+
+  if (job.status !== "open" && !isParticipant) {
+    return (
+      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 pt-24 pb-16">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
+          <Link
+            href="/jobs"
+            className="inline-flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 mb-6 transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Înapoi la lucrări
+          </Link>
+          <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-8 text-center">
+            <p className="text-zinc-900 dark:text-white font-semibold text-lg mb-2">
+              Lucrare indisponibilă
+            </p>
+            <p className="text-zinc-500 dark:text-zinc-400 text-sm mb-6">
+              Această lucrare a fost acordată și nu mai este disponibilă public.
+            </p>
+            <Link href="/jobs">
+              <Button variant="ghost" size="sm">
+                Caută alte lucrări
+              </Button>
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
@@ -145,7 +178,7 @@ export default function JobDetailPage() {
           className="inline-flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 mb-6 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Jobs
+          Înapoi la lucrări
         </Link>
 
         <div className="grid gap-5">
@@ -165,9 +198,7 @@ export default function JobDetailPage() {
                       {cat.name}
                     </span>
                   )}
-                  <Badge variant="success" dot>
-                    Open
-                  </Badge>
+                  <JobStatusBadge status={job.status} />
                 </div>
                 <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
                   {job.title}
@@ -179,7 +210,7 @@ export default function JobDetailPage() {
                     <p className="text-2xl font-bold text-zinc-900 dark:text-white">
                       {job.budget.toLocaleString()} RON
                     </p>
-                    <p className="text-xs text-zinc-400">Budget</p>
+                    <p className="text-xs text-zinc-400">Buget</p>
                   </div>
                 )}
                 <FavoriteButton targetType="job" targetId={job.id} />
@@ -201,14 +232,14 @@ export default function JobDetailPage() {
               </span>
               <span className="flex items-center gap-1.5">
                 <Calendar className="h-4 w-4 flex-shrink-0" />
-                Posted {formatRelativeTime(job.created_at)}
+                Postat {formatRelativeTime(job.created_at)}
               </span>
             </div>
 
             {/* Description */}
             <div className="mb-6">
               <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">
-                Description
+                Descriere
               </h2>
               <p className="text-zinc-600 dark:text-zinc-400 whitespace-pre-wrap leading-relaxed text-sm">
                 {job.description}
@@ -219,7 +250,7 @@ export default function JobDetailPage() {
             {job.photo_urls?.length > 0 && (
               <div className="mb-6">
                 <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">
-                  Photos
+                  Fotografii
                 </h2>
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
                   {job.photo_urls.map((url, i) => (
@@ -241,12 +272,22 @@ export default function JobDetailPage() {
               </div>
             )}
 
-            {/* CTA — hidden if viewer is the job poster */}
-            <ContactButton
-              jobClientId={job.client_id}
-              onContact={handleContact}
-              isLoading={contacting}
-            />
+            {/* Status banner for awarded provider viewing their own job */}
+            {job.status !== "open" && currentUserId === job.awarded_provider_id && (
+              <div className="rounded-xl px-4 py-3 text-sm mb-4 bg-violet-500/10 ring-1 ring-violet-500/20 text-violet-400">
+                Această lucrare îți este acordată.
+              </div>
+            )}
+
+            {/* CTA — shown for open jobs (non-poster) or awarded provider */}
+            {(job.status === "open" || job.awarded_provider_id === currentUserId) && (
+              <ContactButton
+                jobClientId={job.client_id}
+                currentUserId={currentUserId}
+                onContact={handleContact}
+                isLoading={contacting}
+              />
+            )}
           </motion.div>
 
           {/* Posted by */}
@@ -258,7 +299,7 @@ export default function JobDetailPage() {
               className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-5"
             >
               <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">
-                Posted by
+                Postat de
               </p>
               <div className="flex items-center gap-3">
                 <Avatar
@@ -270,7 +311,7 @@ export default function JobDetailPage() {
                   <p className="font-semibold text-zinc-900 dark:text-white text-sm">
                     {job.profiles.full_name}
                   </p>
-                  <p className="text-xs text-zinc-400">Member</p>
+                  <p className="text-xs text-zinc-400">Membru</p>
                 </div>
               </div>
             </motion.div>

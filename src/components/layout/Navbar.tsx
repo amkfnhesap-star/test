@@ -24,21 +24,21 @@ import type { User } from "@supabase/supabase-js";
 
 const navLinks = [
   {
-    label: "Browse",
+    label: "Explorează",
     href: "/search",
     children: [
-      { label: "Browse Everything", href: "/search" },
-      { label: "Browse Jobs", href: "/jobs" },
-      { label: "Find Providers (Pros only)", href: "/search?type=providers" },
-      { label: "Cleaning", href: "/search?category=cleaning" },
-      { label: "Handyman", href: "/search?category=handyman" },
-      { label: "Moving", href: "/search?category=moving" },
-      { label: "AI Services", href: "/search?category=ai-services" },
+      { label: "Toate serviciile", href: "/search" },
+      { label: "Lucrări disponibile", href: "/jobs" },
+      { label: "Găsește meșteri (doar Pros)", href: "/search?type=providers" },
+      { label: "Curățenie", href: "/search?category=cleaning" },
+      { label: "Reparații generale", href: "/search?category=handyman" },
+      { label: "Mutări", href: "/search?category=moving" },
+      { label: "Servicii AI", href: "/search?category=ai-services" },
     ],
   },
-  { label: "For Providers", href: "/provider/onboarding" },
-  { label: "How It Works", href: "/#how-it-works" },
-  { label: "Pricing", href: "/#pricing" },
+  { label: "Pentru meșteri", href: "/provider/onboarding" },
+  { label: "Cum funcționează", href: "/#how-it-works" },
+  { label: "Prețuri", href: "/#pricing" },
 ];
 
 export function Navbar() {
@@ -109,9 +109,9 @@ export function Navbar() {
                       : "text-white"
                   )}
                 >
-                  Skill
+                  Meste
                 </span>
-                <span className="text-brand-500">Seekers</span>
+                <span className="text-brand-500">RO</span>
               </span>
             </Link>
 
@@ -177,7 +177,7 @@ export function Navbar() {
                 )}
               >
                 <Plus className="h-3.5 w-3.5" />
-                Post a Job
+                Postează o lucrare
               </Link>
 
               {/* Theme Toggle */}
@@ -192,7 +192,7 @@ export function Navbar() {
                       ? "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                       : "text-white/80 hover:bg-white/10"
                   )}
-                  aria-label="Toggle theme"
+                  aria-label="Comută tema"
                 >
                   {theme === "dark" ? (
                     <Sun className="h-4 w-4" />
@@ -213,10 +213,10 @@ export function Navbar() {
                         : "text-white/80 hover:bg-white/10"
                     )}
                   >
-                    My Jobs
+                    Lucrările mele
                   </Link>
                   <Link href="/messages">
-                    <button className="p-2 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors" aria-label="Messages">
+                    <button className="p-2 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors" aria-label="Mesaje">
                       <MessageCircle className="h-4 w-4" />
                     </button>
                   </Link>
@@ -235,7 +235,7 @@ export function Navbar() {
                         : "text-white/80 hover:bg-white/10"
                     )}
                   >
-                    Log out
+                    Deconectează-te
                   </button>
                 </div>
               ) : (
@@ -250,11 +250,11 @@ export function Navbar() {
                           : "text-white hover:bg-white/10"
                       )}
                     >
-                      Log in
+                      Conectează-te
                     </Button>
                   </Link>
                   <Link href="/register">
-                    <Button size="sm">Get Started</Button>
+                    <Button size="sm">Începe acum</Button>
                   </Link>
                 </div>
               )}
@@ -268,7 +268,7 @@ export function Navbar() {
                     : "text-white hover:bg-white/10"
                 )}
                 onClick={() => setMobileOpen(!mobileOpen)}
-                aria-label="Toggle menu"
+                aria-label="Deschide meniu"
               >
                 {mobileOpen ? (
                   <X className="h-5 w-5" />
@@ -306,30 +306,30 @@ export function Navbar() {
                 className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors"
               >
                 <Plus className="h-4 w-4" />
-                Post a Job
+                Postează o lucrare
               </Link>
               <div className="pt-3 pb-1 border-t border-zinc-100 dark:border-zinc-800 flex gap-2">
                 {user ? (
                   <>
                     <Link href="/dashboard/my-jobs" className="flex-1">
                       <Button variant="secondary" size="md" fullWidth>
-                        My Jobs
+                        Lucrările mele
                       </Button>
                     </Link>
                     <Button size="md" fullWidth onClick={handleSignOut}>
-                      Log out
+                      Deconectează-te
                     </Button>
                   </>
                 ) : (
                   <>
                     <Link href="/login" className="flex-1">
                       <Button variant="secondary" size="md" fullWidth>
-                        Log in
+                        Conectează-te
                       </Button>
                     </Link>
                     <Link href="/register" className="flex-1">
                       <Button size="md" fullWidth>
-                        Get Started
+                        Începe acum
                       </Button>
                     </Link>
                   </>

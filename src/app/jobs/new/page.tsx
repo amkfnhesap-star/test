@@ -58,11 +58,11 @@ export default function PostJobPage() {
 
   const validate = (): boolean => {
     const errs: FormErrors = {};
-    if (title.trim().length < 5) errs.title = "Title must be at least 5 characters.";
-    if (!category) errs.category = "Please select a category.";
+    if (title.trim().length < 5) errs.title = "Titlul trebuie să aibă cel puțin 5 caractere.";
+    if (!category) errs.category = "Te rugăm să selectezi o categorie.";
     if (description.trim().length < 20)
-      errs.description = "Description must be at least 20 characters.";
-    if (!city.trim()) errs.city = "City is required.";
+      errs.description = "Descrierea trebuie să aibă cel puțin 20 de caractere.";
+    if (!city.trim()) errs.city = "Orașul este obligatoriu.";
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -84,7 +84,7 @@ export default function PostJobPage() {
     });
 
     if (error || !job) {
-      toast.error(error ?? "Failed to post job. Please try again.");
+      toast.error(error ?? "Eroare la postarea lucrării. Încearcă din nou.");
       setIsSubmitting(false);
       return;
     }
@@ -117,7 +117,7 @@ export default function PostJobPage() {
       }).catch(() => {});
     });
 
-    toast.success("Job posted!");
+    toast.success("Lucrarea a fost postată!");
     router.push(`/jobs/${job.id}`);
   };
 
@@ -131,9 +131,9 @@ export default function PostJobPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Post a Job</h1>
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Postează o lucrare</h1>
           <p className="text-zinc-500 dark:text-zinc-400 mt-1 text-sm">
-            Describe what you need — pros in your area will reach out.
+            Descrie ce ai nevoie — meșterii din zona ta te vor contacta.
           </p>
         </motion.div>
 
@@ -146,8 +146,8 @@ export default function PostJobPage() {
         >
           {/* Title */}
           <Input
-            label='Job Title *'
-            placeholder='e.g. "Need plumber for leaky tap"'
+            label='Titlul lucrării *'
+            placeholder='ex. "Am nevoie de instalator"'
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             error={errors.title}
@@ -157,7 +157,7 @@ export default function PostJobPage() {
           {/* Category */}
           <div>
             <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 block mb-2">
-              Category <span className="text-red-500">*</span>
+              Categorie <span className="text-red-500">*</span>
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {categories.map((cat) => (
@@ -187,8 +187,8 @@ export default function PostJobPage() {
 
           {/* Description */}
           <Textarea
-            label="Description *"
-            placeholder="Describe the job — what needs to be done, any specific requirements, access details, etc."
+            label="Descriere *"
+            placeholder="Descrie lucrarea — ce trebuie făcut, cerințe specifice, detalii de acces etc."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={5}
@@ -199,17 +199,17 @@ export default function PostJobPage() {
           {/* City + Budget */}
           <div className="grid grid-cols-2 gap-4">
             <Input
-              label="City *"
-              placeholder="e.g. București, Cluj-Napoca"
+              label="Oraș *"
+              placeholder="ex. București, Cluj-Napoca"
               value={city}
               onChange={(e) => setCity(e.target.value)}
               error={errors.city}
               fullWidth
             />
             <Input
-              label="Budget (RON, optional)"
+              label="Buget (RON, opțional)"
               type="number"
-              placeholder="e.g. 500"
+              placeholder="ex. 500"
               min={0}
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
@@ -220,14 +220,14 @@ export default function PostJobPage() {
           {/* Timeframe */}
           <div>
             <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 block mb-2">
-              When do you need it?
+              Când ai nevoie?
             </label>
             <div className="flex gap-2 flex-wrap">
               {(
                 [
-                  { value: "asap", label: "ASAP" },
-                  { value: "specific_date", label: "Specific Date" },
-                  { value: "flexible", label: "Flexible" },
+                  { value: "asap", label: "Urgent" },
+                  { value: "specific_date", label: "Dată specifică" },
+                  { value: "flexible", label: "Flexibil" },
                 ] as { value: Timeframe; label: string }[]
               ).map(({ value, label }) => (
                 <button
@@ -259,8 +259,8 @@ export default function PostJobPage() {
           {/* Photos */}
           <div>
             <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 block mb-2">
-              Photos{" "}
-              <span className="text-zinc-400 font-normal">(optional, up to 5)</span>
+              Fotografii{" "}
+              <span className="text-zinc-400 font-normal">(opțional, maxim 5)</span>
             </label>
             {photos.length < 5 && (
               <button
@@ -269,8 +269,8 @@ export default function PostJobPage() {
                 className="w-full border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-xl p-8 flex flex-col items-center gap-2 text-zinc-400 hover:border-brand-400 hover:text-brand-500 transition-colors"
               >
                 <Camera className="h-6 w-6" />
-                <span className="text-sm">Click to add photos</span>
-                <span className="text-xs text-zinc-400">{photos.length}/5 added</span>
+                <span className="text-sm">Apasă pentru a adăuga fotografii</span>
+                <span className="text-xs text-zinc-400">{photos.length}/5 adăugate</span>
               </button>
             )}
             <input
@@ -311,7 +311,7 @@ export default function PostJobPage() {
             size="lg"
             rightIcon={<ArrowRight className="h-4 w-4" />}
           >
-            Post Job
+            Postează lucrarea
           </Button>
         </motion.form>
       </div>

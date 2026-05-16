@@ -47,7 +47,7 @@ export default function LoginPage() {
       }).catch(() => {});
     });
 
-    toast.success("Welcome back!");
+    toast.success("Bun venit înapoi!");
     router.push(redirectTo);
   };
 
@@ -72,9 +72,9 @@ export default function LoginPage() {
         {/* Floating cards */}
         <div className="absolute inset-0 pointer-events-none">
           {[
-            { x: "20%", y: "25%", name: "Marcus J.", role: "Handyman", rating: "4.9", delay: 0 },
-            { x: "60%", y: "50%", name: "Sophia C.", role: "Cleaning", rating: "4.95", delay: 0.5 },
-            { x: "15%", y: "65%", name: "James P.", role: "AI Expert", rating: "4.97", delay: 1 },
+            { x: "20%", y: "25%", name: "Marcus J.", role: "Reparații gen.", rating: "4.9", delay: 0 },
+            { x: "60%", y: "50%", name: "Sophia C.", role: "Curățenie", rating: "4.95", delay: 0.5 },
+            { x: "15%", y: "65%", name: "James P.", role: "Expert AI", rating: "4.97", delay: 1 },
           ].map((card) => (
             <motion.div
               key={card.name}
@@ -101,14 +101,14 @@ export default function LoginPage() {
               <Zap className="h-4 w-4 text-white" />
             </div>
             <span className="text-white font-bold text-lg">
-              Skill<span className="text-brand-400">Seekers</span>
+              Meste<span className="text-brand-400">RO</span>
             </span>
           </Link>
         </div>
 
         <div className="relative z-10">
           <blockquote className="text-white/90 text-xl font-medium leading-relaxed mb-6">
-            "SkillSeekers transformed how I find clients. My income tripled in 6 months."
+            "MesteRO a transformat modul în care îmi găsesc clienți. Venitul meu s-a triplat în 6 luni."
           </blockquote>
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-brand-500/40 flex items-center justify-center text-white font-bold">
@@ -116,7 +116,7 @@ export default function LoginPage() {
             </div>
             <div>
               <div className="text-white text-sm font-semibold">Robert K.</div>
-              <div className="text-white/50 text-xs">Handyman · Austin, TX</div>
+              <div className="text-white/50 text-xs">Meșter reparații · București</div>
             </div>
           </div>
         </div>
@@ -136,20 +136,20 @@ export default function LoginPage() {
               <Zap className="h-4 w-4 text-white" />
             </div>
             <span className="font-bold text-lg text-zinc-900 dark:text-white">
-              Skill<span className="text-brand-500">Seekers</span>
+              Meste<span className="text-brand-500">RO</span>
             </span>
           </Link>
 
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-1">
-            Welcome back
+            Bun venit înapoi
           </h1>
           <p className="text-zinc-500 dark:text-zinc-400 text-sm mb-8">
-            Don&apos;t have an account?{" "}
+            Nu ai cont?{" "}
             <Link
               href="/register"
               className="text-brand-600 dark:text-brand-400 font-medium hover:underline"
             >
-              Sign up free
+              Înregistrează-te gratuit
             </Link>
           </p>
 
@@ -178,24 +178,24 @@ export default function LoginPage() {
 
           <div className="relative flex items-center gap-3 mb-6">
             <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-700" />
-            <span className="text-xs text-zinc-400">or continue with email</span>
+            <span className="text-xs text-zinc-400">sau continuă cu email</span>
             <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-700" />
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              label="Email address"
+              label="Adresă de email"
               type="email"
-              placeholder="you@example.com"
+              placeholder="tu@exemplu.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               fullWidth
             />
             <Input
-              label="Password"
+              label="Parolă"
               type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
+              placeholder="Introdu parola"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -222,14 +222,14 @@ export default function LoginPage() {
                   className="h-4 w-4 rounded border-zinc-300 text-brand-500 focus:ring-brand-500"
                 />
                 <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                  Remember me
+                  Ține-mă minte
                 </span>
               </label>
               <Link
                 href="/forgot-password"
                 className="text-sm text-brand-600 dark:text-brand-400 hover:underline"
               >
-                Forgot password?
+                Ai uitat parola?
               </Link>
             </div>
 
@@ -246,18 +246,18 @@ export default function LoginPage() {
               size="lg"
               rightIcon={<ArrowRight className="h-4 w-4" />}
             >
-              Sign in
+              Conectează-te
             </Button>
           </form>
 
           <p className="mt-6 text-center text-xs text-zinc-400">
-            By signing in, you agree to our{" "}
+            Prin conectare, confirmați că sunteți de acord cu{" "}
             <Link href="/terms" className="underline hover:text-zinc-600">
-              Terms of Service
+              Termenii de utilizare
             </Link>{" "}
-            and{" "}
+            și{" "}
             <Link href="/privacy" className="underline hover:text-zinc-600">
-              Privacy Policy
+              Politica de confidențialitate
             </Link>
             .
           </p>

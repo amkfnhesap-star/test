@@ -9,34 +9,34 @@ import { Avatar } from "@/components/ui/Avatar";
 import { platformStats } from "@/data/dummy";
 
 const searchPlaceholders = [
-  "House cleaning in New York…",
-  "Furniture assembly near me…",
-  "AI workflow automation…",
-  "Dog walker in Chicago…",
-  "Electrical repairs today…",
-  "Brand logo designer…",
+  "Curățenie casă în București…",
+  "Asamblare mobilier lângă mine…",
+  "Automatizare flux de lucru AI…",
+  "Dog walker în Cluj-Napoca…",
+  "Reparații electrice azi…",
+  "Designer logo brand…",
 ];
 
 const popularSearches = [
-  "Cleaning",
-  "Handyman",
-  "Moving Help",
-  "AI Services",
-  "Pet Care",
-  "Photography",
+  "Curățenie",
+  "Reparații generale",
+  "Ajutor la mutare",
+  "Servicii AI",
+  "Îngrijire animale",
+  "Fotografie",
 ];
 
 const floatingProviders = [
-  { name: "Marcus J.", avatar: "https://i.pravatar.cc/60?img=12", rating: 4.9, role: "Handyman", offset: { x: -340, y: -80 } },
-  { name: "Sophia C.", avatar: "https://i.pravatar.cc/60?img=47", rating: 4.95, role: "Cleaning", offset: { x: 340, y: -100 } },
-  { name: "James P.", avatar: "https://i.pravatar.cc/60?img=57", rating: 4.97, role: "AI Expert", offset: { x: -380, y: 80 } },
-  { name: "Emma W.", avatar: "https://i.pravatar.cc/60?img=9", rating: 4.98, role: "Pet Care", offset: { x: 360, y: 60 } },
+  { name: "Marcus J.", avatar: "https://i.pravatar.cc/60?img=12", rating: 4.9, role: "Reparații gen.", offset: { x: -340, y: -80 } },
+  { name: "Sophia C.", avatar: "https://i.pravatar.cc/60?img=47", rating: 4.95, role: "Curățenie", offset: { x: 340, y: -100 } },
+  { name: "James P.", avatar: "https://i.pravatar.cc/60?img=57", rating: 4.97, role: "Expert AI", offset: { x: -380, y: 80 } },
+  { name: "Emma W.", avatar: "https://i.pravatar.cc/60?img=9", rating: 4.98, role: "Îngrijire animale", offset: { x: 360, y: 60 } },
 ];
 
 const stats = [
-  { label: "Verified Professionals", value: formatNumber(platformStats.total_providers), icon: Shield },
-  { label: "Tasks Completed", value: formatNumber(platformStats.total_bookings), icon: Zap },
-  { label: "Avg Rating", value: `${platformStats.avg_rating}★`, icon: Star },
+  { label: "Meșteri verificați", value: formatNumber(platformStats.total_providers), icon: Shield },
+  { label: "Lucrări finalizate", value: formatNumber(platformStats.total_bookings), icon: Zap },
+  { label: "Evaluare medie", value: `${platformStats.avg_rating}★`, icon: Star },
 ];
 
 export function Hero() {
@@ -134,7 +134,7 @@ export function Hero() {
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/90 text-sm font-medium mb-6 backdrop-blur-sm"
         >
           <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-          AI-Powered Matching — Find the right pro instantly
+          Potrivire AI — Găsești meșterul potrivit instant
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
         </motion.div>
 
@@ -145,10 +145,10 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          Find trusted{" "}
+          Găsește{" "}
           <span className="relative">
             <span className="bg-gradient-to-r from-brand-300 via-violet-300 to-pink-300 bg-clip-text text-transparent">
-              professionals
+              meșteri de încredere
             </span>
             <motion.span
               className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-brand-400 to-violet-400 rounded-full"
@@ -157,7 +157,7 @@ export function Hero() {
               transition={{ delay: 0.8, duration: 0.6 }}
             />
           </span>
-          <br />near you
+          <br />în zona ta
         </motion.h1>
 
         <motion.p
@@ -166,8 +166,8 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          Book verified, insured professionals for 14+ services. Same-day availability,
-          transparent pricing, and a $1M satisfaction guarantee.
+          Rezervă meșteri verificați și asigurați pentru 14+ servicii. Disponibilitate în aceeași zi,
+          prețuri transparente și garanție de satisfacție de 1M$.
         </motion.p>
 
         {/* Search bar */}
@@ -202,7 +202,7 @@ export function Hero() {
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                placeholder="City or ZIP code"
+                placeholder="Oraș sau cod poștal"
                 className="flex-1 bg-transparent text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-none min-w-0"
               />
             </div>
@@ -213,8 +213,8 @@ export function Hero() {
               className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-brand-500 to-violet-600 text-white font-semibold hover:shadow-glow hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 text-sm whitespace-nowrap"
             >
               <Search className="h-4 w-4" />
-              <span className="hidden sm:inline">Search</span>
-              <span className="sm:hidden">Find Pros</span>
+              <span className="hidden sm:inline">Caută</span>
+              <span className="sm:hidden">Caută meșteri</span>
             </button>
           </div>
 
@@ -268,7 +268,7 @@ export function Hero() {
             transition={{ duration: 2, repeat: Infinity }}
             className="flex flex-col items-center gap-1 text-white/30 cursor-pointer"
           >
-            <span className="text-xs">Scroll to explore</span>
+            <span className="text-xs">Derulează pentru a descoperi</span>
             <ChevronDown className="h-4 w-4" />
           </motion.div>
         </motion.div>

@@ -7,36 +7,36 @@ import { cn } from "@/lib/utils";
 
 const faqs = [
   {
-    q: "How are professionals verified on SkillSeekers?",
-    a: "Every provider goes through a rigorous 5-step verification process: government ID check, professional license verification (where applicable), criminal background check, insurance verification, and skills assessment. Only about 20% of applicants pass our vetting process.",
+    q: "Cum sunt verificați meșterii pe MesteRO?",
+    a: "Fiecare meșter trece printr-un proces de verificare riguros în 5 pași: verificare act de identitate, verificare licență profesională (unde este cazul), verificare antecedente penale, verificare asigurare și evaluare competențe. Doar aproximativ 20% dintre candidați trec procesul nostru de selecție.",
   },
   {
-    q: "What happens if I'm not satisfied with the work?",
-    a: "We offer a 100% satisfaction guarantee. If you're not happy with the result, we'll either send another professional to redo the work at no charge or give you a full refund. Simply contact our support team within 72 hours of job completion.",
+    q: "Ce se întâmplă dacă nu sunt mulțumit de lucrare?",
+    a: "Oferim garanție de satisfacție 100%. Dacă nu ești mulțumit de rezultat, trimitem un alt meșter să refacă lucrarea gratuit sau îți oferim rambursare integrală. Contactează echipa de suport în 72 de ore de la finalizarea lucrării.",
   },
   {
-    q: "How does pricing work?",
-    a: "Pricing depends on the service and provider. Some services have fixed prices, while others are hourly. You'll always see the full price before booking — no hidden fees. We charge a 10% platform fee that's included in the price you see.",
+    q: "Cum funcționează prețurile?",
+    a: "Prețul depinde de serviciu și meșter. Unele servicii au preț fix, altele sunt cu ora. Vei vedea întotdeauna prețul complet înainte de rezervare — fără costuri ascunse. Percepem un comision de platformă de 10%, inclus în prețul afișat.",
   },
   {
-    q: "Is my payment information secure?",
-    a: "Absolutely. All payments are processed through Stripe with 256-bit SSL encryption. We never store your credit card details on our servers. Your payment is held in escrow and only released to the provider once the job is marked complete.",
+    q: "Sunt datele mele de plată în siguranță?",
+    a: "Absolut. Toate plățile sunt procesate prin Stripe cu criptare SSL pe 256 de biți. Nu stocăm niciodată datele cardului tău pe serverele noastre. Plata este reținută în escrow și eliberată meșterului abia când lucrarea este marcată finalizată.",
   },
   {
-    q: "Can I cancel or reschedule a booking?",
-    a: "Yes. Cancellations made 24+ hours before the scheduled time are fully refunded. Cancellations within 24 hours may be subject to a small fee. Rescheduling is always free and can be done directly from your dashboard.",
+    q: "Pot anula sau reprograma o rezervare?",
+    a: "Da. Anulările cu 24+ ore înainte de ora programată sunt rambursate integral. Anulările în mai puțin de 24 de ore pot fi supuse unui mic comision. Reprogramarea este întotdeauna gratuită și se poate face direct din dashboard.",
   },
   {
-    q: "What is the AI matching feature?",
-    a: "Our AI analyzes your job description, location, budget, and historical preferences to instantly match you with the top 3-5 most suitable providers. It learns from your feedback to get smarter with every booking.",
+    q: "Ce este funcția de potrivire AI?",
+    a: "AI-ul nostru analizează descrierea lucrării, locația, bugetul și preferințele anterioare pentru a te potrivi instant cu cei mai potriviți 3-5 meșteri. Învață din feedback-ul tău pentru a deveni mai precis cu fiecare rezervare.",
   },
   {
-    q: "How do I become a provider on SkillSeekers?",
-    a: "Click 'Become a Provider' and complete your profile with your skills, experience, and portfolio. After submitting your documents for verification (takes 1-3 business days), you'll be active on the platform and start receiving job requests.",
+    q: "Cum devin meșter pe MesteRO?",
+    a: "Apasă 'Devino meșter' și completează-ți profilul cu competențele, experiența și portofoliul. După trimiterea documentelor pentru verificare (durează 1-3 zile lucrătoare), vei fi activ pe platformă și vei începe să primești cereri de lucrări.",
   },
   {
-    q: "What cities do you operate in?",
-    a: "We currently operate in 150+ US cities including New York, Los Angeles, Chicago, Houston, San Francisco, Seattle, Austin, Miami, and more. We're expanding rapidly — enter your ZIP code to see availability in your area.",
+    q: "În ce orașe activați?",
+    a: "Operăm în prezent în 50+ orașe din România, inclusiv București, Cluj-Napoca, Timișoara, Iași, Brașov, Constanța, Craiova și altele. Ne extindem rapid — introdu codul poștal pentru a verifica disponibilitatea în zona ta.",
   },
 ];
 
@@ -54,14 +54,14 @@ export function FAQ() {
           viewport={{ once: true }}
         >
           <p className="text-brand-500 font-semibold text-sm uppercase tracking-wider mb-3">
-            FAQ
+            Întrebări frecvente
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-white mb-4">
-            Frequently asked{" "}
-            <span className="gradient-text">questions</span>
+            Cele mai frecvente{" "}
+            <span className="gradient-text">întrebări</span>
           </h2>
           <p className="text-zinc-500 dark:text-zinc-400">
-            Everything you need to know about SkillSeekers.
+            Tot ce trebuie să știi despre MesteRO.
           </p>
         </motion.div>
 
@@ -139,12 +139,12 @@ export function FAQ() {
           viewport={{ once: true }}
         >
           <p className="text-zinc-500 dark:text-zinc-400 text-sm">
-            Still have questions?{" "}
+            Ai în continuare întrebări?{" "}
             <a
               href="/contact"
               className="text-brand-600 dark:text-brand-400 font-medium hover:underline"
             >
-              Contact our support team →
+              Contactează echipa de suport →
             </a>
           </p>
         </motion.div>

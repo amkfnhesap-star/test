@@ -65,7 +65,7 @@ export default function EditProviderProfilePage() {
       return;
     }
 
-    toast.success("Profile updated!");
+    toast.success("Profil actualizat!");
     // Fire-and-forget provider update log
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session?.access_token) return;
@@ -105,7 +105,7 @@ export default function EditProviderProfilePage() {
             className="inline-flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Dashboard
+            Înapoi la panou
           </Link>
           {userId && (
             <Link
@@ -113,7 +113,7 @@ export default function EditProviderProfilePage() {
               className="inline-flex items-center gap-1.5 text-sm text-brand-600 dark:text-brand-400 hover:underline"
             >
               <ExternalLink className="h-3.5 w-3.5" />
-              View public profile
+              Vezi profilul public
             </Link>
           )}
         </div>
@@ -124,10 +124,10 @@ export default function EditProviderProfilePage() {
           className="mb-8"
         >
           <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-            Edit Provider Profile
+            Editează profilul de meșter
           </h1>
           <p className="text-zinc-500 dark:text-zinc-400 mt-1 text-sm">
-            Keep your profile up to date to attract more clients.
+            Menține-ți profilul actualizat pentru a atrage mai mulți clienți.
           </p>
         </motion.div>
 
@@ -155,7 +155,7 @@ export default function EditProviderProfilePage() {
             onSubmit={handleSubmit}
             isLoading={isSubmitting}
             showIsActive
-            submitLabel="Save Changes"
+            submitLabel="Salvează modificările"
           />
         </motion.div>
       </div>

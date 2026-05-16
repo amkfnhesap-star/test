@@ -79,7 +79,7 @@ export default function ProviderOnboardingPage() {
       }).catch(() => {});
     });
 
-    toast.success("Provider profile created! Welcome aboard.");
+    toast.success("Profil creat! Bun venit pe MesteRO.");
     router.push(`/pros/${userId}`);
   };
 
@@ -99,7 +99,7 @@ export default function ProviderOnboardingPage() {
           className="inline-flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 mb-6 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to home
+          Înapoi acasă
         </Link>
 
         <motion.div
@@ -112,10 +112,10 @@ export default function ProviderOnboardingPage() {
           </div>
           <div>
             <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-              Become a Provider
+              Devino meșter
             </h1>
             <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-0.5">
-              Set up your public profile and start getting clients.
+              Configurează-ți profilul public și începe să primești clienți.
             </p>
           </div>
         </motion.div>
@@ -129,7 +129,7 @@ export default function ProviderOnboardingPage() {
           <ProviderProfileForm
             onSubmit={handleSubmit}
             isLoading={isSubmitting}
-            submitLabel="Create my profile →"
+            submitLabel="Creează profilul meu →"
           />
         </motion.div>
       </div>

@@ -84,13 +84,13 @@ export default function ProviderProfilePage() {
       <div className="min-h-screen flex flex-col items-center justify-center pt-16 px-4 text-center">
         <div className="text-6xl mb-4">🔍</div>
         <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">
-          Provider not found
+          Meșter negăsit
         </h1>
         <p className="text-zinc-500 dark:text-zinc-400 mb-6 text-sm">
-          This profile doesn't exist or is no longer active.
+          Acest profil nu există sau nu mai este activ.
         </p>
         <Link href="/pros">
-          <Button>Browse providers</Button>
+          <Button>Descoperă meșteri</Button>
         </Link>
       </div>
     );
@@ -146,7 +146,7 @@ export default function ProviderProfilePage() {
               className="inline-flex items-center gap-1.5 text-sm text-white/70 hover:text-white mb-8 transition-colors"
             >
               <ChevronLeft className="h-4 w-4" />
-              Browse providers
+              Descoperă meșteri
             </Link>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-end gap-6">
@@ -185,7 +185,7 @@ export default function ProviderProfilePage() {
                     {profile.is_verified && (
                       <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-200 text-xs font-medium border border-emerald-400/20">
                         <CheckCircle className="h-3 w-3" />
-                        Verified
+                        Verificat
                       </span>
                     )}
                   </div>
@@ -210,13 +210,13 @@ export default function ProviderProfilePage() {
                       <span className="text-white font-semibold">
                         {profile.average_rating.toFixed(1)}
                       </span>
-                      <span>({profile.review_count} reviews)</span>
+                      <span>({profile.review_count} recenzii)</span>
                     </span>
                   )}
                   {profile.jobs_completed > 0 && (
                     <span className="flex items-center gap-1.5">
                       <Briefcase className="h-4 w-4" />
-                      {profile.jobs_completed} jobs completed
+                      {profile.jobs_completed} lucrări finalizate
                     </span>
                   )}
                   <span className="flex items-center gap-1.5">
@@ -243,7 +243,7 @@ export default function ProviderProfilePage() {
                   className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-6"
                 >
                   <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4">
-                    Skills & Specialties
+                    Competențe și specialități
                   </h2>
                   <div className="flex flex-wrap gap-2">
                     {profile.skills.map((skill) => (
@@ -267,7 +267,7 @@ export default function ProviderProfilePage() {
                   className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-6"
                 >
                   <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4">
-                    About
+                    Despre
                   </h2>
                   <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed whitespace-pre-line">
                     {profile.bio}
@@ -284,7 +284,7 @@ export default function ProviderProfilePage() {
                   className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-6"
                 >
                   <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4">
-                    Portfolio
+                    Portofoliu
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {profile.portfolio_urls.map((url, i) => (
@@ -321,12 +321,12 @@ export default function ProviderProfilePage() {
                       <span className="text-3xl font-bold text-zinc-900 dark:text-white">
                         {profile.hourly_rate.toLocaleString()}
                       </span>
-                      <span className="text-zinc-500 dark:text-zinc-400 text-sm">RON / hr</span>
+                      <span className="text-zinc-500 dark:text-zinc-400 text-sm">RON / oră</span>
                     </div>
                   )}
                   {profile.fixed_price_from != null && (
                     <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                      Starting from{" "}
+                      De la{" "}
                       <span className="font-semibold text-zinc-800 dark:text-zinc-200">
                         {profile.fixed_price_from.toLocaleString()} RON
                       </span>
@@ -346,11 +346,11 @@ export default function ProviderProfilePage() {
                   <div className="flex items-start gap-3 text-sm">
                     <MapPin className="h-4 w-4 text-zinc-400 mt-0.5 flex-shrink-0" />
                     <span className="text-zinc-600 dark:text-zinc-400">
-                      Serves up to{" "}
+                      Deservește până la{" "}
                       <span className="font-medium text-zinc-800 dark:text-zinc-200">
                         {profile.service_radius_km} km
                       </span>{" "}
-                      around{" "}
+                      în jurul{" "}
                       <span className="font-medium text-zinc-800 dark:text-zinc-200">
                         {profile.home_city}
                       </span>
@@ -361,7 +361,7 @@ export default function ProviderProfilePage() {
                     <div className="flex items-center gap-3 text-sm">
                       <Clock className="h-4 w-4 text-zinc-400 flex-shrink-0" />
                       <span className="text-zinc-600 dark:text-zinc-400">
-                        Responds{" "}
+                        Răspunde{" "}
                         <span className="font-medium text-zinc-800 dark:text-zinc-200">
                           {profile.response_time.toLowerCase()}
                         </span>
@@ -374,10 +374,10 @@ export default function ProviderProfilePage() {
                       <Briefcase className="h-4 w-4 text-zinc-400 flex-shrink-0" />
                       <span className="text-zinc-600 dark:text-zinc-400">
                         <span className="font-medium text-zinc-800 dark:text-zinc-200">
-                          {profile.years_experience} year
-                          {profile.years_experience !== 1 ? "s" : ""}
+                          {profile.years_experience}{" "}
+                          {profile.years_experience === 1 ? "an" : "ani"}
                         </span>{" "}
-                        of experience
+                        experiență
                       </span>
                     </div>
                   )}
@@ -387,9 +387,9 @@ export default function ProviderProfilePage() {
                       <Star className="h-4 w-4 text-zinc-400 flex-shrink-0" />
                       <span className="text-zinc-600 dark:text-zinc-400">
                         <span className="font-medium text-zinc-800 dark:text-zinc-200">
-                          {profile.average_rating.toFixed(1)} stars
+                          {profile.average_rating.toFixed(1)} stele
                         </span>{" "}
-                        · {profile.review_count} reviews
+                        · {profile.review_count} recenzii
                       </span>
                     </div>
                   )}
@@ -401,7 +401,7 @@ export default function ProviderProfilePage() {
                         <span className="font-medium text-zinc-800 dark:text-zinc-200">
                           {profile.jobs_completed}
                         </span>{" "}
-                        jobs completed
+                        lucrări finalizate
                       </span>
                     </div>
                   )}

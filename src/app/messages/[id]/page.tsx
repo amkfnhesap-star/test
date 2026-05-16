@@ -18,6 +18,10 @@ import {
   ImageIcon,
   X,
   Loader2,
+  Trophy,
+  Check,
+  AlertCircle,
+  CheckCircle2,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import {
@@ -26,6 +30,7 @@ import {
 } from "@/components/messages/ConversationList";
 import { Avatar } from "@/components/ui/Avatar";
 import { cn, formatRelativeTime } from "@/lib/utils";
+import toast from "react-hot-toast";
 
 interface Message {
   id: string;
@@ -36,6 +41,18 @@ interface Message {
   photo_url: string | null;
   read_at: string | null;
   _pending?: boolean;
+}
+
+interface JobContext {
+  id: string;
+  client_id: string;
+  title: string;
+  status: string;
+  awarded_provider_id: string | null;
+  completion_requested_by: string | null;
+  completion_requested_at: string | null;
+  completion_note: string | null;
+  completed_at: string | null;
 }
 
 function dateSeparatorLabel(dateStr: string): string {
@@ -49,9 +66,9 @@ function dateSeparatorLabel(dateStr: string): string {
     a.getMonth() === b.getMonth() &&
     a.getDate() === b.getDate();
 
-  if (same(d, today)) return "Today";
-  if (same(d, yesterday)) return "Yesterday";
-  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  if (same(d, today)) return "Azi";
+  if (same(d, yesterday)) return "Ieri";
+  return d.toLocaleDateString("ro-RO", { month: "short", day: "numeric", year: "numeric" });
 }
 
 function shouldShowDateSeparator(prev: Message | undefined, curr: Message): boolean {
@@ -72,24 +89,36 @@ export default function ConversationPage() {
   const [token, setToken] = useState<string | null>(null);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-  // Conversations list (sidebar)
   const [convList, setConvList] = useState<ConversationSummary[]>([]);
   const [convListLoading, setConvListLoading] = useState(true);
 
-  // Current conversation
   const currentConv = convList.find((c) => c.id === conversationId) ?? null;
 
-  // Messages
   const [messages, setMessages] = useState<Message[]>([]);
   const [messagesLoading, setMessagesLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
 
-  // Compose
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<{ file: File; dataUrl: string } | null>(null);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+
+  // Job award / completion state
+  const [jobCtx, setJobCtx] = useState<JobContext | null>(null);
+  const [otherUserIsProvider, setOtherUserIsProvider] = useState(false);
+
+  // Modal states
+  const [awardModalOpen, setAwardModalOpen] = useState(false);
+  const [unawardModalOpen, setUnawardModalOpen] = useState(false);
+  const [completeModalOpen, setCompleteModalOpen] = useState(false);
+  const [completeNote, setCompleteNote] = useState("");
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [disputeModalOpen, setDisputeModalOpen] = useState(false);
+  const [disputeReason, setDisputeReason] = useState("");
+
+  // Loading state shared across all job actions
+  const [jobActionLoading, setJobActionLoading] = useState(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -119,6 +148,31 @@ export default function ConversationPage() {
       .catch(() => setConvListLoading(false));
   }, [token]);
 
+  // Fetch job context
+  useEffect(() => {
+    if (!currentConv || currentConv.context_type !== "job" || !currentConv.context_job_id) return;
+    supabase
+      .from("jobs")
+      .select("id, client_id, title, status, awarded_provider_id, completion_requested_by, completion_requested_at, completion_note, completed_at")
+      .eq("id", currentConv.context_job_id)
+      .single()
+      .then(({ data }) => {
+        if (data) setJobCtx(data as JobContext);
+      });
+  }, [currentConv?.context_job_id, currentConv?.context_type]);
+
+  // Check if other user has a provider profile
+  useEffect(() => {
+    const otherId = currentConv?.other_user?.id;
+    if (!otherId) return;
+    supabase
+      .from("provider_profiles")
+      .select("user_id")
+      .eq("user_id", otherId)
+      .maybeSingle()
+      .then(({ data }) => setOtherUserIsProvider(!!data));
+  }, [currentConv?.other_user?.id]);
+
   // Fetch messages + mark read
   const fetchMessages = useCallback(
     async (tok: string) => {
@@ -136,21 +190,18 @@ export default function ConversationPage() {
   useEffect(() => {
     if (!token) return;
     fetchMessages(token);
-    // Fire-and-forget mark as read
     fetch(`/api/conversations/${conversationId}/mark-read`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     }).catch(() => {});
   }, [token, conversationId, fetchMessages]);
 
-  // Scroll to bottom on initial load
   useEffect(() => {
     if (!messagesLoading) {
       bottomRef.current?.scrollIntoView({ behavior: "instant" });
     }
   }, [messagesLoading]);
 
-  // Load older messages
   const loadMore = async () => {
     if (!token || !hasMore || loadingMore) return;
     setLoadingMore(true);
@@ -165,7 +216,6 @@ export default function ConversationPage() {
     setLoadingMore(false);
   };
 
-  // Send message
   const handleSend = async () => {
     if (!token || !currentUserId) return;
     const trimmed = text.trim();
@@ -194,7 +244,6 @@ export default function ConversationPage() {
       setUploadingPhoto(false);
     }
 
-    // Optimistic insert
     const tempId = `temp-${Date.now()}`;
     const optimistic: Message = {
       id: tempId,
@@ -225,14 +274,13 @@ export default function ConversationPage() {
         setMessages((prev) =>
           prev.map((m) => (m.id === tempId ? { ...data.message } : m))
         );
-        // Update conversation list preview
         setConvList((prev) =>
           prev.map((c) =>
             c.id === conversationId
               ? {
                   ...c,
                   last_message_at: data.message.created_at,
-                  last_message_preview: trimmed || "📷 Photo",
+                  last_message_preview: trimmed || "📷 Fotografie",
                   last_message_sender_id: currentUserId,
                   unread_count: 0,
                 }
@@ -263,6 +311,98 @@ export default function ConversationPage() {
     e.target.value = "";
   };
 
+  // ── Job action helpers ───────────────────────────────────────────────────────
+
+  async function postJobAction(path: string, body?: Record<string, unknown>): Promise<boolean> {
+    if (!token || !jobCtx) return false;
+    setJobActionLoading(true);
+    try {
+      const r = await fetch(`/api/jobs/${jobCtx.id}/${path}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          ...(body ? { "Content-Type": "application/json" } : {}),
+        },
+        ...(body ? { body: JSON.stringify(body) } : {}),
+      });
+      const data = await r.json();
+      if (!data.ok) {
+        toast.error(data.error ?? "A apărut o eroare.");
+        return false;
+      }
+      return true;
+    } catch {
+      toast.error("A apărut o eroare.");
+      return false;
+    } finally {
+      setJobActionLoading(false);
+    }
+  }
+
+  const handleAward = async () => {
+    if (!currentConv?.other_user?.id) return;
+    const ok = await postJobAction("award", { provider_id: currentConv.other_user.id });
+    if (ok) {
+      setJobCtx((p) => p ? { ...p, status: "awarded", awarded_provider_id: currentConv.other_user!.id } : p);
+      setAwardModalOpen(false);
+      toast.success("Lucrare acordată!");
+    }
+  };
+
+  const handleUnaward = async () => {
+    const ok = await postJobAction("unaward");
+    if (ok) {
+      setJobCtx((p) => p ? { ...p, status: "open", awarded_provider_id: null } : p);
+      setUnawardModalOpen(false);
+      toast.success("Acordare anulată.");
+    }
+  };
+
+  const handleRequestCompletion = async () => {
+    const ok = await postJobAction("request-completion", completeNote.trim() ? { note: completeNote.trim() } : {});
+    if (ok) {
+      setJobCtx((p) =>
+        p ? {
+          ...p,
+          status: "pending_completion",
+          completion_requested_by: currentUserId,
+          completion_requested_at: new Date().toISOString(),
+          completion_note: completeNote.trim() || null,
+        } : p
+      );
+      setCompleteModalOpen(false);
+      setCompleteNote("");
+      toast.success("Cerere de finalizare trimisă.");
+    }
+  };
+
+  const handleConfirmCompletion = async () => {
+    const ok = await postJobAction("confirm-completion");
+    if (ok) {
+      setJobCtx((p) => p ? { ...p, status: "completed", completed_at: new Date().toISOString() } : p);
+      setConfirmModalOpen(false);
+      toast.success("Lucrare finalizată cu succes!");
+    }
+  };
+
+  const handleDisputeCompletion = async () => {
+    const ok = await postJobAction("dispute-completion", disputeReason.trim() ? { reason: disputeReason.trim() } : {});
+    if (ok) {
+      setJobCtx((p) =>
+        p ? {
+          ...p,
+          status: "awarded",
+          completion_requested_by: null,
+          completion_requested_at: null,
+          completion_note: null,
+        } : p
+      );
+      setDisputeModalOpen(false);
+      setDisputeReason("");
+      toast.success("Contestație trimisă. Lucrarea a revenit la starea «Acordată».");
+    }
+  };
+
   if (!token) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-zinc-950">
@@ -272,7 +412,8 @@ export default function ConversationPage() {
   }
 
   const otherUser = currentConv?.other_user;
-  const name = otherUser?.full_name ?? "Conversation";
+  const otherId = otherUser?.id ?? null;
+  const name = otherUser?.full_name ?? "Conversație";
 
   const contextHref =
     currentConv?.context_type === "job"
@@ -284,18 +425,47 @@ export default function ConversationPage() {
     ) : (
       <Wrench className="h-2.5 w-2.5" />
     );
-  const contextLabel = currentConv?.context_type === "job" ? "Job" : "Provider";
+  const contextLabel = currentConv?.context_type === "job" ? "Job" : "Meșter";
+
+  // Derived role flags
+  const iAmClient = jobCtx ? currentUserId === jobCtx.client_id : false;
+  const iAmAwardedProvider = jobCtx ? currentUserId === jobCtx.awarded_provider_id : false;
+  const otherIsAwardedProvider = jobCtx ? otherId === jobCtx.awarded_provider_id : false;
+  const otherIsClient = jobCtx ? otherId === jobCtx.client_id : false;
+
+  // This conversation is between the actual client and the awarded provider
+  const isJobParticipantConv =
+    (iAmClient && otherIsAwardedProvider) || (iAmAwardedProvider && otherIsClient);
+
+  // Award button: only when job is open, I'm the client, other user is a provider
+  const showAwardButton =
+    !!jobCtx &&
+    iAmClient &&
+    jobCtx.status === "open" &&
+    !jobCtx.awarded_provider_id &&
+    otherUserIsProvider;
+
+  // Awarded to a completely different provider (not in this conversation)
+  const isAwardedToOther =
+    !!jobCtx &&
+    jobCtx.status === "awarded" &&
+    !!jobCtx.awarded_provider_id &&
+    !isJobParticipantConv;
+
+  // Who requested completion?
+  const iAmRequester = !!jobCtx?.completion_requested_by && jobCtx.completion_requested_by === currentUserId;
+  const iAmConfirmer = !!jobCtx?.completion_requested_by && jobCtx.completion_requested_by !== currentUserId && isJobParticipantConv;
 
   return (
     <div className="min-h-screen bg-zinc-950 pt-16">
       <div className="max-w-5xl mx-auto flex h-[calc(100vh-64px)]">
-        {/* ── Sidebar (desktop only) ─────────────────────────── */}
+        {/* ── Sidebar ─────────────────────────────────────────── */}
         <div className="hidden md:flex w-[360px] flex-shrink-0 border-r border-zinc-800 flex-col overflow-hidden">
           <div className="flex items-center gap-2 px-4 py-4 border-b border-zinc-800">
             <Link href="/messages" className="text-zinc-400 hover:text-zinc-200 transition-colors mr-1">
               <ArrowLeft className="h-4 w-4" />
             </Link>
-            <span className="text-base font-semibold text-white">Messages</span>
+            <span className="text-base font-semibold text-white">Mesaje</span>
           </div>
           <div className="flex-1 overflow-y-auto">
             <ConversationList
@@ -307,37 +477,181 @@ export default function ConversationPage() {
           </div>
         </div>
 
-        {/* ── Thread ─────────────────────────────────────────── */}
+        {/* ── Thread ──────────────────────────────────────────── */}
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Sticky header */}
-          <div className="flex-shrink-0 flex items-center gap-3 px-4 py-3 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-sm">
-            <Link
-              href="/messages"
-              className="md:hidden p-1 -ml-1 rounded-lg text-zinc-400 hover:text-zinc-200 transition-colors"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
+          <div className="flex-shrink-0 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-sm">
+            {/* Main row */}
+            <div className="flex items-center gap-3 px-4 py-3">
+              <Link
+                href="/messages"
+                className="md:hidden p-1 -ml-1 rounded-lg text-zinc-400 hover:text-zinc-200 transition-colors"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Link>
 
-            <Avatar name={name} src={otherUser?.avatar_url ?? undefined} size="sm" />
+              <Avatar name={name} src={otherUser?.avatar_url ?? undefined} size="sm" />
 
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-white truncate">{name}</p>
-              {currentConv && (
-                <Link
-                  href={contextHref}
-                  className="inline-flex items-center gap-1 text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors"
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-white truncate">{name}</p>
+                {currentConv && (
+                  <Link
+                    href={contextHref}
+                    className="inline-flex items-center gap-1 text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors"
+                  >
+                    {contextIcon}
+                    {contextLabel}
+                    {currentConv.context_title ? `: ${currentConv.context_title}` : ""}
+                  </Link>
+                )}
+              </div>
+
+              {/* Award button (only when job is open) */}
+              {showAwardButton && (
+                <button
+                  onClick={() => setAwardModalOpen(true)}
+                  className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition-colors"
                 >
-                  {contextIcon}
-                  {contextLabel}
-                  {currentConv.context_title ? `: ${currentConv.context_title}` : ""}
-                </Link>
+                  <Trophy className="h-3.5 w-3.5" />
+                  Acordă lucrarea
+                </button>
               )}
             </div>
+
+            {/* ── Status banners ───────────────────────────────── */}
+
+            {/* This conversation is between client and awarded provider */}
+            {isJobParticipantConv && (
+              <div className="px-4 pb-2.5 space-y-1.5">
+
+                {/* AWARDED */}
+                {jobCtx!.status === "awarded" && (
+                  <>
+                    <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-violet-500/10 ring-1 ring-violet-500/20 text-violet-400 text-xs font-medium">
+                      <Check className="h-3 w-3 flex-shrink-0" />
+                      <span className="flex-1">
+                        {iAmClient
+                          ? "Lucrarea este acordată acestui meșter"
+                          : "Ai primit această lucrare"}
+                      </span>
+                      {iAmClient && (
+                        <button
+                          onClick={() => setUnawardModalOpen(true)}
+                          className="text-violet-500 hover:text-violet-300 underline transition-colors ml-2 flex-shrink-0"
+                        >
+                          Anulează acordarea
+                        </button>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => setCompleteModalOpen(true)}
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-medium transition-colors w-full"
+                    >
+                      <CheckCircle2 className="h-3 w-3 flex-shrink-0 text-zinc-400" />
+                      Marchează ca finalizată
+                    </button>
+                  </>
+                )}
+
+                {/* PENDING COMPLETION */}
+                {jobCtx!.status === "pending_completion" && (
+                  <>
+                    {iAmRequester ? (
+                      <div className="px-2.5 py-2 rounded-xl bg-amber-500/10 ring-1 ring-amber-500/20 text-amber-400 text-xs">
+                        <div className="flex items-center gap-1.5 font-medium mb-0.5">
+                          <Loader2 className="h-3 w-3 flex-shrink-0" />
+                          Aștepți confirmarea celeilalte părți
+                        </div>
+                        {jobCtx!.completion_requested_at && (
+                          <div className="text-amber-500/70 pl-4.5">
+                            Marcată {formatRelativeTime(jobCtx!.completion_requested_at)} de tine
+                          </div>
+                        )}
+                      </div>
+                    ) : iAmConfirmer ? (
+                      <div className="space-y-1.5">
+                        <div className="px-2.5 py-2 rounded-xl bg-amber-500/10 ring-1 ring-amber-500/20 text-amber-400 text-xs font-medium flex items-center gap-1.5">
+                          <AlertCircle className="h-3 w-3 flex-shrink-0" />
+                          Cealaltă parte a marcat lucrarea ca finalizată. Confirmi?
+                        </div>
+                        {jobCtx!.completion_note && (
+                          <div className="px-2.5 py-1.5 rounded-lg bg-zinc-800/60 text-zinc-400 text-xs">
+                            <span className="text-zinc-500">Notă de la cealaltă parte: </span>
+                            &laquo;{jobCtx!.completion_note}&raquo;
+                          </div>
+                        )}
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => setConfirmModalOpen(true)}
+                            className="flex-1 flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors"
+                          >
+                            <CheckCircle2 className="h-3 w-3" />
+                            Confirmă finalizarea
+                          </button>
+                          <button
+                            onClick={() => setDisputeModalOpen(true)}
+                            className="flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-400 text-xs font-medium transition-colors"
+                          >
+                            <X className="h-3 w-3" />
+                            Contestă
+                          </button>
+                        </div>
+                      </div>
+                    ) : null}
+                  </>
+                )}
+
+                {/* COMPLETED */}
+                {jobCtx!.status === "completed" && (
+                  <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-emerald-500/10 ring-1 ring-emerald-500/20 text-emerald-400 text-xs font-medium">
+                    <Check className="h-3 w-3 flex-shrink-0" />
+                    Lucrare finalizată cu succes
+                    {jobCtx!.completed_at && (
+                      <span className="text-emerald-500/70 font-normal">
+                        pe{" "}
+                        {new Date(jobCtx!.completed_at).toLocaleDateString("ro-RO", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {/* CANCELLED */}
+                {jobCtx!.status === "cancelled" && (
+                  <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-zinc-800/60 ring-1 ring-zinc-700 text-zinc-500 text-xs">
+                    <AlertCircle className="h-3 w-3 flex-shrink-0" />
+                    Lucrarea a fost anulată
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Awarded to a different provider (not in this conversation) */}
+            {isAwardedToOther && (
+              <div className="px-4 pb-2.5">
+                <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-zinc-800/60 ring-1 ring-zinc-700 text-zinc-500 text-xs">
+                  <AlertCircle className="h-3 w-3 flex-shrink-0" />
+                  Această lucrare a fost acordată altui meșter
+                </div>
+              </div>
+            )}
+
+            {/* Cancelled banner for non-participants */}
+            {jobCtx && jobCtx.status === "cancelled" && !isJobParticipantConv && iAmClient && (
+              <div className="px-4 pb-2.5">
+                <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-zinc-800/60 ring-1 ring-zinc-700 text-zinc-500 text-xs">
+                  <AlertCircle className="h-3 w-3 flex-shrink-0" />
+                  Lucrarea a fost anulată
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Messages */}
           <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
-            {/* Load more */}
             {hasMore && (
               <div className="text-center mb-4">
                 <button
@@ -345,7 +659,7 @@ export default function ConversationPage() {
                   disabled={loadingMore}
                   className="text-xs text-brand-400 hover:text-brand-300 disabled:text-zinc-600 transition-colors"
                 >
-                  {loadingMore ? "Loading…" : "Load older messages"}
+                  {loadingMore ? "Se încarcă…" : "Încarcă mesaje mai vechi"}
                 </button>
               </div>
             )}
@@ -356,8 +670,8 @@ export default function ConversationPage() {
               </div>
             ) : messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 text-center">
-                <p className="text-sm text-zinc-500">No messages yet.</p>
-                <p className="text-xs text-zinc-700 mt-1">Say hello!</p>
+                <p className="text-sm text-zinc-500">Niciun mesaj încă.</p>
+                <p className="text-xs text-zinc-700 mt-1">Spune salut!</p>
               </div>
             ) : (
               messages.map((msg, i) => {
@@ -371,7 +685,6 @@ export default function ConversationPage() {
 
                 return (
                   <div key={msg.id}>
-                    {/* Date separator */}
                     {showSep && (
                       <div className="flex items-center gap-3 my-4">
                         <div className="flex-1 h-px bg-zinc-800" />
@@ -389,20 +702,14 @@ export default function ConversationPage() {
                         sameAsPrev && !showSep ? "mt-0.5" : "mt-3"
                       )}
                     >
-                      {/* Avatar — only show for last in group (their messages) */}
                       {!isMe && (
                         <div className="flex-shrink-0 w-7">
                           {isLastInGroup ? (
-                            <Avatar
-                              name={name}
-                              src={otherUser?.avatar_url ?? undefined}
-                              size="xs"
-                            />
+                            <Avatar name={name} src={otherUser?.avatar_url ?? undefined} size="xs" />
                           ) : null}
                         </div>
                       )}
 
-                      {/* Bubble */}
                       <div
                         className={cn(
                           "max-w-[75%] sm:max-w-[65%]",
@@ -411,15 +718,10 @@ export default function ConversationPage() {
                         )}
                       >
                         {msg.photo_url && (
-                          <a
-                            href={msg.photo_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="block"
-                          >
+                          <a href={msg.photo_url} target="_blank" rel="noopener noreferrer" className="block">
                             <Image
                               src={msg.photo_url}
-                              alt="Photo"
+                              alt="Fotografie"
                               width={320}
                               height={240}
                               className="rounded-2xl max-w-[320px] w-full object-cover border border-zinc-700"
@@ -439,14 +741,8 @@ export default function ConversationPage() {
                             {msg.body}
                           </div>
                         )}
-                        {/* Time — only for last in group */}
                         {isLastInGroup && (
-                          <span
-                            className={cn(
-                              "text-[10px] text-zinc-600 px-1",
-                              isMe ? "text-right" : "text-left"
-                            )}
-                          >
+                          <span className={cn("text-[10px] text-zinc-600 px-1", isMe ? "text-right" : "text-left")}>
                             {formatRelativeTime(msg.created_at)}
                           </span>
                         )}
@@ -459,14 +755,13 @@ export default function ConversationPage() {
             <div ref={bottomRef} />
           </div>
 
-          {/* ── Sticky footer / compose ────────────────────────── */}
+          {/* Compose */}
           <div className="flex-shrink-0 border-t border-zinc-800 px-4 py-3 bg-zinc-950">
-            {/* Photo preview */}
             {photoPreview && (
               <div className="relative inline-block mb-2">
                 <Image
                   src={photoPreview.dataUrl}
-                  alt="Preview"
+                  alt="Previzualizare"
                   width={80}
                   height={80}
                   className="rounded-xl object-cover border border-zinc-700"
@@ -481,12 +776,11 @@ export default function ConversationPage() {
             )}
 
             <div className="flex items-end gap-2">
-              {/* Photo attach */}
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="p-2 rounded-xl text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors flex-shrink-0 mb-0.5"
                 disabled={sending}
-                aria-label="Attach photo"
+                aria-label="Atașează fotografie"
               >
                 <ImageIcon className="h-4.5 w-4.5" />
               </button>
@@ -498,7 +792,6 @@ export default function ConversationPage() {
                 onChange={handleFileChange}
               />
 
-              {/* Text input */}
               <textarea
                 ref={textareaRef}
                 value={text}
@@ -508,14 +801,13 @@ export default function ConversationPage() {
                   e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`;
                 }}
                 onKeyDown={handleKeyDown}
-                placeholder="Type a message…"
+                placeholder="Scrie un mesaj…"
                 rows={1}
                 className="flex-1 resize-none bg-zinc-800 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors overflow-hidden"
                 style={{ minHeight: "40px", maxHeight: "120px" }}
                 disabled={sending}
               />
 
-              {/* Send */}
               <button
                 onClick={handleSend}
                 disabled={sending || (!text.trim() && !photoPreview)}
@@ -525,7 +817,7 @@ export default function ConversationPage() {
                     ? "bg-brand-600 hover:bg-brand-500 text-white"
                     : "bg-zinc-800 text-zinc-600 cursor-not-allowed"
                 )}
-                aria-label="Send"
+                aria-label="Trimite"
               >
                 {sending || uploadingPhoto ? (
                   <Loader2 className="h-4.5 w-4.5 animate-spin" />
@@ -537,6 +829,144 @@ export default function ConversationPage() {
           </div>
         </div>
       </div>
+
+      {/* ══ Modals ══════════════════════════════════════════════════════════════ */}
+
+      {/* Award */}
+      {awardModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => !jobActionLoading && setAwardModalOpen(false)}>
+          <div className="bg-zinc-900 rounded-2xl border border-zinc-700 p-6 max-w-sm w-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-10 w-10 rounded-xl bg-violet-900/40 flex items-center justify-center flex-shrink-0">
+                <Trophy className="h-5 w-5 text-violet-400" />
+              </div>
+              <h3 className="font-semibold text-white text-sm">Acordă lucrarea acestui meșter?</h3>
+            </div>
+            <p className="text-sm text-zinc-400 mb-5 leading-relaxed">
+              Vei acorda lucrarea <span className="text-zinc-200 font-medium">«{jobCtx?.title}»</span> către{" "}
+              <span className="text-zinc-200 font-medium">{name}</span>. După acordare, lucrarea nu va mai fi vizibilă altor meșteri. Această acțiune poate fi anulată cât timp lucrarea nu este finalizată.
+            </p>
+            <div className="flex gap-3">
+              <button onClick={() => setAwardModalOpen(false)} disabled={jobActionLoading} className="flex-1 px-4 py-2.5 rounded-xl border border-zinc-700 text-zinc-300 text-sm font-medium hover:bg-zinc-800 transition-colors disabled:opacity-50">
+                Anulează
+              </button>
+              <button onClick={handleAward} disabled={jobActionLoading} className="flex-1 px-4 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold transition-colors disabled:opacity-50">
+                {jobActionLoading ? "Se procesează…" : "Da, acordă"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Unaward */}
+      {unawardModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => !jobActionLoading && setUnawardModalOpen(false)}>
+          <div className="bg-zinc-900 rounded-2xl border border-zinc-700 p-6 max-w-sm w-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <h3 className="font-semibold text-white text-sm mb-2">Anulează acordarea?</h3>
+            <p className="text-sm text-zinc-400 mb-5 leading-relaxed">
+              Sunteți sigur că doriți să anulați acordarea? Lucrarea va deveni din nou disponibilă altor meșteri.
+            </p>
+            <div className="flex gap-3">
+              <button onClick={() => setUnawardModalOpen(false)} disabled={jobActionLoading} className="flex-1 px-4 py-2.5 rounded-xl border border-zinc-700 text-zinc-300 text-sm font-medium hover:bg-zinc-800 transition-colors disabled:opacity-50">
+                Renunță
+              </button>
+              <button onClick={handleUnaward} disabled={jobActionLoading} className="flex-1 px-4 py-2.5 rounded-xl bg-red-700 hover:bg-red-600 text-white text-sm font-semibold transition-colors disabled:opacity-50">
+                {jobActionLoading ? "Se procesează…" : "Da, anulează"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mark as complete */}
+      {completeModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => !jobActionLoading && setCompleteModalOpen(false)}>
+          <div className="bg-zinc-900 rounded-2xl border border-zinc-700 p-6 max-w-sm w-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-10 w-10 rounded-xl bg-emerald-900/30 flex items-center justify-center flex-shrink-0">
+                <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+              </div>
+              <h3 className="font-semibold text-white text-sm">Marchează lucrarea ca finalizată?</h3>
+            </div>
+            <p className="text-sm text-zinc-400 mb-4 leading-relaxed">
+              Cealaltă parte va trebui să confirme finalizarea. Dacă confirmă, lucrarea este oficial finalizată. Dacă nu, lucrarea revine în starea «Acordată» și puteți discuta.
+            </p>
+            <div className="mb-4">
+              <label className="block text-xs text-zinc-400 mb-1.5">Notă (opțional)</label>
+              <textarea
+                value={completeNote}
+                onChange={(e) => setCompleteNote(e.target.value)}
+                placeholder="ex: detalii despre lucrare, ora finalizării, etc."
+                rows={3}
+                className="w-full resize-none bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
+              />
+            </div>
+            <div className="flex gap-3">
+              <button onClick={() => setCompleteModalOpen(false)} disabled={jobActionLoading} className="flex-1 px-4 py-2.5 rounded-xl border border-zinc-700 text-zinc-300 text-sm font-medium hover:bg-zinc-800 transition-colors disabled:opacity-50">
+                Anulează
+              </button>
+              <button onClick={handleRequestCompletion} disabled={jobActionLoading} className="flex-1 px-4 py-2.5 rounded-xl bg-zinc-700 hover:bg-zinc-600 text-white text-sm font-semibold transition-colors disabled:opacity-50">
+                {jobActionLoading ? "Se procesează…" : "Da, marchează ca finalizată"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confirm completion */}
+      {confirmModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => !jobActionLoading && setConfirmModalOpen(false)}>
+          <div className="bg-zinc-900 rounded-2xl border border-zinc-700 p-6 max-w-sm w-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-10 w-10 rounded-xl bg-emerald-900/30 flex items-center justify-center flex-shrink-0">
+                <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+              </div>
+              <h3 className="font-semibold text-white text-sm">Confirmați finalizarea lucrării?</h3>
+            </div>
+            <p className="text-sm text-zinc-400 mb-5 leading-relaxed">
+              Sunteți sigur că lucrarea este finalizată conform așteptărilor? După confirmare, veți putea lăsa o recenzie.
+            </p>
+            <div className="flex gap-3">
+              <button onClick={() => setConfirmModalOpen(false)} disabled={jobActionLoading} className="flex-1 px-4 py-2.5 rounded-xl border border-zinc-700 text-zinc-300 text-sm font-medium hover:bg-zinc-800 transition-colors disabled:opacity-50">
+                Anulează
+              </button>
+              <button onClick={handleConfirmCompletion} disabled={jobActionLoading} className="flex-1 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold transition-colors disabled:opacity-50">
+                {jobActionLoading ? "Se procesează…" : "Da, confirm"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Dispute completion */}
+      {disputeModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => !jobActionLoading && setDisputeModalOpen(false)}>
+          <div className="bg-zinc-900 rounded-2xl border border-zinc-700 p-6 max-w-sm w-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <h3 className="font-semibold text-white text-sm mb-2">Contestați finalizarea lucrării?</h3>
+            <p className="text-sm text-zinc-400 mb-4 leading-relaxed">
+              Vă rugăm să indicați motivul. Cealaltă parte va vedea acest mesaj. Lucrarea va reveni la starea «Acordată» pentru a putea discuta.
+            </p>
+            <div className="mb-4">
+              <label className="block text-xs text-zinc-400 mb-1.5">Motivul contestării</label>
+              <textarea
+                value={disputeReason}
+                onChange={(e) => setDisputeReason(e.target.value)}
+                placeholder="Descrie motivul contestației…"
+                rows={3}
+                className="w-full resize-none bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
+              />
+            </div>
+            <div className="flex gap-3">
+              <button onClick={() => setDisputeModalOpen(false)} disabled={jobActionLoading} className="flex-1 px-4 py-2.5 rounded-xl border border-zinc-700 text-zinc-300 text-sm font-medium hover:bg-zinc-800 transition-colors disabled:opacity-50">
+                Renunță
+              </button>
+              <button onClick={handleDisputeCompletion} disabled={jobActionLoading} className="flex-1 px-4 py-2.5 rounded-xl bg-zinc-700 hover:bg-zinc-600 text-white text-sm font-semibold transition-colors disabled:opacity-50">
+                {jobActionLoading ? "Se procesează…" : "Trimite contestația"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

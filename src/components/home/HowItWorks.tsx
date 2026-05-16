@@ -1,38 +1,105 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, CalendarCheck, CheckCircle2, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 const steps = [
   {
-    number: "01",
-    icon: Search,
-    title: "Describe your job",
+    number: 1,
+    title: "Descrie lucrarea",
     description:
-      "Tell us what you need in plain language. Our AI instantly matches you with the best available professionals in your area.",
-    color: "from-brand-500 to-violet-600",
-    highlight: "AI Matching",
+      "Spune-ne ce ai nevoie în cuvinte simple. AI-ul nostru te potrivește instant cu cei mai buni meșteri disponibili din zona ta.",
+    highlight: "Potrivire AI",
+    highlightColor: "from-brand-500 to-violet-600",
+    fallbackGradient: "from-violet-600 to-violet-900",
+    photoUrl:
+      "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&h=600&fit=crop&q=80",
   },
   {
-    number: "02",
-    icon: CalendarCheck,
-    title: "Pick your pro & schedule",
+    number: 2,
+    title: "Alege meșterul și programează",
     description:
-      "Compare verified pros by rating, price, and availability. Book instantly or request a custom quote — all within minutes.",
-    color: "from-emerald-500 to-teal-600",
-    highlight: "Instant Booking",
+      "Compară meșteri verificați după evaluare, preț și disponibilitate. Rezervă instant sau solicită o ofertă personalizată — în câteva minute.",
+    highlight: "Rezervare instant",
+    highlightColor: "from-emerald-500 to-teal-600",
+    fallbackGradient: "from-emerald-600 to-teal-900",
+    photoUrl:
+      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&h=600&fit=crop&q=80",
   },
   {
-    number: "03",
-    icon: CheckCircle2,
-    title: "Get it done, securely",
+    number: 3,
+    title: "Treaba e gata, în siguranță",
     description:
-      "Payment is held securely until the job is complete. Rate your pro, and your money is released — always protected by our guarantee.",
-    color: "from-amber-500 to-orange-600",
-    highlight: "$1M Guarantee",
+      "Plata este reținută în siguranță până la finalizarea lucrării. Evaluează meșterul, iar banii sunt eliberați — mereu protejaţi de garanția noastră.",
+    highlight: "Garanție 1M$",
+    highlightColor: "from-amber-500 to-orange-600",
+    fallbackGradient: "from-amber-500 to-orange-900",
+    photoUrl:
+      "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800&h=600&fit=crop&q=80",
   },
 ];
+
+type Step = (typeof steps)[number];
+
+function StepCard({ step, index }: { step: Step; index: number }) {
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.15 }}
+      className={index === 2 ? "md:col-span-2 lg:col-span-1" : ""}
+    >
+      <div className="rounded-3xl overflow-hidden ring-1 ring-white/5 bg-slate-900 h-full">
+        {/* Photo */}
+        <div className="relative aspect-[4/3]">
+          {!imgError ? (
+            <img
+              src={step.photoUrl}
+              loading="lazy"
+              alt={step.title}
+              onError={() => setImgError(true)}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          ) : (
+            <div
+              className={`absolute inset-0 bg-gradient-to-br ${step.fallbackGradient}`}
+            />
+          )}
+
+          {/* Bottom gradient so pill text is always readable */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+
+          {/* Step number badge */}
+          <div className="absolute top-4 right-4 h-9 w-9 rounded-full bg-white shadow-md flex items-center justify-center">
+            <span className="text-zinc-900 text-sm font-bold leading-none">
+              {step.number}
+            </span>
+          </div>
+
+          {/* Highlight pill */}
+          <div className="absolute bottom-4 left-4">
+            <span
+              className={`inline-block px-3 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r ${step.highlightColor}`}
+            >
+              {step.highlight}
+            </span>
+          </div>
+        </div>
+
+        {/* Text content */}
+        <div className="p-6">
+          <h3 className="text-2xl font-bold text-white mb-3">{step.title}</h3>
+          <p className="text-slate-400 leading-relaxed">{step.description}</p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export function HowItWorks() {
   return (
@@ -40,7 +107,6 @@ export function HowItWorks() {
       id="how-it-works"
       className="py-20 md:py-28 bg-zinc-50 dark:bg-zinc-900/50 relative overflow-hidden"
     >
-      {/* Background dots */}
       <div className="absolute inset-0 bg-dots opacity-50 dark:opacity-20" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
@@ -53,75 +119,22 @@ export function HowItWorks() {
           transition={{ duration: 0.5 }}
         >
           <p className="text-brand-500 font-semibold text-sm uppercase tracking-wider mb-3">
-            How It Works
+            Cum funcționează
           </p>
           <h2 className="text-3xl md:text-5xl font-bold text-zinc-900 dark:text-white mb-4">
-            From need to done{" "}
-            <span className="gradient-text">in minutes</span>
+            De la idee la realitate,{" "}
+            <span className="gradient-text">în câteva minute</span>
           </h2>
           <p className="text-zinc-500 dark:text-zinc-400 text-lg max-w-2xl mx-auto">
-            The fastest way to get any task done by a trusted professional.
-            No calls, no hassle — just results.
+            Cea mai rapidă cale de a rezolva orice, cu un meșter de încredere.
+            Fără apeluri, fără bătăi de cap — doar rezultate.
           </p>
         </motion.div>
 
-        {/* Steps */}
-        <div className="grid md:grid-cols-3 gap-6 md:gap-8 relative">
-          {/* Connecting line (desktop) */}
-          <div className="absolute top-16 left-[calc(16.67%-24px)] right-[calc(16.67%-24px)] h-px bg-gradient-to-r from-brand-500/50 via-emerald-500/50 to-amber-500/50 hidden md:block" />
-
+        {/* Step cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {steps.map((step, i) => (
-            <motion.div
-              key={step.number}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.15 }}
-              className="relative flex flex-col items-center text-center"
-            >
-              {/* Number + Icon */}
-              <div className="relative mb-6">
-                {/* Outer ring */}
-                <div
-                  className={`h-14 w-14 rounded-2xl bg-gradient-to-br ${step.color} p-0.5 shadow-lg`}
-                >
-                  <div className="h-full w-full rounded-[14px] bg-white dark:bg-zinc-900 flex items-center justify-center">
-                    <step.icon
-                      className={`h-6 w-6 bg-gradient-to-br ${step.color} bg-clip-text`}
-                      style={{
-                        WebkitBackgroundClip: "text",
-                        color: "transparent",
-                      }}
-                    />
-                  </div>
-                </div>
-                {/* Step number */}
-                <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[10px] font-bold flex items-center justify-center">
-                  {i + 1}
-                </span>
-              </div>
-
-              {/* Badge */}
-              <span
-                className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r ${step.color} mb-3`}
-              >
-                {step.highlight}
-              </span>
-
-              <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-3">
-                {step.title}
-              </h3>
-              <p className="text-zinc-500 dark:text-zinc-400 leading-relaxed text-sm">
-                {step.description}
-              </p>
-
-              {/* Arrow between steps */}
-              {i < steps.length - 1 && (
-                <div className="flex md:hidden justify-center mt-6">
-                  <ArrowRight className="h-5 w-5 text-zinc-300 dark:text-zinc-600 rotate-90" />
-                </div>
-              )}
-            </motion.div>
+            <StepCard key={step.number} step={step} index={i} />
           ))}
         </div>
 
@@ -137,11 +150,11 @@ export function HowItWorks() {
             href="/search"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-brand-500 to-violet-600 text-white font-semibold text-base hover:shadow-glow hover:scale-105 transition-all duration-200"
           >
-            Find a Professional Now
+            Găsește un meșter acum
             <ArrowRight className="h-5 w-5" />
           </Link>
           <p className="mt-3 text-sm text-zinc-400">
-            No credit card required · Free to browse
+            Fără card · Gratuit de explorat
           </p>
         </motion.div>
       </div>

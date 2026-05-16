@@ -18,14 +18,14 @@ export function Testimonials() {
           viewport={{ once: true }}
         >
           <p className="text-brand-500 font-semibold text-sm uppercase tracking-wider mb-3">
-            Testimonials
+            Testimoniale
           </p>
           <h2 className="text-3xl md:text-5xl font-bold text-zinc-900 dark:text-white mb-4">
-            Loved by{" "}
-            <span className="gradient-text">1.2M+ customers</span>
+            Iubit de{" "}
+            <span className="gradient-text">1,2M+ clienți</span>
           </h2>
           <p className="text-zinc-500 dark:text-zinc-400 text-lg max-w-xl mx-auto">
-            Real stories from real people who found their perfect professional on SkillSeekers.
+            Povești reale de la oameni care și-au găsit meșterul perfect pe MesteRO.
           </p>
         </motion.div>
       </div>
@@ -69,10 +69,10 @@ export function Testimonials() {
           transition={{ staggerChildren: 0.1 }}
         >
           {[
-            { value: "4.9/5", label: "Average Rating", sub: "Based on 2M+ reviews" },
-            { value: "98%", label: "Satisfaction Rate", sub: "Money-back guarantee" },
-            { value: "< 4h", label: "Avg Response Time", sub: "Most reply under 1hr" },
-            { value: "2M+", label: "Tasks Completed", sub: "And counting" },
+            { value: "4.9/5", label: "Evaluare medie", sub: "Din 2M+ recenzii" },
+            { value: "98%", label: "Rată de satisfacție", sub: "Garanție rambursare" },
+            { value: "< 4h", label: "Timp mediu răspuns", sub: "Cei mai mulți sub 1h" },
+            { value: "2M+", label: "Lucrări finalizate", sub: "Și crește" },
           ].map((stat) => (
             <div
               key={stat.label}

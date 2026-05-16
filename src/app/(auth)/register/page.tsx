@@ -76,7 +76,7 @@ export default function RegisterPage() {
             <Zap className="h-5 w-5 text-white" />
           </div>
           <span className="font-bold text-xl text-zinc-900 dark:text-white">
-            Skill<span className="text-brand-500">Seekers</span>
+            Meste<span className="text-brand-500">RO</span>
           </span>
         </Link>
 
@@ -125,10 +125,10 @@ export default function RegisterPage() {
               className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-8"
             >
               <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2 text-center">
-                How will you use SkillSeekers?
+                Cum vei folosi MesteRO?
               </h1>
               <p className="text-zinc-500 text-sm text-center mb-8">
-                Choose your account type to get started.
+                Alege tipul de cont pentru a începe.
               </p>
 
               <div className="grid grid-cols-2 gap-4">
@@ -136,17 +136,17 @@ export default function RegisterPage() {
                   {
                     r: "customer" as Role,
                     icon: User,
-                    title: "I need help",
-                    desc: "Book trusted professionals for any task",
-                    perks: ["Browse 250K+ pros", "Instant booking", "$1M guarantee"],
+                    title: "Am nevoie de ajutor",
+                    desc: "Găsește profesioniști de încredere pentru orice lucrare",
+                    perks: ["250K+ meșteri disponibili", "Rezervare rapidă", "Garanție 1M RON"],
                     gradient: "from-brand-500 to-violet-600",
                   },
                   {
                     r: "provider" as Role,
                     icon: Briefcase,
-                    title: "I offer services",
-                    desc: "Grow your business on our platform",
-                    perks: ["Set your own rates", "Keep 90% earnings", "Free to join"],
+                    title: "Ofer servicii",
+                    desc: "Dezvoltă-ți afacerea pe platforma noastră",
+                    perks: ["Îți stabilești propriile tarife", "Păstrezi 90% din câștiguri", "Gratuit să te alături"],
                     gradient: "from-emerald-500 to-teal-600",
                   },
                 ].map(({ r, icon: Icon, title, desc, perks, gradient }) => (
@@ -184,9 +184,9 @@ export default function RegisterPage() {
               </div>
 
               <p className="text-center text-sm text-zinc-500 mt-6">
-                Already have an account?{" "}
+                Ai deja un cont?{" "}
                 <Link href="/login" className="text-brand-600 dark:text-brand-400 font-medium hover:underline">
-                  Sign in
+                  Conectează-te
                 </Link>
               </p>
             </motion.div>
@@ -205,49 +205,49 @@ export default function RegisterPage() {
                 onClick={() => setStep("role")}
                 className="flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 mb-6"
               >
-                <ArrowLeft className="h-4 w-4" /> Back
+                <ArrowLeft className="h-4 w-4" /> Înapoi
               </button>
 
               <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-1">
-                Create your account
+                Creează-ți contul
               </h1>
               <p className="text-zinc-500 text-sm mb-8">
                 {role === "provider"
-                  ? "Set up your provider profile to start earning."
-                  : "Join millions of customers on SkillSeekers."}
+                  ? "Configurează-ți profilul de meșter și începe să câștigi."
+                  : "Alătură-te milioanelor de clienți de pe MesteRO."}
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <Input
-                  label="Full name"
-                  placeholder="John Doe"
+                  label="Nume complet"
+                  placeholder="Ion Popescu"
                   value={form.fullName}
                   onChange={(e) => setForm({ ...form, fullName: e.target.value })}
                   required
                   fullWidth
                 />
                 <Input
-                  label="Email address"
+                  label="Adresă de email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="tu@exemplu.com"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   required
                   fullWidth
                 />
                 <Input
-                  label="Password"
+                  label="Parolă"
                   type="password"
-                  placeholder="At least 8 characters"
+                  placeholder="Minim 8 caractere"
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   required
-                  hint="Use 8+ characters with a mix of letters, numbers, and symbols."
+                  hint="Folosește minim 8 caractere, combinând litere, cifre și simboluri."
                   fullWidth
                 />
                 <Input
-                  label="City"
-                  placeholder="New York, NY"
+                  label="Oraș"
+                  placeholder="București"
                   value={form.city}
                   onChange={(e) => setForm({ ...form, city: e.target.value })}
                   required
@@ -255,13 +255,13 @@ export default function RegisterPage() {
                 />
                 {role === "provider" && (
                   <Input
-                    label="Primary skill / service"
-                    placeholder="e.g. House Cleaning, Handyman, AI Consulting"
+                    label="Serviciu / specialitate principală"
+                    placeholder="ex. Curățenie, Instalații, Consultanță IT"
                     value={form.skills}
                     onChange={(e) => setForm({ ...form, skills: e.target.value })}
                     required
                     fullWidth
-                    hint="You can add more services after registration."
+                    hint="Poți adăuga mai multe servicii după înregistrare."
                   />
                 )}
 
@@ -279,14 +279,14 @@ export default function RegisterPage() {
                   rightIcon={<ArrowRight className="h-4 w-4" />}
                   className="mt-2"
                 >
-                  Create account
+                  Creează contul
                 </Button>
               </form>
 
               <p className="mt-4 text-center text-xs text-zinc-400">
-                By creating an account you agree to our{" "}
-                <Link href="/terms" className="underline">Terms</Link> &{" "}
-                <Link href="/privacy" className="underline">Privacy Policy</Link>.
+                Prin crearea unui cont, confirmați că sunteți de acord cu{" "}
+                <Link href="/terms" className="underline">Termenii de utilizare</Link> și{" "}
+                <Link href="/privacy" className="underline">Politica de confidențialitate</Link>.
               </p>
             </motion.div>
           )}
@@ -309,25 +309,25 @@ export default function RegisterPage() {
               </motion.div>
 
               <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">
-                Check your email!
+                Verifică-ți emailul!
               </h2>
               <p className="text-zinc-500 dark:text-zinc-400 text-sm mb-2 leading-relaxed">
-                We sent a verification link to{" "}
+                Am trimis un link de verificare la{" "}
                 <span className="font-medium text-zinc-700 dark:text-zinc-300">
                   {form.email}
                 </span>
-                . Click it to activate your account.
+                . Apasă pe el pentru a-ți activa contul.
               </p>
               {role === "provider" && (
                 <p className="text-xs text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20 rounded-xl px-3 py-2 mb-6">
-                  After verifying, you'll be taken directly to set up your provider profile.
+                  După verificare, vei fi redirecționat direct către configurarea profilului de meșter.
                 </p>
               )}
               {role !== "provider" && <div className="mb-6" />}
 
               <Link href={role === "provider" ? "/provider/onboarding" : "/dashboard"}>
                 <Button fullWidth size="lg">
-                  {role === "provider" ? "Set up provider profile" : "Go to Dashboard"}
+                  {role === "provider" ? "Configurează profilul de meșter" : "Mergi la panou"}
                 </Button>
               </Link>
 
@@ -341,11 +341,11 @@ export default function RegisterPage() {
                   if (error) {
                     toast.error(error.message);
                   } else {
-                    toast.success("Verification email resent!");
+                    toast.success("Email de verificare retrimis!");
                   }
                 }}
               >
-                Didn&apos;t receive it? Resend
+                Nu l-ai primit? Retrimite
               </button>
             </motion.div>
           )}

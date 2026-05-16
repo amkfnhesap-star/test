@@ -9,9 +9,9 @@ import { FAQ } from "@/components/home/FAQ";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "SkillSeekers — Find Trusted Local Professionals Instantly",
+  title: "MesteRO — Găsește meșteri locali de încredere, instant",
   description:
-    "AI-powered marketplace for booking trusted professionals. Cleaning, handyman, moving, AI services and 14+ categories. Same-day availability, verified pros, $1M guarantee.",
+    "Platformă AI pentru rezervarea meșterilor verificați. Curățenie, reparații, mutări, servicii AI și 14+ categorii. Disponibilitate în aceeași zi, meșteri verificați, garanție 1M$.",
 };
 
 export default function HomePage() {

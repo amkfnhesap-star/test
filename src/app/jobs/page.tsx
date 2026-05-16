@@ -11,13 +11,14 @@ import { getJobs, type Job } from "@/lib/jobs";
 import { supabase } from "@/lib/supabase";
 import { categories } from "@/data/dummy";
 import { formatRelativeTime, cn } from "@/lib/utils";
+import { JobStatusBadge } from "@/components/jobs/JobStatusBadge";
 
 const PAGE_SIZE = 12;
 
 function timeframeLabel(t: string) {
-  if (t === "asap") return "ASAP";
-  if (t === "specific_date") return "Specific Date";
-  return "Flexible";
+  if (t === "asap") return "Urgent";
+  if (t === "specific_date") return "Dată specifică";
+  return "Flexibil";
 }
 
 function SkeletonCard() {
@@ -99,15 +100,15 @@ export default function JobsPage() {
         <div className="flex items-start justify-between mb-8 gap-4 flex-wrap">
           <div>
             <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-              Open Jobs
+              Lucrări disponibile
             </h1>
             <p className="text-zinc-500 dark:text-zinc-400 mt-1 text-sm">
-              Browse requests from clients — find work that matches your skills.
+              Explorează cererile clienților — găsește lucrări care ți se potrivesc.
             </p>
           </div>
           <Link href="/jobs/new">
             <Button size="md" leftIcon={<Plus className="h-4 w-4" />}>
-              Post a Job
+              Postează o lucrare
             </Button>
           </Link>
         </div>
@@ -116,14 +117,14 @@ export default function JobsPage() {
         <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-4 mb-5 flex flex-col sm:flex-row gap-3">
           <form onSubmit={handleCitySearch} className="flex gap-2 flex-1">
             <Input
-              placeholder="Filter by city..."
+              placeholder="Filtrează după oraș..."
               value={cityInput}
               onChange={(e) => setCityInput(e.target.value)}
               leftIcon={<Search className="h-4 w-4" />}
               fullWidth
             />
             <Button type="submit" variant="secondary" size="md">
-              Search
+              Caută
             </Button>
           </form>
           {cityFilter && (
@@ -135,7 +136,7 @@ export default function JobsPage() {
                 setCityInput("");
               }}
             >
-              Clear
+              Șterge
             </Button>
           )}
         </div>
@@ -151,7 +152,7 @@ export default function JobsPage() {
                 : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-600"
             )}
           >
-            All
+            Toate
           </button>
           {categories.map((cat) => (
             <button
@@ -183,14 +184,14 @@ export default function JobsPage() {
           </div>
         ) : jobs.length === 0 ? (
           <div className="text-center py-24">
-            <p className="text-zinc-400 text-lg mb-1">No open jobs found</p>
+            <p className="text-zinc-400 text-lg mb-1">Nicio lucrare disponibilă</p>
             <p className="text-zinc-400 text-sm mb-6">
               {categoryFilter || cityFilter
-                ? "Try clearing the filters."
-                : "Be the first to post one!"}
+                ? "Încearcă să ștergi filtrele."
+                : "Fii primul care postează una!"}
             </p>
             <Link href="/jobs/new">
-              <Button>Post a Job</Button>
+              <Button>Postează o lucrare</Button>
             </Link>
           </div>
         ) : (
@@ -220,10 +221,13 @@ export default function JobsPage() {
                           )}
                         </div>
 
-                        {/* Title */}
-                        <h3 className="font-semibold text-zinc-900 dark:text-white mb-2 line-clamp-2 text-sm leading-snug">
-                          {job.title}
-                        </h3>
+                        {/* Title + status */}
+                        <div className="flex items-start gap-2 mb-2">
+                          <h3 className="font-semibold text-zinc-900 dark:text-white line-clamp-2 text-sm leading-snug flex-1">
+                            {job.title}
+                          </h3>
+                          <JobStatusBadge status={job.status} />
+                        </div>
 
                         {/* Description excerpt */}
                         <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-3 mb-4 flex-1 leading-relaxed">
@@ -271,7 +275,7 @@ export default function JobsPage() {
                   isLoading={loadingMore}
                   onClick={handleLoadMore}
                 >
-                  Load More Jobs
+                  Încarcă mai multe lucrări
                 </Button>
               </div>
             )}

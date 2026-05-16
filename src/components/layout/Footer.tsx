@@ -4,32 +4,32 @@ import Link from "next/link";
 import { Zap, Twitter, Linkedin, Instagram, Github, ArrowRight } from "lucide-react";
 
 const footerLinks = {
-  Services: [
-    { label: "Browse Services", href: "/search" },
-    { label: "Cleaning", href: "/search?category=cleaning" },
-    { label: "Handyman", href: "/search?category=handyman" },
-    { label: "AI Services", href: "/search?category=ai-services" },
-    { label: "Photography", href: "/search?category=photography" },
+  Servicii: [
+    { label: "Explorează servicii", href: "/search" },
+    { label: "Curățenie", href: "/search?category=cleaning" },
+    { label: "Reparații generale", href: "/search?category=handyman" },
+    { label: "Servicii AI", href: "/search?category=ai-services" },
+    { label: "Fotografie", href: "/search?category=photography" },
   ],
-  Providers: [
-    { label: "Become a Provider", href: "/register?role=provider" },
-    { label: "Provider Dashboard", href: "/provider/dashboard" },
-    { label: "Earnings", href: "/provider/earnings" },
-    { label: "Success Stories", href: "/#testimonials" },
-    { label: "Provider FAQ", href: "/faq#providers" },
+  Meșteri: [
+    { label: "Devino meșter", href: "/register?role=provider" },
+    { label: "Panou meșter", href: "/provider/dashboard" },
+    { label: "Câștiguri", href: "/provider/earnings" },
+    { label: "Povești de succes", href: "/#testimonials" },
+    { label: "FAQ Meșteri", href: "/faq#providers" },
   ],
-  Company: [
-    { label: "About Us", href: "/about" },
+  Companie: [
+    { label: "Despre noi", href: "/about" },
     { label: "Blog", href: "/blog" },
-    { label: "Careers", href: "/careers" },
-    { label: "Press", href: "/press" },
+    { label: "Cariere", href: "/careers" },
+    { label: "Presă", href: "/press" },
     { label: "Contact", href: "/contact" },
   ],
   Legal: [
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms of Service", href: "/terms" },
-    { label: "Cookie Policy", href: "/cookies" },
-    { label: "Accessibility", href: "/accessibility" },
+    { label: "Politica de confidențialitate", href: "/privacy" },
+    { label: "Termeni și condiții", href: "/terms" },
+    { label: "Politica cookie", href: "/cookies" },
+    { label: "Accesibilitate", href: "/accessibility" },
   ],
 };
 
@@ -49,10 +49,10 @@ export function Footer() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
               <h3 className="text-xl font-semibold text-white mb-1">
-                Get the best pros delivered to your inbox
+                Primești cei mai buni meșteri direct în inbox
               </h3>
               <p className="text-zinc-400 text-sm">
-                New providers, promotions, and platform updates weekly.
+                Meșteri noi, promoții și noutăți de pe platformă, săptămânal.
               </p>
             </div>
             <form
@@ -61,14 +61,14 @@ export function Footer() {
             >
               <input
                 type="email"
-                placeholder="Enter your email"
+                placeholder="Adresa ta de email"
                 className="flex-1 px-4 py-2.5 rounded-xl bg-zinc-800 border border-zinc-700 text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-500 text-sm"
               />
               <button
                 type="submit"
                 className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-violet-600 text-white text-sm font-medium hover:shadow-glow transition-all duration-200 flex items-center gap-1"
               >
-                Subscribe <ArrowRight className="h-3.5 w-3.5" />
+                Abonează-te <ArrowRight className="h-3.5 w-3.5" />
               </button>
             </form>
           </div>
@@ -85,11 +85,11 @@ export function Footer() {
                 <Zap className="h-4 w-4 text-white" />
               </div>
               <span className="text-lg font-bold text-white">
-                Skill<span className="text-brand-400">Seekers</span>
+                Meste<span className="text-brand-400">RO</span>
               </span>
             </Link>
             <p className="text-sm text-zinc-500 mb-4 leading-relaxed">
-              The AI-native marketplace for trusted local professionals.
+              Platforma AI pentru meșteri locali de încredere.
             </p>
             <div className="flex gap-3">
               {socials.map(({ icon: Icon, label, href }) => (
@@ -130,17 +130,17 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-6 border-t border-zinc-800 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-zinc-600">
-            © {new Date().getFullYear()} SkillSeekers, Inc. All rights reserved.
+            © {new Date().getFullYear()} MesteRO SRL. Toate drepturile rezervate.
           </p>
           <div className="flex items-center gap-6">
             <span className="text-xs text-zinc-600">
-              🔒 256-bit SSL encrypted
+              🔒 Criptare SSL 256 biți
             </span>
             <span className="text-xs text-zinc-600">
-              ✅ $1M liability coverage
+              ✅ Acoperire civilă 1M$
             </span>
             <span className="text-xs text-zinc-600">
-              🌱 Carbon neutral platform
+              🌱 Platformă neutră carbon
             </span>
           </div>
         </div>

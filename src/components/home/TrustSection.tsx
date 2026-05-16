@@ -2,148 +2,201 @@
 
 import { motion } from "framer-motion";
 import {
-  ShieldCheck,
   Lock,
-  BadgeCheck,
-  Headphones,
-  CreditCard,
-  Users,
+  ShieldCheck,
+  MapPin,
+  Heart,
+  Ban,
+  MessageCircle,
 } from "lucide-react";
 
-const trustFeatures = [
+const cards = [
   {
-    icon: ShieldCheck,
-    title: "$1M Liability Coverage",
+    title: "Gratuit, complet gratuit",
     description:
-      "Every booking is backed by our $1 million liability insurance. Your home and belongings are always protected.",
-    color: "from-emerald-500 to-teal-600",
-    bg: "bg-emerald-50 dark:bg-emerald-900/10",
+      "Fără comisioane, fără taxe ascunse. Postezi lucrarea, alegi meșterul, vorbiți direct.",
+    photo:
+      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=300&h=400&fit=crop&q=80",
+    accent: "emerald",
   },
   {
-    icon: BadgeCheck,
-    title: "Background Checked Pros",
+    title: "Construit în România",
     description:
-      "Every provider goes through ID verification, criminal background checks, and reference validation before joining.",
-    color: "from-brand-500 to-violet-600",
-    bg: "bg-brand-50 dark:bg-brand-900/10",
+      "Făcut de români, pentru români. Înțelegem piața locală și nevoile reale ale clienților și meșterilor.",
+    photo:
+      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=300&h=400&fit=crop&q=80",
+    accent: "amber",
   },
   {
-    icon: Lock,
-    title: "Secure Payments",
+    title: "Contact direct cu meșterul",
     description:
-      "Stripe-powered payments with 256-bit SSL encryption. Your payment is held in escrow until the job is done.",
-    color: "from-blue-500 to-sky-600",
-    bg: "bg-blue-50 dark:bg-blue-900/10",
+      "Vorbești direct cu meșterul prin chat, telefon sau WhatsApp. Fără intermediari, fără bătăi de cap.",
+    photo:
+      "https://images.unsplash.com/photo-1556745757-8d76bdb6984b?w=300&h=400&fit=crop&q=80",
+    accent: "violet",
   },
   {
-    icon: Headphones,
-    title: "24/7 Support",
+    title: "Date protejate (GDPR)",
     description:
-      "Real humans available around the clock via chat, phone, or email. We resolve disputes within 24 hours.",
-    color: "from-amber-500 to-orange-600",
-    bg: "bg-amber-50 dark:bg-amber-900/10",
+      "Datele tale sunt criptate și protejate conform GDPR. Servere în Uniunea Europeană, conexiune securizată SSL.",
+    photo:
+      "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=300&h=400&fit=crop&q=80",
+    accent: "cyan",
   },
   {
-    icon: CreditCard,
-    title: "Satisfaction Guarantee",
+    title: "Recenzii reale",
     description:
-      "Not happy with the result? We'll send another pro or give you a full refund. No questions asked.",
-    color: "from-pink-500 to-rose-600",
-    bg: "bg-pink-50 dark:bg-pink-900/10",
+      "Doar clienți reali pot lăsa recenzii, după o lucrare finalizată. Fără recenzii false sau cumpărate.",
+    photo:
+      "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=300&h=400&fit=crop&q=80",
+    accent: "pink",
   },
   {
-    icon: Users,
-    title: "Verified Reviews Only",
+    title: "Toate categoriile, într-un singur loc",
     description:
-      "Every review is from a real, completed booking. No fake reviews or paid testimonials — ever.",
-    color: "from-violet-500 to-purple-600",
-    bg: "bg-violet-50 dark:bg-violet-900/10",
+      "De la curățenie și instalații sanitare până la design grafic și servicii AI — un singur cont pentru orice ai nevoie.",
+    photo:
+      "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=300&h=400&fit=crop&q=80",
+    accent: "violet",
   },
 ];
 
-const partnerLogos = [
-  { name: "TechCrunch", text: "TC" },
-  { name: "Forbes", text: "Forbes" },
-  { name: "Wired", text: "WIRED" },
-  { name: "The Verge", text: "The Verge" },
-  { name: "Business Insider", text: "BI" },
-  { name: "Fast Company", text: "FC" },
+const accentDot: Record<string, string> = {
+  emerald: "bg-emerald-500",
+  amber: "bg-amber-500",
+  violet: "bg-violet-500",
+  cyan: "bg-cyan-500",
+  pink: "bg-pink-500",
+};
+
+const accentFallback: Record<string, string> = {
+  emerald: "bg-emerald-900",
+  amber: "bg-amber-900",
+  violet: "bg-violet-900",
+  cyan: "bg-cyan-900",
+  pink: "bg-pink-900",
+};
+
+const trustSignals = [
+  { icon: Lock, label: "SSL securizat" },
+  { icon: ShieldCheck, label: "Conform GDPR" },
+  { icon: MapPin, label: "Servere în UE" },
+  { icon: Heart, label: "Construit în România" },
+  { icon: Ban, label: "Fără comisioane" },
+  { icon: MessageCircle, label: "Suport în limba română" },
 ];
+
+function initials(title: string) {
+  return title
+    .split(" ")
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
+}
+
+function BenefitCard({
+  card,
+  index,
+}: {
+  card: (typeof cards)[number];
+  index: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.07 }}
+      className="group flex flex-row rounded-2xl overflow-hidden bg-slate-900/60 ring-1 ring-white/5 hover:bg-slate-900/80 transition-colors"
+    >
+      {/* Photo strip */}
+      <div className="w-32 md:w-40 flex-shrink-0 overflow-hidden relative">
+        <img
+          src={card.photo}
+          alt={card.title}
+          loading="lazy"
+          onError={(e) => {
+            const target = e.currentTarget;
+            target.style.display = "none";
+            const fallback = target.nextElementSibling as HTMLElement | null;
+            if (fallback) fallback.style.display = "flex";
+          }}
+          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+        <div
+          className={`absolute inset-0 ${accentFallback[card.accent]} hidden items-center justify-center text-white font-bold text-lg`}
+        >
+          {initials(card.title)}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 p-6 flex flex-col justify-center">
+        <span
+          className={`inline-block h-2 w-2 rounded-full ${accentDot[card.accent]} mb-3`}
+        />
+        <h3 className="text-base font-bold text-white leading-snug">
+          {card.title}
+        </h3>
+        <p className="text-sm text-slate-400 leading-relaxed mt-2">
+          {card.description}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
 
 export function TrustSection() {
   return (
-    <section className="py-20 md:py-28 bg-white dark:bg-zinc-950 relative overflow-hidden">
-      <div className="absolute inset-0 mesh-bg opacity-50" />
+    <section className="py-20 md:py-28 bg-zinc-950 relative overflow-hidden">
+      <div className="absolute inset-0 mesh-bg opacity-30" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-14"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
           <p className="text-brand-500 font-semibold text-sm uppercase tracking-wider mb-3">
-            Why SkillSeekers
+            De ce MesteRO
           </p>
-          <h2 className="text-3xl md:text-5xl font-bold text-zinc-900 dark:text-white mb-4">
-            Your safety is our{" "}
-            <span className="gradient-text">top priority</span>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+            Tot ce ai nevoie,{" "}
+            <span className="gradient-text">fără bătăi de cap</span>
           </h2>
-          <p className="text-zinc-500 dark:text-zinc-400 text-lg max-w-2xl mx-auto">
-            We set the gold standard for marketplace trust and safety. Every professional
-            is vetted, every payment is protected, and every job is guaranteed.
+          <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+            Construim MesteRO ca o platformă simplă, onestă și ușor de folosit — fără comisioane, fără promisiuni goale, doar serviciile de care ai nevoie.
           </p>
         </motion.div>
 
-        {/* Trust grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-20">
-          {trustFeatures.map((feature, i) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="flex gap-4 p-5 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:shadow-md transition-shadow"
-            >
-              <div
-                className={`h-11 w-11 rounded-xl ${feature.bg} flex items-center justify-center flex-shrink-0`}
-              >
-                <feature.icon
-                  className={`h-5 w-5 bg-gradient-to-br ${feature.color} bg-clip-text`}
-                  style={{ WebkitBackgroundClip: "text", color: "transparent" }}
-                />
-              </div>
-              <div>
-                <h3 className="font-semibold text-zinc-900 dark:text-white text-sm mb-1">
-                  {feature.title}
-                </h3>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
-            </motion.div>
+        {/* Cards grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
+          {cards.map((card, i) => (
+            <BenefitCard key={card.title} card={card} index={i} />
           ))}
         </div>
 
-        {/* As seen in */}
+        {/* Trust signal strip */}
         <motion.div
           className="text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <p className="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-6">
-            As featured in
+          <p className="text-xs font-semibold text-violet-400 uppercase tracking-wider mb-6">
+            Bazat pe principii reale
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
-            {partnerLogos.map((logo) => (
+          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
+            {trustSignals.map(({ icon: Icon, label }) => (
               <div
-                key={logo.name}
-                className="text-zinc-300 dark:text-zinc-600 font-bold text-lg md:text-xl hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors cursor-pointer"
+                key={label}
+                className="flex items-center gap-2 text-slate-500 hover:text-slate-300 transition-colors"
               >
-                {logo.text}
+                <Icon className="h-4 w-4" />
+                <span className="text-sm">{label}</span>
               </div>
             ))}
           </div>

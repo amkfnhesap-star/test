@@ -29,12 +29,12 @@ export function Categories() {
             transition={{ duration: 0.5 }}
           >
             <p className="text-brand-500 font-semibold text-sm uppercase tracking-wider mb-2">
-              14 Categories
+              14 CATEGORII
             </p>
             <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-white">
-              Every service you need,
+              Toate serviciile,
               <br />
-              <span className="gradient-text">in one place</span>
+              <span className="gradient-text">într-un singur loc</span>
             </h2>
           </motion.div>
           <motion.div
@@ -47,7 +47,7 @@ export function Categories() {
               href="/search"
               className="hidden md:flex items-center gap-2 text-sm font-medium text-brand-600 dark:text-brand-400 hover:gap-3 transition-all duration-200"
             >
-              Browse all services
+              Toate serviciile
               <ArrowRight className="h-4 w-4" />
             </Link>
           </motion.div>

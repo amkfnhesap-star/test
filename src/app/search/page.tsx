@@ -28,24 +28,25 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
 import { Avatar } from "@/components/ui/Avatar";
 import { FavoriteButton } from "@/components/ui/FavoriteButton";
+import { JobStatusBadge } from "@/components/jobs/JobStatusBadge";
 
 type FeedItem =
   | { kind: "provider"; data: ProviderProfile }
   | { kind: "job"; data: Job };
 
 const SORT_OPTIONS = [
-  { label: "Best Match", value: "best_match" },
-  { label: "Newest First", value: "newest" },
-  { label: "Top Rated", value: "top_rated" },
-  { label: "Lowest Price", value: "price_asc" },
-  { label: "Highest Price", value: "price_desc" },
+  { label: "Cea mai bună potrivire", value: "best_match" },
+  { label: "Cele mai recente", value: "newest" },
+  { label: "Cel mai bine cotate", value: "top_rated" },
+  { label: "Preț crescător", value: "price_asc" },
+  { label: "Preț descrescător", value: "price_desc" },
 ];
 
 const TIMEFRAME_OPTIONS = [
-  { label: "Any", value: "" },
-  { label: "ASAP", value: "asap" },
-  { label: "Specific Date", value: "specific_date" },
-  { label: "Flexible", value: "flexible" },
+  { label: "Oricând", value: "" },
+  { label: "Urgent", value: "asap" },
+  { label: "Dată specifică", value: "specific_date" },
+  { label: "Flexibil", value: "flexible" },
 ];
 
 const PAGE_SIZE = 12;
@@ -55,13 +56,13 @@ const MAX_BUDGET = 10000;
 function timeAgo(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 1) return "chiar acum";
+  if (mins < 60) return `acum ${mins}m`;
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
+  if (hrs < 24) return `acum ${hrs}h`;
   const days = Math.floor(hrs / 24);
-  if (days < 30) return `${days}d ago`;
-  return `${Math.floor(days / 30)}mo ago`;
+  if (days < 30) return `acum ${days}z`;
+  return `acum ${Math.floor(days / 30)}l`;
 }
 
 function interleave(providers: ProviderProfile[], jobs: Job[]): FeedItem[] {
@@ -224,7 +225,7 @@ function SearchContent() {
               <Search className="h-4 w-4 text-zinc-400 flex-shrink-0" />
               <input
                 type="text"
-                placeholder="Search jobs, providers, skills..."
+                placeholder="Caută lucrări, meșteri, competențe..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 className="flex-1 bg-transparent text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-none"
@@ -283,7 +284,7 @@ function SearchContent() {
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 transition-colors md:hidden"
             >
               <Filter className="h-4 w-4" />
-              Filters
+              Filtre
             </button>
           </div>
 
@@ -298,7 +299,7 @@ function SearchContent() {
                   : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
               )}
             >
-              All Categories
+              Toate categoriile
             </button>
             {categories.map((cat) => (
               <button
@@ -327,19 +328,19 @@ function SearchContent() {
               <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-5 space-y-5">
                 <h3 className="font-semibold text-zinc-900 dark:text-white text-sm flex items-center gap-2">
                   <SlidersHorizontal className="h-4 w-4" />
-                  Filters
+                  Filtre
                 </h3>
 
                 {/* City — universal */}
                 <div>
                   <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">
-                    City
+                    Oraș
                   </p>
                   <div className="flex items-center gap-2 bg-zinc-50 dark:bg-zinc-800 rounded-lg px-3 py-2 border border-zinc-200 dark:border-zinc-700 focus-within:border-brand-500 transition-all">
                     <MapPin className="h-3.5 w-3.5 text-zinc-400 flex-shrink-0" />
                     <input
                       type="text"
-                      placeholder="e.g. Bucharest"
+                      placeholder="ex. București"
                       value={cityFilter}
                       onChange={(e) => setCityFilter(e.target.value)}
                       className="flex-1 bg-transparent text-xs text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-none"
@@ -356,11 +357,11 @@ function SearchContent() {
                 <div className={cn("space-y-4 transition-opacity duration-200", jobOnlyActive && "opacity-40 pointer-events-none")}>
                   <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
                     <span className="h-1.5 w-1.5 rounded-full bg-brand-500 inline-block" />
-                    Provider Filters
+                    Filtre meșteri
                   </p>
 
                   <label className="flex items-center justify-between cursor-pointer">
-                    <span className="text-sm text-zinc-700 dark:text-zinc-300">Available now only</span>
+                    <span className="text-sm text-zinc-700 dark:text-zinc-300">Doar disponibili acum</span>
                     <button
                       onClick={() => setAvailableOnly(!availableOnly)}
                       className={cn(
@@ -378,7 +379,7 @@ function SearchContent() {
                   </label>
 
                   <div>
-                    <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Minimum Rating</p>
+                    <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Evaluare minimă</p>
                     <div className="flex gap-1.5">
                       {[0, 4, 4.5, 4.8].map((r) => (
                         <button
@@ -391,7 +392,7 @@ function SearchContent() {
                               : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:bg-zinc-200 dark:hover:bg-zinc-700"
                           )}
                         >
-                          {r === 0 ? "Any" : `${r}+`}
+                          {r === 0 ? "Orice" : `${r}+`}
                         </button>
                       ))}
                     </div>
@@ -399,9 +400,9 @@ function SearchContent() {
 
                   <div>
                     <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
-                      Max Rate:{" "}
+                      Tarif maxim:{" "}
                       <span className="text-brand-500">
-                        {maxRate >= MAX_RATE ? "Any" : `${maxRate} RON/hr`}
+                        {maxRate >= MAX_RATE ? "Orice" : `${maxRate} RON/oră`}
                       </span>
                     </p>
                     <input
@@ -423,14 +424,14 @@ function SearchContent() {
                 <div className={cn("space-y-4 transition-opacity duration-200", providerOnlyActive && "opacity-40 pointer-events-none")}>
                   <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
                     <span className="h-1.5 w-1.5 rounded-full bg-cyan-500 inline-block" />
-                    Job Filters
+                    Filtre lucrări
                   </p>
 
                   <div>
                     <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
-                      Max Budget:{" "}
+                      Buget maxim:{" "}
                       <span className="text-cyan-600 dark:text-cyan-400">
-                        {maxBudget >= MAX_BUDGET ? "Any" : `${maxBudget} RON`}
+                        {maxBudget >= MAX_BUDGET ? "Orice" : `${maxBudget} RON`}
                       </span>
                     </p>
                     <input
@@ -446,7 +447,7 @@ function SearchContent() {
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Timeframe</p>
+                    <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Perioadă</p>
                     <div className="grid grid-cols-2 gap-1.5">
                       {TIMEFRAME_OPTIONS.map((t) => (
                         <button
@@ -466,7 +467,7 @@ function SearchContent() {
                   </div>
 
                   <label className="flex items-center justify-between cursor-pointer">
-                    <span className="text-sm text-zinc-700 dark:text-zinc-300">Has photos</span>
+                    <span className="text-sm text-zinc-700 dark:text-zinc-300">Cu fotografii</span>
                     <button
                       onClick={() => setHasPhotos(!hasPhotos)}
                       className={cn(
@@ -489,18 +490,18 @@ function SearchContent() {
               <div className="bg-gradient-to-br from-brand-50 to-violet-50 dark:from-brand-900/20 dark:to-violet-900/20 rounded-2xl border border-brand-100 dark:border-brand-800/30 p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <Sparkles className="h-4 w-4 text-brand-500" />
-                  <span className="text-sm font-semibold text-brand-700 dark:text-brand-300">AI Suggestion</span>
+                  <span className="text-sm font-semibold text-brand-700 dark:text-brand-300">Sugestie AI</span>
                 </div>
                 <p className="text-xs text-brand-600 dark:text-brand-400 leading-relaxed mb-3">
-                  Based on your search, we recommend filtering by{" "}
-                  <strong>4.8+ rating</strong> and enabling{" "}
-                  <strong>available now</strong> for best results.
+                  Pe baza căutării tale, recomandăm filtrarea după{" "}
+                  <strong>evaluare 4.8+</strong> și activarea{" "}
+                  <strong>doar disponibili</strong> pentru cele mai bune rezultate.
                 </p>
                 <button
                   onClick={() => { setMinRating(4.8); setAvailableOnly(true); }}
                   className="text-xs font-medium text-brand-600 dark:text-brand-400 hover:underline"
                 >
-                  Apply suggestion →
+                  Aplică sugestia →
                 </button>
               </div>
             </div>
@@ -513,25 +514,25 @@ function SearchContent() {
                 <span className="font-semibold text-zinc-900 dark:text-white">
                   {loading ? "—" : filtered.length}
                 </span>{" "}
-                results found
+                rezultate găsite
               </p>
                 {!loading && forceType === "providers" && (
                 <span className="text-xs px-2 py-0.5 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300">
-                  Providers only —{" "}
-                  <Link href="/search" className="underline">Browse all</Link>
+                  Doar meșteri —{" "}
+                  <Link href="/search" className="underline">Toate</Link>
                 </span>
               )}
               {!loading && forceType === "jobs" && (
                 <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300">
-                  Jobs only —{" "}
-                  <Link href="/search" className="underline">Browse all</Link>
+                  Doar lucrări —{" "}
+                  <Link href="/search" className="underline">Toate</Link>
                 </span>
               )}
               {!loading && !forceType && (providerOnlyActive || jobOnlyActive) && (
                 <p className="text-xs text-zinc-400 italic">
                   {providerOnlyActive
-                    ? "Provider filters active — jobs hidden"
-                    : "Job filters active — providers hidden"}
+                    ? "Filtre meșteri active — lucrările sunt ascunse"
+                    : "Filtre lucrări active — meșterii sunt ascuși"}
                 </p>
               )}
             </div>
@@ -558,10 +559,10 @@ function SearchContent() {
               <div className="text-center py-20">
                 <div className="text-4xl mb-4">🔍</div>
                 <h3 className="text-lg font-semibold text-zinc-700 dark:text-zinc-300 mb-2">
-                  No results found
+                  Niciun rezultat găsit
                 </h3>
                 <p className="text-zinc-400 text-sm">
-                  Try adjusting your filters or search term.
+                  Încearcă să ajustezi filtrele sau termenul de căutare.
                 </p>
               </div>
             ) : (
@@ -596,7 +597,7 @@ function SearchContent() {
                       onClick={() => setDisplayCount((c) => c + PAGE_SIZE)}
                       className="px-6 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
                     >
-                      Load {Math.min(PAGE_SIZE, filtered.length - displayCount)} more
+                      Încarcă încă {Math.min(PAGE_SIZE, filtered.length - displayCount)}
                     </button>
                   </div>
                 )}
@@ -650,7 +651,7 @@ function ProviderCard({
             <div className="absolute top-3 left-3 z-10">
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-700/50">
                 <span className="h-1.5 w-1.5 rounded-full bg-brand-500 inline-block" />
-                Provider
+                Meșter
               </span>
             </div>
           )}
@@ -701,7 +702,7 @@ function ProviderCard({
                 {provider.hourly_rate != null && (
                   <div className="font-bold text-zinc-900 dark:text-white">
                     {provider.hourly_rate}
-                    <span className="text-xs font-normal text-zinc-400"> RON/hr</span>
+                    <span className="text-xs font-normal text-zinc-400"> RON/oră</span>
                   </div>
                 )}
               </div>
@@ -729,7 +730,7 @@ function ProviderCard({
                   <div className="text-right flex-shrink-0">
                     {provider.hourly_rate != null && (
                       <div className="font-bold text-zinc-900 dark:text-white text-sm">
-                        {provider.hourly_rate} RON/hr
+                        {provider.hourly_rate} RON/oră
                       </div>
                     )}
                     <div className="flex items-center gap-1 mt-0.5 justify-end">
@@ -752,7 +753,7 @@ function ProviderCard({
                     </span>
                   )}
                   {provider.is_verified && (
-                    <Badge variant="success" dot className="text-[10px]">Verified</Badge>
+                    <Badge variant="success" dot className="text-[10px]">Verificat</Badge>
                   )}
                 </div>
               </div>
@@ -782,11 +783,11 @@ function JobCard({
 
   const timeframeLabel =
     job.timeframe === "asap"
-      ? "ASAP"
+      ? "Urgent"
       : job.timeframe === "specific_date" && job.scheduled_date
-      ? new Date(job.scheduled_date).toLocaleDateString("en-GB", { day: "numeric", month: "short" })
+      ? new Date(job.scheduled_date).toLocaleDateString("ro-RO", { day: "numeric", month: "short" })
       : job.timeframe === "flexible"
-      ? "Flexible"
+      ? "Flexibil"
       : job.timeframe;
 
   return (
@@ -815,10 +816,13 @@ function JobCard({
           {viewMode === "grid" ? (
             <div className="p-5 pt-8">
               <div className="mb-2">
-                <h3 className="font-semibold text-zinc-900 dark:text-white text-sm group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors line-clamp-2 leading-snug">
-                  {job.title}
-                </h3>
-                <p className="text-xs text-zinc-400 mt-1 line-clamp-2 leading-relaxed">
+                <div className="flex items-start gap-2 mb-1">
+                  <h3 className="font-semibold text-zinc-900 dark:text-white text-sm group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors line-clamp-2 leading-snug flex-1">
+                    {job.title}
+                  </h3>
+                  <JobStatusBadge status={job.status} />
+                </div>
+                <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
                   {job.description}
                 </p>
               </div>
@@ -848,16 +852,16 @@ function JobCard({
                     <span className="text-xs font-normal text-zinc-400"> RON</span>
                   </div>
                 ) : (
-                  <span className="text-zinc-400 text-[10px]">Open budget</span>
+                  <span className="text-zinc-400 text-[10px]">Buget deschis</span>
                 )}
               </div>
 
               <div className="mt-2 pt-2 border-t border-zinc-50 dark:border-zinc-800 text-[10px] text-zinc-400 flex items-center gap-2">
-                <span>Posted {timeAgo(job.created_at)}</span>
+                <span>Postat {timeAgo(job.created_at)}</span>
                 {job.photo_urls.length > 0 && (
                   <span className="flex items-center gap-0.5">
                     <Camera className="h-2.5 w-2.5" />
-                    {job.photo_urls.length} photo{job.photo_urls.length !== 1 ? "s" : ""}
+                    {job.photo_urls.length} foto
                   </span>
                 )}
               </div>

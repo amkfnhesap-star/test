@@ -39,10 +39,15 @@ type AdminJob = {
 };
 
 const PAGE_SIZE = 100;
-const JOB_STATUSES = ["open", "in_progress", "closed"];
+const JOB_STATUSES = ["open", "awarded", "pending_completion", "completed", "cancelled"];
 
-const statusBadge = (s: string) =>
-  s === "open" ? "success" : s === "in_progress" ? "warning" : "default";
+const statusBadge = (s: string): "success" | "purple" | "warning" | "default" | "danger" => {
+  if (s === "open") return "success";
+  if (s === "awarded") return "purple";
+  if (s === "pending_completion") return "warning";
+  if (s === "completed") return "default";
+  return "danger";
+};
 
 export default function AdminJobsPage() {
   const [token, setToken] = useState<string | null>(null);

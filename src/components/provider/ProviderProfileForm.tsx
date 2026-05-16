@@ -10,11 +10,11 @@ import { cn } from "@/lib/utils";
 import type { ProviderProfileInput } from "@/lib/providers";
 
 const RESPONSE_TIME_OPTIONS = [
-  "Within 1 hour",
-  "Within 2 hours",
-  "Same day",
-  "Within 24 hours",
-  "Within 2-3 days",
+  "În decurs de 1 oră",
+  "În decurs de 2 ore",
+  "În aceeași zi",
+  "În decurs de 24 de ore",
+  "În 2-3 zile",
 ];
 
 const MAX_PORTFOLIO = 8;
@@ -113,12 +113,12 @@ export function ProviderProfileForm({
   const validate = (): boolean => {
     const errs: FormErrors = {};
     if (headline.trim().length < 10)
-      errs.headline = "Headline must be at least 10 characters.";
-    if (!mainCategory) errs.main_category = "Please select a category.";
+      errs.headline = "Titlul trebuie să aibă cel puțin 10 caractere.";
+    if (!mainCategory) errs.main_category = "Te rugăm să selectezi o categorie.";
     if (!hourlyRate && !fixedPriceFrom)
-      errs.pricing = "Enter at least one price (hourly or starting from).";
-    if (!homeCity.trim()) errs.home_city = "City is required.";
-    if (bio.trim().length < 30) errs.bio = "Bio must be at least 30 characters.";
+      errs.pricing = "Introdu cel puțin un preț (orar sau de la).";
+    if (!homeCity.trim()) errs.home_city = "Orașul este obligatoriu.";
+    if (bio.trim().length < 30) errs.bio = "Biografia trebuie să aibă cel puțin 30 de caractere.";
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -154,7 +154,7 @@ export function ProviderProfileForm({
       {/* Main Category */}
       <div>
         <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 block mb-2">
-          Main Category <span className="text-red-500">*</span>
+          Categorie principală <span className="text-red-500">*</span>
         </label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {categories.map((cat) => (
@@ -184,8 +184,8 @@ export function ProviderProfileForm({
 
       {/* Headline */}
       <Input
-        label="Headline *"
-        placeholder='e.g. "Professional plumber with 10+ years of experience"'
+        label="Titlu *"
+        placeholder='ex. "Instalator profesionist cu peste 10 ani experiență"'
         value={headline}
         onChange={(e) => setHeadline(e.target.value)}
         error={errors.headline}
@@ -195,9 +195,9 @@ export function ProviderProfileForm({
       {/* Skills tag input */}
       <div>
         <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 block mb-2">
-          Skills{" "}
+          Competențe{" "}
           <span className="text-zinc-400 font-normal text-xs">
-            (press Enter or comma to add, up to 15)
+            (apasă Enter sau virgulă pentru a adăuga, maxim 15)
           </span>
         </label>
         <div className="min-h-[48px] flex flex-wrap gap-1.5 p-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500/20 transition-all">
@@ -221,7 +221,7 @@ export function ProviderProfileForm({
             onChange={(e) => setSkillInput(e.target.value)}
             onKeyDown={handleSkillKeyDown}
             onBlur={handleSkillBlur}
-            placeholder={skills.length === 0 ? "e.g. Deep Cleaning, Eco Products..." : ""}
+            placeholder={skills.length === 0 ? "ex. Curățenie profundă, Produse ecologice..." : ""}
             className="flex-1 min-w-[140px] outline-none text-sm bg-transparent text-zinc-900 dark:text-white placeholder:text-zinc-400"
           />
         </div>
@@ -230,14 +230,14 @@ export function ProviderProfileForm({
       {/* Pricing */}
       <div>
         <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 block mb-2">
-          Pricing{" "}
-          <span className="text-zinc-400 font-normal text-xs">(at least one required)</span>
+          Prețuri{" "}
+          <span className="text-zinc-400 font-normal text-xs">(cel puțin unul obligatoriu)</span>
         </label>
         <div className="grid grid-cols-2 gap-4">
           <Input
-            label="Hourly Rate (RON/hr)"
+            label="Tarif orar (RON/oră)"
             type="number"
-            placeholder="e.g. 80"
+            placeholder="ex. 80"
             min={0}
             value={hourlyRate}
             onChange={(e) => {
@@ -247,9 +247,9 @@ export function ProviderProfileForm({
             fullWidth
           />
           <Input
-            label="Starting From (RON)"
+            label="De la (RON)"
             type="number"
-            placeholder="e.g. 150"
+            placeholder="ex. 150"
             min={0}
             value={fixedPriceFrom}
             onChange={(e) => {
@@ -267,17 +267,17 @@ export function ProviderProfileForm({
       {/* Location + Experience */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Input
-          label="Home City *"
-          placeholder="e.g. București"
+          label="Oraș de reședință *"
+          placeholder="ex. București"
           value={homeCity}
           onChange={(e) => setHomeCity(e.target.value)}
           error={errors.home_city}
           fullWidth
         />
         <Input
-          label="Years of Experience"
+          label="Ani de experiență"
           type="number"
-          placeholder="e.g. 5"
+          placeholder="ex. 5"
           min={0}
           max={60}
           value={yearsExperience}
@@ -289,7 +289,7 @@ export function ProviderProfileForm({
       {/* Service Radius slider */}
       <div>
         <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 block mb-3">
-          Service Radius:{" "}
+          Raza de serviciu:{" "}
           <span className="text-brand-600 dark:text-brand-400 font-semibold">
             {serviceRadius} km
           </span>
@@ -312,8 +312,8 @@ export function ProviderProfileForm({
       {/* Response Time */}
       <div>
         <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 block mb-2">
-          Typical Response Time{" "}
-          <span className="text-zinc-400 font-normal text-xs">(optional)</span>
+          Timp tipic de răspuns{" "}
+          <span className="text-zinc-400 font-normal text-xs">(opțional)</span>
         </label>
         <div className="flex flex-wrap gap-2">
           {RESPONSE_TIME_OPTIONS.map((opt) => (
@@ -336,8 +336,8 @@ export function ProviderProfileForm({
 
       {/* Bio */}
       <Textarea
-        label="Bio *"
-        placeholder="Describe your experience, specialties, and what sets you apart. Be specific — clients read this carefully."
+        label="Despre mine *"
+        placeholder="Descrie experiența ta, specialitățile și ce te diferențiază. Fii specific — clienții citesc cu atenție."
         value={bio}
         onChange={(e) => setBio(e.target.value)}
         rows={5}
@@ -348,9 +348,9 @@ export function ProviderProfileForm({
       {/* Portfolio photos */}
       <div>
         <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 block mb-2">
-          Portfolio Photos{" "}
+          Fotografii portofoliu{" "}
           <span className="text-zinc-400 font-normal text-xs">
-            (optional, up to {MAX_PORTFOLIO})
+            (opțional, maxim {MAX_PORTFOLIO})
           </span>
         </label>
 
@@ -401,8 +401,8 @@ export function ProviderProfileForm({
             className="w-full border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-xl p-6 flex flex-col items-center gap-2 text-zinc-400 hover:border-brand-400 hover:text-brand-500 transition-colors"
           >
             <Camera className="h-5 w-5" />
-            <span className="text-sm">Add portfolio photos</span>
-            <span className="text-xs">{totalPhotos}/{MAX_PORTFOLIO} added</span>
+            <span className="text-sm">Adaugă fotografii în portofoliu</span>
+            <span className="text-xs">{totalPhotos}/{MAX_PORTFOLIO} adăugate</span>
           </button>
         )}
         <input
@@ -420,10 +420,10 @@ export function ProviderProfileForm({
         <div className="flex items-center justify-between p-4 rounded-xl border border-zinc-200 dark:border-zinc-700">
           <div>
             <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
-              Profile active
+              Profil activ
             </p>
             <p className="text-xs text-zinc-400 mt-0.5">
-              When off, your profile won't appear in search results
+              Când este dezactivat, profilul tău nu va apărea în rezultatele de căutare
             </p>
           </div>
           <button

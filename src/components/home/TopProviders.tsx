@@ -22,14 +22,14 @@ export function TopProviders() {
             viewport={{ once: true }}
           >
             <p className="text-brand-500 font-semibold text-sm uppercase tracking-wider mb-2">
-              Top Rated
+              Cei mai buni
             </p>
             <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-white">
-              Meet our best{" "}
-              <span className="gradient-text">professionals</span>
+              Cunoaște cei mai buni{" "}
+              <span className="gradient-text">meșteri</span>
             </h2>
             <p className="text-zinc-500 dark:text-zinc-400 mt-3 max-w-md">
-              Hand-verified experts with proven track records and thousands of 5-star reviews.
+              Experți verificați manual, cu istoric dovedit și mii de recenzii de 5 stele.
             </p>
           </motion.div>
           <motion.div
@@ -43,7 +43,7 @@ export function TopProviders() {
               href="/search"
               className="flex items-center gap-2 text-sm font-medium text-brand-600 dark:text-brand-400 hover:gap-3 transition-all"
             >
-              View all providers
+              Vezi toți meșterii
               <ArrowRight className="h-4 w-4" />
             </Link>
           </motion.div>
@@ -87,7 +87,7 @@ export function TopProviders() {
                               : "bg-zinc-400"
                           }`}
                         />
-                        {provider.is_available ? "Available" : "Busy"}
+                        {provider.is_available ? "Disponibil" : "Ocupat"}
                       </span>
                     </div>
                   </div>
@@ -115,7 +115,7 @@ export function TopProviders() {
                       <div className="text-right">
                         <div className="text-lg font-bold text-zinc-900 dark:text-white">
                           {formatCurrency(provider.hourly_rate)}
-                          <span className="text-xs font-normal text-zinc-400">/hr</span>
+                          <span className="text-xs font-normal text-zinc-400">/oră</span>
                         </div>
                       </div>
                     </div>
@@ -166,7 +166,7 @@ export function TopProviders() {
             href="/search"
             className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-brand-500 to-violet-600 text-white text-sm font-semibold"
           >
-            View all providers
+            Vezi toți meșterii
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
