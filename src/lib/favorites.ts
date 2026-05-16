@@ -70,15 +70,32 @@ export async function toggleJobFavorite(jobId: string): Promise<{ isFavorited: b
     .eq("job_id", jobId)
     .maybeSingle();
 
+  let isFavorited: boolean;
   if (existing) {
     const { error } = await supabase.from("job_favorites").delete().eq("id", existing.id);
     if (error) throw new Error(error.message);
-    return { isFavorited: false };
+    isFavorited = false;
+  } else {
+    const { error } = await supabase.from("job_favorites").insert({ user_id: userId, job_id: jobId });
+    if (error) throw new Error(error.message);
+    isFavorited = true;
   }
 
-  const { error } = await supabase.from("job_favorites").insert({ user_id: userId, job_id: jobId });
-  if (error) throw new Error(error.message);
-  return { isFavorited: true };
+  if (session?.access_token) {
+    fetch("/api/log-activity", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_type: isFavorited ? "favorite.job.added" : "favorite.job.removed",
+        event_category: "favorite",
+        target_type: "job",
+        target_id: jobId,
+        description: isFavorited ? "Job added to favorites" : "Job removed from favorites",
+      }),
+    }).catch(() => {});
+  }
+
+  return { isFavorited };
 }
 
 export async function toggleProviderFavorite(providerId: string): Promise<{ isFavorited: boolean }> {
@@ -92,15 +109,34 @@ export async function toggleProviderFavorite(providerId: string): Promise<{ isFa
     .eq("provider_id", providerId)
     .maybeSingle();
 
+  let isFavorited: boolean;
   if (existing) {
     const { error } = await supabase.from("provider_favorites").delete().eq("id", existing.id);
     if (error) throw new Error(error.message);
-    return { isFavorited: false };
+    isFavorited = false;
+  } else {
+    const { error } = await supabase.from("provider_favorites").insert({ user_id: user.id, provider_id: providerId });
+    if (error) throw new Error(error.message);
+    isFavorited = true;
   }
 
-  const { error } = await supabase.from("provider_favorites").insert({ user_id: user.id, provider_id: providerId });
-  if (error) throw new Error(error.message);
-  return { isFavorited: true };
+  // Need the session token for the log endpoint
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session?.access_token) {
+    fetch("/api/log-activity", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_type: isFavorited ? "favorite.provider.added" : "favorite.provider.removed",
+        event_category: "favorite",
+        target_type: "provider",
+        target_id: providerId,
+        description: isFavorited ? "Provider added to favorites" : "Provider removed from favorites",
+      }),
+    }).catch(() => {});
+  }
+
+  return { isFavorited };
 }
 
 export async function getFavoritedJobs(): Promise<Job[]> {

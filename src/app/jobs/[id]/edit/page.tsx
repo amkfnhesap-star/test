@@ -135,6 +135,23 @@ export default function EditJobPage() {
       return;
     }
 
+    // Fire-and-forget job update log
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session?.access_token) return;
+      fetch("/api/log-activity", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          event_type: "job.updated",
+          event_category: "job",
+          target_type: "job",
+          target_id: id,
+          description: `Job updated: ${title.trim()}`,
+          metadata: { changes: { title: title.trim(), category, city: city.trim(), budget: budget ? Number(budget) : null, timeframe } },
+        }),
+      }).catch(() => {});
+    });
+
     toast.success("Job updated!");
     router.push(`/jobs/${id}`);
   };

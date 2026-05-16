@@ -100,6 +100,23 @@ export default function PostJobPage() {
       }
     }
 
+    // Fire-and-forget job creation log
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session?.access_token) return;
+      fetch("/api/log-activity", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          event_type: "job.created",
+          event_category: "job",
+          target_type: "job",
+          target_id: job.id,
+          description: `Job posted: ${title.trim()}`,
+          metadata: { category, city: city.trim(), budget: budget ? Number(budget) : null, timeframe },
+        }),
+      }).catch(() => {});
+    });
+
     toast.success("Job posted!");
     router.push(`/jobs/${job.id}`);
   };

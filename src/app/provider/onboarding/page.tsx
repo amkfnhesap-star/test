@@ -62,6 +62,23 @@ export default function ProviderOnboardingPage() {
       return;
     }
 
+    // Fire-and-forget provider creation log
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session?.access_token) return;
+      fetch("/api/log-activity", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          event_type: "provider.created",
+          event_category: "provider",
+          target_type: "provider",
+          target_id: userId,
+          description: `Provider profile created: ${data.headline}`,
+          metadata: { category: data.main_category, city: data.home_city, hourly_rate: data.hourly_rate ?? null },
+        }),
+      }).catch(() => {});
+    });
+
     toast.success("Provider profile created! Welcome aboard.");
     router.push(`/pros/${userId}`);
   };

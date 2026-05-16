@@ -139,6 +139,24 @@ export default function SettingsPage() {
       toast.error("Failed to save profile.");
     } else {
       toast.success("Profile saved!");
+      // Fire-and-forget profile update log
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (!session?.access_token) return;
+        fetch("/api/log-activity", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            event_type: "profile.updated",
+            event_category: "user",
+            target_type: "user",
+            target_id: profile?.id,
+            description: "Profile updated",
+            metadata: {
+              changed_fields: ["full_name", "city", "phone", "bio", ...(avatarFile ? ["avatar_url"] : [])],
+            },
+          }),
+        }).catch(() => {});
+      });
       setProfile((prev) =>
         prev
           ? { ...prev, full_name: fullName, city, phone, bio, avatar_url: avatarUrl }

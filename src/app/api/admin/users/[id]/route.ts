@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { verifyAdmin } from "@/lib/admin-auth";
+import { logActivity } from "@/lib/activity-log";
 
 export async function PATCH(
   request: NextRequest,
@@ -29,6 +30,20 @@ export async function PATCH(
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  await logActivity({
+    event_type: "admin.user.updated",
+    event_category: "admin",
+    actor_id: admin.id,
+    actor_email: admin.email,
+    actor_role: "admin",
+    target_type: "user",
+    target_id: id,
+    description: `Admin updated user ${id}`,
+    metadata: { changes: updates },
+    request,
+  });
+
   return NextResponse.json({ user: data });
 }
 
@@ -44,5 +59,18 @@ export async function DELETE(
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   await supabaseAdmin.from("profiles").delete().eq("id", id);
+
+  await logActivity({
+    event_type: "admin.user.deleted",
+    event_category: "admin",
+    actor_id: admin.id,
+    actor_email: admin.email,
+    actor_role: "admin",
+    target_type: "user",
+    target_id: id,
+    description: `Admin deleted user ${id}`,
+    request,
+  });
+
   return NextResponse.json({ ok: true });
 }

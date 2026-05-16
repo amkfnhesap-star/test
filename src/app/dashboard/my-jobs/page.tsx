@@ -25,6 +25,7 @@ import {
   type Job,
   type JobStatus,
 } from "@/lib/jobs";
+import { supabase } from "@/lib/supabase";
 import { categories } from "@/data/dummy";
 import { formatRelativeTime } from "@/lib/utils";
 import toast from "react-hot-toast";
@@ -91,6 +92,23 @@ export default function MyJobsPage() {
     } else {
       setJobs((prev) => prev.filter((j) => j.id !== deleteModal.id));
       toast.success("Job deleted.");
+      // Fire-and-forget job deletion log
+      const deletedId = deleteModal.id;
+      const deletedTitle = deleteModal.title;
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (!session?.access_token) return;
+        fetch("/api/log-activity", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            event_type: "job.deleted",
+            event_category: "job",
+            target_type: "job",
+            target_id: deletedId,
+            description: `Job deleted: ${deletedTitle}`,
+          }),
+        }).catch(() => {});
+      });
       setDeleteModal(null);
     }
     setIsDeleting(false);

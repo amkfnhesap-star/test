@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { Eye, EyeOff, Zap, ArrowRight, Github } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { signInWithEmail, signInWithGoogle, signInWithGithub } from "@/lib/supabase";
+import { signInWithEmail, signInWithGoogle, signInWithGithub, supabase } from "@/lib/supabase";
 import toast from "react-hot-toast";
 
 export default function LoginPage() {
@@ -37,6 +37,15 @@ export default function LoginPage() {
       setIsLoading(false);
       return;
     }
+
+    // Fire-and-forget login log
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session?.access_token) return;
+      fetch("/api/log-login", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      }).catch(() => {});
+    });
 
     toast.success("Welcome back!");
     router.push(redirectTo);

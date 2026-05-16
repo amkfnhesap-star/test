@@ -18,6 +18,7 @@ export const categories: ServiceCategory[] = [
     gradient: "from-blue-500 to-cyan-400",
     count: 1240,
     description: "Home and office cleaning services",
+    photoUrl: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&h=750&fit=crop&q=80",
   },
   {
     id: "moving",
@@ -28,6 +29,7 @@ export const categories: ServiceCategory[] = [
     gradient: "from-amber-500 to-orange-400",
     count: 890,
     description: "Local and long-distance moving help",
+    photoUrl: "https://images.unsplash.com/photo-1600518464441-9154a4dea21b?w=600&h=750&fit=crop&q=80",
   },
   {
     id: "furniture",
@@ -38,6 +40,7 @@ export const categories: ServiceCategory[] = [
     gradient: "from-violet-500 to-purple-400",
     count: 654,
     description: "IKEA and furniture assembly pros",
+    photoUrl: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=750&fit=crop&q=80",
   },
   {
     id: "handyman",
@@ -48,6 +51,7 @@ export const categories: ServiceCategory[] = [
     gradient: "from-red-500 to-rose-400",
     count: 2100,
     description: "General repairs and maintenance",
+    photoUrl: "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&h=750&fit=crop&q=80",
   },
   {
     id: "plumbing",
@@ -58,6 +62,7 @@ export const categories: ServiceCategory[] = [
     gradient: "from-cyan-500 to-teal-400",
     count: 780,
     description: "Pipe repairs, fixtures, and more",
+    photoUrl: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=600&h=750&fit=crop&q=80",
   },
   {
     id: "electrical",
@@ -68,6 +73,7 @@ export const categories: ServiceCategory[] = [
     gradient: "from-yellow-500 to-amber-400",
     count: 520,
     description: "Wiring, fixtures, and electrical work",
+    photoUrl: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&h=750&fit=crop&q=80",
   },
   {
     id: "pet-care",
@@ -78,6 +84,7 @@ export const categories: ServiceCategory[] = [
     gradient: "from-pink-500 to-rose-400",
     count: 1560,
     description: "Dog walking, pet sitting, grooming",
+    photoUrl: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=600&h=750&fit=crop&q=80",
   },
   {
     id: "delivery",
@@ -88,6 +95,7 @@ export const categories: ServiceCategory[] = [
     gradient: "from-emerald-500 to-green-400",
     count: 3200,
     description: "Same-day delivery and errands",
+    photoUrl: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&h=750&fit=crop&q=80",
   },
   {
     id: "personal-assistant",
@@ -98,6 +106,7 @@ export const categories: ServiceCategory[] = [
     gradient: "from-indigo-500 to-blue-400",
     count: 430,
     description: "Admin, scheduling, and errands",
+    photoUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&h=750&fit=crop&q=80",
   },
   {
     id: "tech-support",
@@ -108,6 +117,7 @@ export const categories: ServiceCategory[] = [
     gradient: "from-sky-500 to-blue-400",
     count: 870,
     description: "Computer help and tech repairs",
+    photoUrl: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=750&fit=crop&q=80",
   },
   {
     id: "home-repair",
@@ -118,6 +128,7 @@ export const categories: ServiceCategory[] = [
     gradient: "from-orange-500 to-amber-400",
     count: 1890,
     description: "Painting, drywall, flooring and more",
+    photoUrl: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=600&h=750&fit=crop&q=80",
   },
   {
     id: "photography",
@@ -128,6 +139,7 @@ export const categories: ServiceCategory[] = [
     gradient: "from-purple-500 to-fuchsia-400",
     count: 340,
     description: "Events, portraits, and real estate",
+    photoUrl: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=600&h=750&fit=crop&q=80",
   },
   {
     id: "graphic-design",
@@ -138,6 +150,7 @@ export const categories: ServiceCategory[] = [
     gradient: "from-teal-500 to-cyan-400",
     count: 720,
     description: "Logos, branding, and digital assets",
+    photoUrl: "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=600&h=750&fit=crop&q=80",
   },
   {
     id: "ai-services",
@@ -148,6 +161,7 @@ export const categories: ServiceCategory[] = [
     gradient: "from-violet-500 to-indigo-400",
     count: 290,
     description: "AI prompting, automation, and tools",
+    photoUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=750&fit=crop&q=80",
   },
 ];
 

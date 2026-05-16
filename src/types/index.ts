@@ -50,6 +50,7 @@ export interface ServiceCategory {
   gradient: string;
   count: number;
   description: string;
+  photoUrl?: string;
 }
 
 export interface Provider {

@@ -3,7 +3,7 @@ import { supabaseAdmin } from "./supabase-admin";
 
 export async function verifyAdmin(
   request: NextRequest
-): Promise<{ email: string } | null> {
+): Promise<{ id: string; email: string } | null> {
   const token = request.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
 
@@ -15,5 +15,5 @@ export async function verifyAdmin(
   const adminEmail = process.env.ADMIN_EMAIL;
   if (!adminEmail || user.email !== adminEmail) return null;
 
-  return { email: user.email };
+  return { id: user.id, email: user.email };
 }

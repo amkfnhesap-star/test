@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -18,8 +18,44 @@ import { Badge } from "@/components/ui/Badge";
 import { Avatar } from "@/components/ui/Avatar";
 import { FavoriteButton } from "@/components/ui/FavoriteButton";
 import { getJob, type Job } from "@/lib/jobs";
+import { supabase } from "@/lib/supabase";
 import { categories } from "@/data/dummy";
 import { formatRelativeTime } from "@/lib/utils";
+
+function ContactButton({
+  jobClientId,
+  onContact,
+  isLoading,
+}: {
+  jobClientId: string;
+  onContact: () => void;
+  isLoading: boolean;
+}) {
+  const [currentUserId, setCurrentUserId] = useState<string | null | undefined>(undefined);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setCurrentUserId(session?.user.id ?? null);
+    });
+  }, []);
+
+  // Still loading auth state
+  if (currentUserId === undefined) return null;
+  // Viewer is the job poster — hide button
+  if (currentUserId === jobClientId) return null;
+
+  return (
+    <Button
+      fullWidth
+      size="lg"
+      leftIcon={<MessageSquare className="h-4 w-4" />}
+      isLoading={isLoading}
+      onClick={onContact}
+    >
+      Contact Client
+    </Button>
+  );
+}
 
 function timeframeLabel(t: string) {
   if (t === "asap") return "ASAP";
@@ -29,9 +65,11 @@ function timeframeLabel(t: string) {
 
 export default function JobDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
   const [lightbox, setLightbox] = useState<string | null>(null);
+  const [contacting, setContacting] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -41,6 +79,39 @@ export default function JobDetailPage() {
       });
     }
   }, [id]);
+
+  const handleContact = async () => {
+    if (!job) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      router.push(`/login?redirect=/jobs/${id}`);
+      return;
+    }
+    // Don't show the button if I'm the poster (handled in render), but guard here too
+    if (session.user.id === job.client_id) return;
+
+    setContacting(true);
+    try {
+      const r = await fetch("/api/conversations/start", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          otherUserId: job.client_id,
+          contextType: "job",
+          contextJobId: job.id,
+        }),
+      });
+      const data = await r.json();
+      if (data.conversationId) {
+        router.push(`/messages/${data.conversationId}`);
+      }
+    } finally {
+      setContacting(false);
+    }
+  };
 
   const cat = categories.find((c) => c.slug === job?.category);
 
@@ -170,15 +241,12 @@ export default function JobDetailPage() {
               </div>
             )}
 
-            {/* CTA */}
-            <Button
-              fullWidth
-              size="lg"
-              leftIcon={<MessageSquare className="h-4 w-4" />}
-              onClick={() => alert("Contact feature coming soon!")}
-            >
-              Contact Client
-            </Button>
+            {/* CTA — hidden if viewer is the job poster */}
+            <ContactButton
+              jobClientId={job.client_id}
+              onContact={handleContact}
+              isLoading={contacting}
+            />
           </motion.div>
 
           {/* Posted by */}

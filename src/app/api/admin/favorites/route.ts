@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { verifyAdmin } from "@/lib/admin-auth";
+import { logActivity } from "@/lib/activity-log";
 
 export async function GET(request: NextRequest) {
   const admin = await verifyAdmin(request);
@@ -109,6 +110,19 @@ export async function DELETE(request: NextRequest) {
   } else {
     return NextResponse.json({ error: "type must be 'job' or 'provider'" }, { status: 400 });
   }
+
+  await logActivity({
+    event_type: "admin.favorite.deleted",
+    event_category: "admin",
+    actor_id: admin.id,
+    actor_email: admin.email,
+    actor_role: "admin",
+    target_type: type,
+    target_id: targetId,
+    description: `Admin removed ${type} favorite for user ${userId}`,
+    metadata: { user_id: userId },
+    request,
+  });
 
   return NextResponse.json({ ok: true });
 }

@@ -4,11 +4,11 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { categories } from "@/data/dummy";
-import { formatNumber } from "@/lib/utils";
+import { CategoryCard } from "./CategoryCard";
 
 const containerVariants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.06 } },
+  visible: { transition: { staggerChildren: 0.04 } },
 };
 
 const itemVariants = {
@@ -19,9 +19,9 @@ const itemVariants = {
 export function Categories() {
   return (
     <section className="py-20 md:py-28 bg-white dark:bg-zinc-950">
+      {/* Heading — constrained to max-w-7xl */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Header */}
-        <div className="flex items-end justify-between mb-12">
+        <div className="flex items-end justify-between mb-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -52,10 +52,12 @@ export function Categories() {
             </Link>
           </motion.div>
         </div>
+      </div>
 
-        {/* Grid */}
+      {/* Full-width grid */}
+      <div className="w-full px-4 md:px-8 lg:px-12">
         <motion.div
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3"
+          className="grid gap-3 md:gap-4 grid-cols-2 sm:grid-cols-4 lg:grid-cols-7"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -63,45 +65,26 @@ export function Categories() {
         >
           {categories.map((cat) => (
             <motion.div key={cat.id} variants={itemVariants}>
-              <Link href={`/search?category=${cat.slug}`}>
-                <div className="group relative flex flex-col items-center gap-3 p-4 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-transparent hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden">
-                  {/* Gradient background on hover */}
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${cat.gradient} opacity-0 group-hover:opacity-10 dark:group-hover:opacity-20 transition-opacity duration-300`}
-                  />
-
-                  {/* Icon */}
-                  <div
-                    className={`relative h-12 w-12 rounded-xl bg-gradient-to-br ${cat.gradient} flex items-center justify-center text-2xl shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-300`}
-                  >
-                    {cat.icon}
-                  </div>
-
-                  {/* Text */}
-                  <div className="text-center">
-                    <p className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 group-hover:text-zinc-900 dark:group-hover:text-white leading-tight">
-                      {cat.name}
-                    </p>
-                    <p className="text-[10px] text-zinc-400 dark:text-zinc-600 mt-0.5">
-                      {formatNumber(cat.count)}+ pros
-                    </p>
-                  </div>
-                </div>
-              </Link>
+              <CategoryCard
+                name={cat.name}
+                slug={cat.slug}
+                count={cat.count}
+                photoUrl={cat.photoUrl}
+              />
             </motion.div>
           ))}
         </motion.div>
+      </div>
 
-        {/* Mobile CTA */}
-        <div className="mt-6 flex justify-center md:hidden">
-          <Link
-            href="/search"
-            className="flex items-center gap-2 text-sm font-medium text-brand-600 dark:text-brand-400"
-          >
-            Browse all services
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
+      {/* Mobile CTA */}
+      <div className="mt-8 flex justify-center md:hidden">
+        <Link
+          href="/search"
+          className="flex items-center gap-2 text-sm font-medium text-brand-600 dark:text-brand-400"
+        >
+          Browse all services
+          <ArrowRight className="h-4 w-4" />
+        </Link>
       </div>
     </section>
   );

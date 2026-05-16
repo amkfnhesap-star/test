@@ -13,7 +13,7 @@ import {
   ChevronDown,
   Zap,
   Bell,
-  MessageSquare,
+  MessageCircle,
   Plus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -215,9 +215,9 @@ export function Navbar() {
                   >
                     My Jobs
                   </Link>
-                  <Link href="/dashboard/messages">
-                    <button className="p-2 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                      <MessageSquare className="h-4 w-4" />
+                  <Link href="/messages">
+                    <button className="p-2 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors" aria-label="Messages">
+                      <MessageCircle className="h-4 w-4" />
                     </button>
                   </Link>
                   <Link href="/dashboard/my-jobs">

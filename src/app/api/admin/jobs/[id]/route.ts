@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { verifyAdmin } from "@/lib/admin-auth";
+import { logActivity } from "@/lib/activity-log";
 
 export async function PATCH(
   request: NextRequest,
@@ -41,6 +42,20 @@ export async function PATCH(
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  await logActivity({
+    event_type: "admin.job.updated",
+    event_category: "admin",
+    actor_id: admin.id,
+    actor_email: admin.email,
+    actor_role: "admin",
+    target_type: "job",
+    target_id: id,
+    description: `Admin updated job ${id}`,
+    metadata: { changes: updates },
+    request,
+  });
+
   return NextResponse.json({ job: data });
 }
 
@@ -54,5 +69,18 @@ export async function DELETE(
   const { id } = await params;
   const { error } = await supabaseAdmin.from("jobs").delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  await logActivity({
+    event_type: "admin.job.deleted",
+    event_category: "admin",
+    actor_id: admin.id,
+    actor_email: admin.email,
+    actor_role: "admin",
+    target_type: "job",
+    target_id: id,
+    description: `Admin deleted job ${id}`,
+    request,
+  });
+
   return NextResponse.json({ ok: true });
 }

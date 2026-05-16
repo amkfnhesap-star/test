@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,14 +19,45 @@ import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { FavoriteButton } from "@/components/ui/FavoriteButton";
 import { getProviderProfile, type ProviderProfile } from "@/lib/providers";
+import { supabase } from "@/lib/supabase";
 import { categories } from "@/data/dummy";
+
+function SelfGuardedContactButton({
+  providerId,
+  label,
+  onClick,
+  isLoading,
+}: {
+  providerId: string;
+  label: string;
+  onClick: () => void;
+  isLoading: boolean;
+}) {
+  const [currentUserId, setCurrentUserId] = useState<string | null | undefined>(undefined);
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setCurrentUserId(session?.user.id ?? null);
+    });
+  }, []);
+
+  if (currentUserId === undefined) return null;
+  if (currentUserId === providerId) return null;
+
+  return (
+    <Button fullWidth size="lg" onClick={onClick} isLoading={isLoading} className="mb-5">
+      {label}
+    </Button>
+  );
+}
 
 export default function ProviderProfilePage() {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
   const [profile, setProfile] = useState<ProviderProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
+  const [contacting, setContacting] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -69,12 +100,35 @@ export default function ProviderProfilePage() {
   const name = profile.profiles?.full_name ?? "Provider";
   const avatarSrc = profile.profiles?.avatar_url ?? null;
 
-  const handleContact = () => {
-    const phone = profile.profiles?.phone;
-    if (phone) {
-      alert(`Contact ${name} at: ${phone}`);
-    } else {
-      alert("Messaging is coming soon! Check back later.");
+  const handleContact = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      router.push(`/login?redirect=/pros/${id}`);
+      return;
+    }
+    // Can't contact yourself
+    if (session.user.id === profile.user_id) return;
+
+    setContacting(true);
+    try {
+      const r = await fetch("/api/conversations/start", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          otherUserId: profile.user_id,
+          contextType: "provider",
+          contextProviderId: profile.user_id,
+        }),
+      });
+      const data = await r.json();
+      if (data.conversationId) {
+        router.push(`/messages/${data.conversationId}`);
+      }
+    } finally {
+      setContacting(false);
     }
   };
 
@@ -280,9 +334,12 @@ export default function ProviderProfilePage() {
                   )}
                 </div>
 
-                <Button fullWidth size="lg" onClick={handleContact} className="mb-5">
-                  Contact {name.split(" ")[0]}
-                </Button>
+                <SelfGuardedContactButton
+                  providerId={profile.user_id}
+                  label={`Contact ${name.split(" ")[0]}`}
+                  onClick={handleContact}
+                  isLoading={contacting}
+                />
 
                 {/* Details list */}
                 <div className="space-y-3.5">

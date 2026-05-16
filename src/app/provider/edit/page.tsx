@@ -66,6 +66,22 @@ export default function EditProviderProfilePage() {
     }
 
     toast.success("Profile updated!");
+    // Fire-and-forget provider update log
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session?.access_token) return;
+      fetch("/api/log-activity", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          event_type: "provider.updated",
+          event_category: "provider",
+          target_type: "provider",
+          target_id: userId,
+          description: `Provider profile updated: ${data.headline}`,
+          metadata: { category: data.main_category, city: data.home_city, hourly_rate: data.hourly_rate ?? null },
+        }),
+      }).catch(() => {});
+    });
     setIsSubmitting(false);
 
     const { profile: refreshed } = await getMyProviderProfile();
