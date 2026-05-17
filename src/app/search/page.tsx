@@ -670,6 +670,9 @@ function ProviderCard({
                     {name}
                   </h3>
                   <p className="text-xs text-slate-400 truncate mt-0.5">{provider.headline}</p>
+                  <div className="mt-2">
+                    <StarRating value={provider.average_rating} count={provider.review_count} size="sm" />
+                  </div>
                 </div>
                 {provider.is_verified && (
                   <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
@@ -685,12 +688,9 @@ function ProviderCard({
               )}
 
               <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-3 text-slate-500">
-                  <StarRating value={provider.average_rating} count={provider.review_count} size="sm" />
-                  <div className="flex items-center gap-1">
-                    <MapPin className="h-3 w-3" />
-                    {provider.home_city}
-                  </div>
+                <div className="flex items-center gap-1 text-slate-500">
+                  <MapPin className="h-3 w-3" />
+                  {provider.home_city}
                 </div>
                 {provider.hourly_rate != null && (
                   <div className="font-bold text-slate-900">
@@ -719,6 +719,9 @@ function ProviderCard({
                       </span>
                     </div>
                     <p className="text-xs text-slate-400 line-clamp-2">{provider.bio}</p>
+                    <div className="mt-2">
+                      <StarRating value={provider.average_rating} count={provider.review_count} size="sm" />
+                    </div>
                   </div>
                   <div className="text-right flex-shrink-0">
                     {provider.hourly_rate != null && (
@@ -726,9 +729,6 @@ function ProviderCard({
                         {provider.hourly_rate} RON/oră
                       </div>
                     )}
-                    <div className="mt-0.5 flex justify-end">
-                      <StarRating value={provider.average_rating} count={provider.review_count} size="sm" />
-                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">

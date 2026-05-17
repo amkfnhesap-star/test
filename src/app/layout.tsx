@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { ConditionalNavbar, ConditionalFooter } from "@/components/layout/ConditionalNav";
+import { CookieBanner } from "@/components/legal/CookieBanner";
 import "./globals.css";
 
 const inter = Inter({
@@ -81,6 +82,7 @@ export default function RootLayout({
           <ConditionalNavbar />
           <main className="flex-1">{children}</main>
           <ConditionalFooter />
+          <CookieBanner />
           <Toaster
             position="top-right"
             toastOptions={{

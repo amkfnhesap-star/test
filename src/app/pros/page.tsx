@@ -252,10 +252,13 @@ export default function BrowseProvidersPage() {
                           </div>
                         </div>
 
-                        {/* Headline */}
-                        <p className="text-xs text-slate-500 mb-3 line-clamp-2 flex-1">
-                          {pro.headline}
-                        </p>
+                        {/* Headline + rating */}
+                        <div className="flex-1 mb-3">
+                          <p className="text-xs text-slate-500 line-clamp-2 mb-2">
+                            {pro.headline}
+                          </p>
+                          <StarRating value={pro.average_rating} count={pro.review_count} size="sm" />
+                        </div>
 
                         {/* Skills */}
                         {pro.skills.length > 0 && (
@@ -284,24 +287,17 @@ export default function BrowseProvidersPage() {
                           className="mb-3"
                         />
 
-                        {/* Bottom row: city, rating, price */}
+                        {/* Bottom row: city, price */}
                         <div className="flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-slate-100">
                           <span className="flex items-center gap-1">
                             <MapPin className="h-3 w-3" />
                             {pro.home_city}
                           </span>
-                          <div className="flex items-center gap-2">
-                            <StarRating
-                              value={pro.average_rating}
-                              count={pro.review_count}
-                              size="sm"
-                            />
-                            {pro.hourly_rate != null && (
-                              <span className="font-semibold text-slate-700">
-                                {pro.hourly_rate} RON/oră
-                              </span>
-                            )}
-                          </div>
+                          {pro.hourly_rate != null && (
+                            <span className="font-semibold text-slate-700">
+                              {pro.hourly_rate} RON/oră
+                            </span>
+                          )}
                         </div>
                       </div>
                     </Link>

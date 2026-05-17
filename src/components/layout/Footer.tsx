@@ -26,9 +26,9 @@ const footerLinks = {
     { label: "Contact", href: "/contact" },
   ],
   Legal: [
-    { label: "Politica de confidențialitate", href: "/privacy" },
-    { label: "Termeni și condiții", href: "/terms" },
-    { label: "Politica cookie", href: "/cookies" },
+    { label: "Politica de Confidențialitate", href: "/politica-de-confidentialitate" },
+    { label: "Termeni și Condiții", href: "/termeni-si-conditii" },
+    { label: "Politica de Cookies", href: "/politica-cookies" },
     { label: "Accesibilitate", href: "/accessibility" },
   ],
 };
@@ -130,7 +130,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-6 border-t border-zinc-800 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-zinc-600">
-            © {new Date().getFullYear()} MesteRO SRL. Toate drepturile rezervate.
+            © {new Date().getFullYear()} MesteRO — Versiune beta
           </p>
           <div className="flex items-center gap-6">
             <span className="text-xs text-zinc-600">

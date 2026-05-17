@@ -271,6 +271,28 @@ export default function RegisterPage() {
                   </p>
                 )}
 
+                <p className="text-slate-500 text-xs text-center">
+                  Prin crearea contului, sunteți de acord cu{" "}
+                  <Link
+                    href="/termeni-si-conditii"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-slate-700"
+                  >
+                    Termenii și Condițiile
+                  </Link>{" "}
+                  și{" "}
+                  <Link
+                    href="/politica-de-confidentialitate"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-slate-700"
+                  >
+                    Politica de Confidențialitate
+                  </Link>
+                  .
+                </p>
+
                 <Button
                   type="submit"
                   isLoading={isLoading}
@@ -282,12 +304,6 @@ export default function RegisterPage() {
                   Creează contul
                 </Button>
               </form>
-
-              <p className="mt-4 text-center text-xs text-slate-400">
-                Prin crearea unui cont, confirmați că sunteți de acord cu{" "}
-                <Link href="/terms" className="underline">Termenii de utilizare</Link> și{" "}
-                <Link href="/privacy" className="underline">Politica de confidențialitate</Link>.
-              </p>
             </motion.div>
           )}
 
