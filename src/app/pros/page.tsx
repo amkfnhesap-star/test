@@ -4,10 +4,12 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Search, Star, MapPin, Shield, CheckCircle2 } from "lucide-react";
+import { Search, MapPin, Shield, CheckCircle2 } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { FavoriteButton } from "@/components/ui/FavoriteButton";
+import { StarRating } from "@/components/reviews/StarRating";
+import { TrustSignals } from "@/components/providers/TrustSignals";
 import { getProviders, type ProviderProfile } from "@/lib/providers";
 import { categories } from "@/data/dummy";
 import { cn } from "@/lib/utils";
@@ -274,6 +276,14 @@ export default function BrowseProvidersPage() {
                           </div>
                         )}
 
+                        {/* Trust signals */}
+                        <TrustSignals
+                          provider={pro}
+                          joinedAt={pro.created_at}
+                          layout="inline"
+                          className="mb-3"
+                        />
+
                         {/* Bottom row: city, rating, price */}
                         <div className="flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-slate-100">
                           <span className="flex items-center gap-1">
@@ -281,14 +291,11 @@ export default function BrowseProvidersPage() {
                             {pro.home_city}
                           </span>
                           <div className="flex items-center gap-2">
-                            {pro.average_rating > 0 && (
-                              <span className="flex items-center gap-0.5">
-                                <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
-                                <span className="font-medium text-slate-600">
-                                  {pro.average_rating.toFixed(1)}
-                                </span>
-                              </span>
-                            )}
+                            <StarRating
+                              value={pro.average_rating}
+                              count={pro.review_count}
+                              size="sm"
+                            />
                             {pro.hourly_rate != null && (
                               <span className="font-semibold text-slate-700">
                                 {pro.hourly_rate} RON/oră

@@ -16,7 +16,11 @@ import {
   Clock,
   AlertTriangle,
   ExternalLink,
+  Star,
 } from "lucide-react";
+import { Modal } from "@/components/ui/Modal";
+import { Avatar } from "@/components/ui/Avatar";
+import { ReviewForm } from "@/components/reviews/ReviewForm";
 import { Button } from "@/components/ui/Button";
 import { JobStatusBadge } from "@/components/jobs/JobStatusBadge";
 import {
@@ -42,6 +46,15 @@ interface DeleteModal {
   title: string;
 }
 
+interface PendingReview {
+  job_id: string;
+  job_title: string;
+  direction: "client_to_provider" | "provider_to_client";
+  other_party_id: string | null;
+  other_party: { full_name: string; avatar_url: string | null } | null;
+  is_client: boolean;
+}
+
 export default function MyJobsPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -49,6 +62,8 @@ export default function MyJobsPage() {
   const [deleteModal, setDeleteModal] = useState<DeleteModal | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [pendingReviews, setPendingReviews] = useState<PendingReview[]>([]);
+  const [reviewModal, setReviewModal] = useState<PendingReview | null>(null);
 
   useEffect(() => {
     getMyJobs().then(({ jobs, error }) => {
@@ -59,6 +74,16 @@ export default function MyJobsPage() {
         setJobs(jobs);
       }
       setLoading(false);
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) return;
+      fetch("/api/reviews/pending-for-me", {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      })
+        .then((r) => r.json())
+        .then((data) => setPendingReviews(data.pending ?? []))
+        .catch(() => {});
     });
   }, []);
 
@@ -116,6 +141,45 @@ export default function MyJobsPage() {
   return (
     <>
       <div className="space-y-6">
+        {/* Pending reviews widget */}
+        {pendingReviews.length > 0 && (
+          <div className="bg-brand-50 border border-brand-200 rounded-2xl p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <Star className="h-4 w-4 text-brand-600 fill-brand-600" />
+              <h2 className="font-semibold text-brand-900 text-sm">
+                Ai {pendingReviews.length}{" "}
+                {pendingReviews.length === 1 ? "recenzie de lăsat" : "recenzii de lăsat"}
+              </h2>
+            </div>
+            <div className="space-y-2">
+              {pendingReviews.map((p) => (
+                <div
+                  key={p.job_id}
+                  className="flex items-center gap-3 bg-white rounded-xl px-3 py-2.5 border border-brand-100"
+                >
+                  <Avatar
+                    name={p.other_party?.full_name ?? "?"}
+                    src={p.other_party?.avatar_url ?? undefined}
+                    size="sm"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-slate-900 truncate">
+                      {p.other_party?.full_name ?? (p.is_client ? "Meșterul" : "Clientul")}
+                    </p>
+                    <p className="text-xs text-slate-400 truncate">{p.job_title}</p>
+                  </div>
+                  <button
+                    onClick={() => setReviewModal(p)}
+                    className="flex-shrink-0 text-xs font-medium text-brand-600 hover:text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-200 px-3 py-1.5 rounded-lg transition-colors"
+                  >
+                    Lasă o recenzie
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div>
@@ -328,6 +392,32 @@ export default function MyJobsPage() {
           </div>
         )}
       </div>
+
+      {/* Review modal */}
+      <Modal
+        isOpen={!!reviewModal}
+        onClose={() => setReviewModal(null)}
+        title="Lasă o recenzie"
+        size="md"
+      >
+        {reviewModal && (
+          <ReviewForm
+            jobId={reviewModal.job_id}
+            revieweeId={reviewModal.other_party_id ?? ""}
+            revieweeName={
+              reviewModal.other_party?.full_name ??
+              (reviewModal.is_client ? "Meșterul" : "Clientul")
+            }
+            direction={reviewModal.direction}
+            onSubmitted={() => {
+              setReviewModal(null);
+              setPendingReviews((prev) =>
+                prev.filter((p) => p.job_id !== reviewModal.job_id)
+              );
+            }}
+          />
+        )}
+      </Modal>
 
       {/* Delete confirmation modal */}
       <AnimatePresence>

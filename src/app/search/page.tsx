@@ -9,7 +9,6 @@ import {
   Search,
   SlidersHorizontal,
   MapPin,
-  Star,
   Clock,
   Filter,
   X,
@@ -21,6 +20,7 @@ import {
   Briefcase,
   Camera,
 } from "lucide-react";
+import { StarRating } from "@/components/reviews/StarRating";
 import { getProviders, type ProviderProfile } from "@/lib/providers";
 import { getJobs, type Job } from "@/lib/jobs";
 import { categories } from "@/data/dummy";
@@ -686,13 +686,7 @@ function ProviderCard({
 
               <div className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-3 text-slate-500">
-                  <div className="flex items-center gap-0.5">
-                    <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
-                    <span className="font-medium text-slate-700">
-                      {provider.average_rating.toFixed(1)}
-                    </span>
-                    <span className="text-slate-400">({provider.review_count})</span>
-                  </div>
+                  <StarRating value={provider.average_rating} count={provider.review_count} size="sm" />
                   <div className="flex items-center gap-1">
                     <MapPin className="h-3 w-3" />
                     {provider.home_city}
@@ -732,11 +726,8 @@ function ProviderCard({
                         {provider.hourly_rate} RON/oră
                       </div>
                     )}
-                    <div className="flex items-center gap-1 mt-0.5 justify-end">
-                      <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
-                      <span className="text-xs text-slate-600">
-                        {provider.average_rating.toFixed(1)} ({provider.review_count})
-                      </span>
+                    <div className="mt-0.5 flex justify-end">
+                      <StarRating value={provider.average_rating} count={provider.review_count} size="sm" />
                     </div>
                   </div>
                 </div>

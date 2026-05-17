@@ -12,6 +12,7 @@ import {
   ScrollText,
   Settings,
   ArrowLeft,
+  MessageCircle,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,7 @@ const navItems = [
   { label: "Users", href: "/admin/users", icon: Users },
   { label: "Jobs", href: "/admin/jobs", icon: Briefcase },
   { label: "Providers", href: "/admin/providers", icon: Shield },
+  { label: "Reviews", href: "/admin/reviews", icon: MessageCircle },
   { label: "Favorites", href: "/admin/favorites", icon: Heart },
   { label: "Logs", href: "/admin/logs", icon: ScrollText },
   { label: "Settings", href: "/admin/settings", icon: Settings },

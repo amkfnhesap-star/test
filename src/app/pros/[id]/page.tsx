@@ -18,6 +18,9 @@ import {
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { FavoriteButton } from "@/components/ui/FavoriteButton";
+import { ProviderReviews } from "@/components/reviews/ProviderReviews";
+import { StarRating } from "@/components/reviews/StarRating";
+import { TrustSignals } from "@/components/providers/TrustSignals";
 import { getProviderProfile, type ProviderProfile } from "@/lib/providers";
 import { supabase } from "@/lib/supabase";
 import { categories } from "@/data/dummy";
@@ -198,27 +201,22 @@ export default function ProviderProfilePage() {
                   {profile.headline}
                 </p>
 
-                <div className="flex flex-wrap items-center gap-5 text-sm text-slate-500">
-                  {profile.average_rating > 0 && (
-                    <span className="flex items-center gap-1.5">
-                      <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
-                      <span className="text-slate-900 font-semibold">
-                        {profile.average_rating.toFixed(1)}
-                      </span>
-                      <span>({profile.review_count} recenzii)</span>
-                    </span>
-                  )}
-                  {profile.jobs_completed > 0 && (
-                    <span className="flex items-center gap-1.5">
-                      <Briefcase className="h-4 w-4 text-brand-500" />
-                      {profile.jobs_completed} lucrări finalizate
-                    </span>
-                  )}
+                <div className="flex flex-wrap items-center gap-5 text-sm text-slate-500 mb-3">
+                  <StarRating
+                    value={profile.average_rating}
+                    count={profile.review_count}
+                    size="md"
+                  />
                   <span className="flex items-center gap-1.5">
                     <MapPin className="h-4 w-4" />
                     {profile.home_city}
                   </span>
                 </div>
+                <TrustSignals
+                  provider={profile}
+                  joinedAt={profile.created_at}
+                  layout="stacked"
+                />
               </div>
             </div>
           </div>
@@ -299,6 +297,13 @@ export default function ProviderProfilePage() {
                   </div>
                 </motion.div>
               )}
+
+              {/* Reviews section */}
+              <ProviderReviews
+                providerId={profile.user_id}
+                initialRating={profile.average_rating}
+                initialCount={profile.review_count}
+              />
             </div>
 
             {/* ── RIGHT: sticky sidebar ── */}

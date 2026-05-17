@@ -15,6 +15,7 @@ import {
   Briefcase,
   Star,
   ShieldCheck,
+  MessageCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar } from "@/components/ui/Avatar";
@@ -26,6 +27,7 @@ const navItems = [
   { icon: Calendar, label: "My Bookings", href: "/dashboard/bookings" },
   { icon: MessageSquare, label: "Messages", href: "/dashboard/messages", badge: 3 },
   { icon: Heart, label: "Favorites", href: "/dashboard/favorites" },
+  { icon: MessageCircle, label: "Recenzii", href: "/dashboard/reviews" },
   { icon: Star, label: "Provider Profile", href: "/provider/onboarding" },
   { icon: Settings, label: "Settings", href: "/dashboard/settings" },
 ];

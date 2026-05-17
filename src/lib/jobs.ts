@@ -20,7 +20,7 @@ export interface Job {
   profiles: { full_name: string; avatar_url: string | null } | null;
   awarded_provider_id?: string | null;
   awarded_at?: string | null;
-  awarded_provider_profile?: { id: string; full_name: string } | null;
+  awarded_provider_profile?: { id: string; full_name: string; avatar_url: string | null } | null;
 }
 
 export interface CreateJobInput {
@@ -113,7 +113,21 @@ export async function getJob(
     .single();
 
   if (error) return { job: null, error: error.message };
-  return { job: data as unknown as Job, error: null };
+
+  const job = data as unknown as Job;
+
+  if (job.awarded_provider_id) {
+    const { data: providerProfile } = await supabase
+      .from("profiles")
+      .select("id, full_name, avatar_url")
+      .eq("id", job.awarded_provider_id)
+      .single();
+    if (providerProfile) {
+      job.awarded_provider_profile = providerProfile;
+    }
+  }
+
+  return { job, error: null };
 }
 
 export async function getMyJobs(): Promise<{
@@ -147,7 +161,7 @@ export async function getMyJobs(): Promise<{
   if (providerIds.length > 0) {
     const { data: profiles, error: profilesError } = await supabase
       .from("profiles")
-      .select("id, full_name")
+      .select("id, full_name, avatar_url")
       .in("id", providerIds);
 
     if (profilesError) {

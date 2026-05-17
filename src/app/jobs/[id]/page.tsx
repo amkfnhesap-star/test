@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/Button";
 import { Avatar } from "@/components/ui/Avatar";
 import { FavoriteButton } from "@/components/ui/FavoriteButton";
 import { JobStatusBadge } from "@/components/jobs/JobStatusBadge";
+import { JobReviewSection } from "@/components/reviews/JobReviewSection";
 import { getJob, type Job } from "@/lib/jobs";
 import { supabase } from "@/lib/supabase";
 import { categories } from "@/data/dummy";
@@ -181,6 +182,25 @@ export default function JobDetailPage() {
         </Link>
 
         <div className="grid gap-5">
+          {/* Review section — completed jobs, participants only */}
+          {job.status === "completed" && isParticipant && currentUserId && (
+            <JobReviewSection
+              jobId={job.id}
+              currentUserId={currentUserId}
+              isClient={currentUserId === job.client_id}
+              otherPartyId={
+                currentUserId === job.client_id
+                  ? (job.awarded_provider_id ?? null)
+                  : job.client_id
+              }
+              otherPartyName={
+                currentUserId === job.client_id
+                  ? (job.awarded_provider_profile?.full_name ?? "Meșterul")
+                  : (job.profiles?.full_name ?? "Clientul")
+              }
+            />
+          )}
+
           {/* Main card */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
