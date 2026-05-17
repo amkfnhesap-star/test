@@ -94,7 +94,7 @@ export function FavoriteButton({
     return (
       <div
         className={cn(
-          "w-9 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800 animate-pulse",
+          "w-9 h-7 rounded-lg bg-slate-100 animate-pulse",
           className
         )}
       />
@@ -107,10 +107,10 @@ export function FavoriteButton({
       title={isFavorited ? "Remove from favorites" : "Save to favorites"}
       className={cn(
         "inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium transition-all duration-200",
-        "bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm border shadow-sm",
+        "bg-white border shadow-sm",
         isFavorited
-          ? "border-red-200 dark:border-red-900/50 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
-          : "border-zinc-200 dark:border-zinc-700 text-zinc-400 hover:text-red-500 hover:border-red-200 dark:hover:border-red-900/50",
+          ? "border-red-200 text-red-500 hover:bg-red-50"
+          : "border-slate-200 text-slate-400 hover:text-red-500 hover:border-red-200",
         className
       )}
     >

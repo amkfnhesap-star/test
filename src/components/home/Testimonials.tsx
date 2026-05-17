@@ -9,7 +9,7 @@ export function Testimonials() {
   const doubled = [...testimonials, ...testimonials];
 
   return (
-    <section className="py-20 md:py-28 bg-zinc-50 dark:bg-zinc-900/50 overflow-hidden">
+    <section className="py-20 md:py-28 bg-slate-50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-12">
         <motion.div
           className="text-center"
@@ -17,14 +17,14 @@ export function Testimonials() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <p className="text-brand-500 font-semibold text-sm uppercase tracking-wider mb-3">
+          <p className="text-brand-600 font-semibold text-sm uppercase tracking-wider mb-3">
             Testimoniale
           </p>
-          <h2 className="text-3xl md:text-5xl font-bold text-zinc-900 dark:text-white mb-4">
+          <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-4">
             Iubit de{" "}
             <span className="gradient-text">1,2M+ clienți</span>
           </h2>
-          <p className="text-zinc-500 dark:text-zinc-400 text-lg max-w-xl mx-auto">
+          <p className="text-slate-500 text-lg max-w-xl mx-auto">
             Povești reale de la oameni care și-au găsit meșterul perfect pe MesteRO.
           </p>
         </motion.div>
@@ -76,12 +76,12 @@ export function Testimonials() {
           ].map((stat) => (
             <div
               key={stat.label}
-              className="text-center p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800"
+              className="text-center p-6 rounded-2xl bg-white border border-slate-100"
             >
               <div className="text-2xl md:text-3xl font-bold gradient-text mb-1">
                 {stat.value}
               </div>
-              <div className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+              <div className="text-sm font-semibold text-slate-800">
                 {stat.label}
               </div>
               <div className="text-xs text-zinc-400 mt-0.5">{stat.sub}</div>
@@ -95,7 +95,7 @@ export function Testimonials() {
 
 function TestimonialCard({ testimonial }: { testimonial: typeof testimonials[0] }) {
   return (
-    <div className="flex-shrink-0 w-72 md:w-80 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 shadow-sm">
+    <div className="flex-shrink-0 w-72 md:w-80 rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
           <Image
@@ -106,13 +106,13 @@ function TestimonialCard({ testimonial }: { testimonial: typeof testimonials[0] 
             className="h-9 w-9 rounded-full object-cover"
           />
           <div>
-            <p className="text-sm font-semibold text-zinc-900 dark:text-white leading-none">
+            <p className="text-sm font-semibold text-slate-900 leading-none">
               {testimonial.name}
             </p>
             <p className="text-[10px] text-zinc-400 mt-0.5">{testimonial.role}</p>
           </div>
         </div>
-        <Quote className="h-5 w-5 text-brand-300 dark:text-brand-700 flex-shrink-0" />
+        <Quote className="h-5 w-5 text-brand-300 flex-shrink-0" />
       </div>
 
       <div className="flex gap-0.5 mb-3">
@@ -121,7 +121,7 @@ function TestimonialCard({ testimonial }: { testimonial: typeof testimonials[0] 
         ))}
       </div>
 
-      <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed line-clamp-3">
+      <p className="text-sm text-slate-600 leading-relaxed line-clamp-3">
         {testimonial.text}
       </p>
 

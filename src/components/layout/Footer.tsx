@@ -66,7 +66,7 @@ export function Footer() {
               />
               <button
                 type="submit"
-                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-violet-600 text-white text-sm font-medium hover:shadow-glow transition-all duration-200 flex items-center gap-1"
+                className="px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-medium transition-all duration-200 flex items-center gap-1"
               >
                 Abonează-te <ArrowRight className="h-3.5 w-3.5" />
               </button>
@@ -81,7 +81,7 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-brand-500 to-violet-600 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-lg bg-brand-500 flex items-center justify-center">
                 <Zap className="h-4 w-4 text-white" />
               </div>
               <span className="text-lg font-bold text-white">

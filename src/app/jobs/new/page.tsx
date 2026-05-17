@@ -124,15 +124,15 @@ export default function PostJobPage() {
   if (loading) return null;
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 pt-24 pb-16">
+    <div className="min-h-screen bg-slate-50 pt-24 pb-16">
       <div className="max-w-2xl mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Postează o lucrare</h1>
-          <p className="text-zinc-500 dark:text-zinc-400 mt-1 text-sm">
+          <h1 className="text-3xl font-bold text-slate-900">Postează o lucrare</h1>
+          <p className="text-slate-500 mt-1 text-sm">
             Descrie ce ai nevoie — meșterii din zona ta te vor contacta.
           </p>
         </motion.div>
@@ -142,7 +142,7 @@ export default function PostJobPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.08 }}
           onSubmit={handleSubmit}
-          className="space-y-6 bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-6 md:p-8"
+          className="space-y-6 bg-white rounded-2xl border border-slate-200 p-6 md:p-8 shadow-sm"
         >
           {/* Title */}
           <Input
@@ -156,7 +156,7 @@ export default function PostJobPage() {
 
           {/* Category */}
           <div>
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 block mb-2">
+            <label className="text-sm font-medium text-slate-700 block mb-2">
               Categorie <span className="text-red-500">*</span>
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -171,8 +171,8 @@ export default function PostJobPage() {
                   className={cn(
                     "flex items-center gap-2 px-3 py-2.5 rounded-xl border text-sm font-medium text-left transition-all",
                     category === cat.slug
-                      ? "border-brand-500 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300"
-                      : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-600"
+                      ? "border-brand-500 bg-brand-50 text-brand-700"
+                      : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50"
                   )}
                 >
                   <span className="text-base leading-none">{cat.icon}</span>
@@ -181,7 +181,7 @@ export default function PostJobPage() {
               ))}
             </div>
             {errors.category && (
-              <p className="text-xs text-red-500 mt-1.5">{errors.category}</p>
+              <p className="text-xs text-red-600 mt-1.5">{errors.category}</p>
             )}
           </div>
 
@@ -219,7 +219,7 @@ export default function PostJobPage() {
 
           {/* Timeframe */}
           <div>
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 block mb-2">
+            <label className="text-sm font-medium text-slate-700 block mb-2">
               Când ai nevoie?
             </label>
             <div className="flex gap-2 flex-wrap">
@@ -237,8 +237,8 @@ export default function PostJobPage() {
                   className={cn(
                     "px-4 py-2 rounded-xl border text-sm font-medium transition-all",
                     timeframe === value
-                      ? "border-brand-500 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300"
-                      : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-600"
+                      ? "border-brand-500 bg-brand-50 text-brand-700"
+                      : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50"
                   )}
                 >
                   {label}
@@ -251,26 +251,26 @@ export default function PostJobPage() {
                 value={scheduledDate}
                 min={new Date().toISOString().split("T")[0]}
                 onChange={(e) => setScheduledDate(e.target.value)}
-                className="mt-3 w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-zinc-900 dark:text-white focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none transition-all"
+                className="mt-3 w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none transition-all"
               />
             )}
           </div>
 
           {/* Photos */}
           <div>
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 block mb-2">
+            <label className="text-sm font-medium text-slate-700 block mb-2">
               Fotografii{" "}
-              <span className="text-zinc-400 font-normal">(opțional, maxim 5)</span>
+              <span className="text-slate-400 font-normal">(opțional, maxim 5)</span>
             </label>
             {photos.length < 5 && (
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-xl p-8 flex flex-col items-center gap-2 text-zinc-400 hover:border-brand-400 hover:text-brand-500 transition-colors"
+                className="w-full border-2 border-dashed border-slate-300 rounded-xl p-8 flex flex-col items-center gap-2 text-slate-400 hover:border-brand-400 hover:text-brand-500 transition-colors bg-slate-50"
               >
                 <Camera className="h-6 w-6" />
                 <span className="text-sm">Apasă pentru a adăuga fotografii</span>
-                <span className="text-xs text-zinc-400">{photos.length}/5 adăugate</span>
+                <span className="text-xs text-slate-400">{photos.length}/5 adăugate</span>
               </button>
             )}
             <input
@@ -289,7 +289,7 @@ export default function PostJobPage() {
                     <img
                       src={URL.createObjectURL(photo)}
                       alt=""
-                      className="h-20 w-20 rounded-xl object-cover border border-zinc-200 dark:border-zinc-700"
+                      className="h-20 w-20 rounded-xl object-cover border border-slate-200"
                     />
                     <button
                       type="button"

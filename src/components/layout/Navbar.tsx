@@ -4,15 +4,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "next-themes";
 import {
-  Sun,
-  Moon,
   Menu,
   X,
   ChevronDown,
   Zap,
-  Bell,
   MessageCircle,
   Plus,
 } from "lucide-react";
@@ -21,6 +17,10 @@ import { Button } from "@/components/ui/Button";
 import { Avatar } from "@/components/ui/Avatar";
 import { supabase, signOut } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
+
+// TODO: Navbar is now always light (white bg). Dark pages (admin, dashboard,
+// messages, etc.) will show a white navbar on a dark body until those pages
+// are converted to the light theme in a follow-up session.
 
 const navLinks = [
   {
@@ -46,12 +46,8 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const pathname = usePathname();
-
-  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -81,37 +77,23 @@ export function Navbar() {
     setMobileOpen(false);
   }, [pathname]);
 
-  const isHome = pathname === "/";
-
   return (
     <>
       <header
         className={cn(
-          "fixed top-0 inset-x-0 z-40 transition-all duration-300",
-          scrolled || !isHome
-            ? "bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-200/60 dark:border-zinc-800/60 shadow-sm"
-            : "bg-transparent"
+          "fixed top-0 inset-x-0 z-40 transition-all duration-300 bg-white border-b border-slate-200",
+          scrolled ? "shadow-md" : "shadow-sm"
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-brand-500 to-violet-600 flex items-center justify-center shadow-glow">
+              <div className="h-8 w-8 rounded-lg bg-brand-500 flex items-center justify-center">
                 <Zap className="h-4 w-4 text-white" />
               </div>
-              <span className="text-lg font-bold">
-                <span
-                  className={cn(
-                    "transition-colors",
-                    scrolled || !isHome
-                      ? "text-zinc-900 dark:text-white"
-                      : "text-white"
-                  )}
-                >
-                  Meste
-                </span>
-                <span className="text-brand-500">RO</span>
+              <span className="text-lg font-bold text-slate-900">
+                Meste<span className="text-brand-500">RO</span>
               </span>
             </Link>
 
@@ -121,24 +103,15 @@ export function Navbar() {
                 <div
                   key={link.label}
                   className="relative"
-                  onMouseEnter={() =>
-                    link.children && setActiveDropdown(link.label)
-                  }
+                  onMouseEnter={() => link.children && setActiveDropdown(link.label)}
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
                   <Link
                     href={link.href}
-                    className={cn(
-                      "flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                      scrolled || !isHome
-                        ? "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800"
-                        : "text-white/80 hover:text-white hover:bg-white/10"
-                    )}
+                    className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-brand-600 hover:bg-slate-50 transition-colors"
                   >
                     {link.label}
-                    {link.children && (
-                      <ChevronDown className="h-3 w-3 mt-0.5" />
-                    )}
+                    {link.children && <ChevronDown className="h-3 w-3 mt-0.5" />}
                   </Link>
 
                   {link.children && activeDropdown === link.label && (
@@ -147,13 +120,13 @@ export function Navbar() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 8 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute top-full left-0 mt-1 w-48 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-xl py-1.5"
+                      className="absolute top-full left-0 mt-1 w-52 rounded-xl border border-slate-200 bg-white shadow-lg py-1.5"
                     >
                       {link.children.map((child) => (
                         <Link
                           key={child.label}
                           href={child.href}
-                          className="block px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+                          className="block px-4 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
                         >
                           {child.label}
                         </Link>
@@ -166,57 +139,25 @@ export function Navbar() {
 
             {/* Right side */}
             <div className="flex items-center gap-2">
-              {/* Post a Job — visible to everyone on desktop */}
+              {/* Post a Job */}
               <Link
                 href={user ? "/jobs/new" : "/login?redirect=/jobs/new"}
-                className={cn(
-                  "hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border transition-all",
-                  scrolled || !isHome
-                    ? "border-brand-500 text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20"
-                    : "border-white/40 text-white hover:bg-white/10"
-                )}
+                className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border border-brand-500 text-brand-600 hover:bg-brand-50 transition-colors"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Postează o lucrare
               </Link>
 
-              {/* Theme Toggle */}
-              {mounted && (
-                <button
-                  onClick={() =>
-                    setTheme(theme === "dark" ? "light" : "dark")
-                  }
-                  className={cn(
-                    "p-2 rounded-lg transition-colors",
-                    scrolled || !isHome
-                      ? "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-                      : "text-white/80 hover:bg-white/10"
-                  )}
-                  aria-label="Comută tema"
-                >
-                  {theme === "dark" ? (
-                    <Sun className="h-4 w-4" />
-                  ) : (
-                    <Moon className="h-4 w-4" />
-                  )}
-                </button>
-              )}
-
               {user ? (
                 <div className="hidden md:flex items-center gap-2">
                   <Link
                     href="/dashboard/my-jobs"
-                    className={cn(
-                      "text-sm font-medium px-3 py-1.5 rounded-lg transition-colors",
-                      scrolled || !isHome
-                        ? "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-                        : "text-white/80 hover:bg-white/10"
-                    )}
+                    className="text-sm font-medium px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
                   >
                     Lucrările mele
                   </Link>
                   <Link href="/messages">
-                    <button className="p-2 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors" aria-label="Mesaje">
+                    <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors" aria-label="Mesaje">
                       <MessageCircle className="h-4 w-4" />
                     </button>
                   </Link>
@@ -228,12 +169,7 @@ export function Navbar() {
                   </Link>
                   <button
                     onClick={handleSignOut}
-                    className={cn(
-                      "text-sm font-medium px-3 py-1.5 rounded-lg transition-colors",
-                      scrolled || !isHome
-                        ? "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-                        : "text-white/80 hover:bg-white/10"
-                    )}
+                    className="text-sm font-medium px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
                   >
                     Deconectează-te
                   </button>
@@ -241,15 +177,7 @@ export function Navbar() {
               ) : (
                 <div className="hidden md:flex items-center gap-2">
                   <Link href="/login">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={cn(
-                        scrolled || !isHome
-                          ? ""
-                          : "text-white hover:bg-white/10"
-                      )}
-                    >
+                    <Button variant="ghost" size="sm">
                       Conectează-te
                     </Button>
                   </Link>
@@ -261,20 +189,11 @@ export function Navbar() {
 
               {/* Mobile hamburger */}
               <button
-                className={cn(
-                  "md:hidden p-2 rounded-lg transition-colors",
-                  scrolled || !isHome
-                    ? "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-                    : "text-white hover:bg-white/10"
-                )}
+                className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
                 onClick={() => setMobileOpen(!mobileOpen)}
                 aria-label="Deschide meniu"
               >
-                {mobileOpen ? (
-                  <X className="h-5 w-5" />
-                ) : (
-                  <Menu className="h-5 w-5" />
-                )}
+                {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
             </div>
           </div>
@@ -289,26 +208,26 @@ export function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed top-16 inset-x-0 z-30 bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 overflow-hidden md:hidden"
+            className="fixed top-16 inset-x-0 z-30 bg-white border-b border-slate-200 overflow-hidden md:hidden"
           >
             <div className="px-4 py-4 space-y-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="block px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                  className="block px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors"
                 >
                   {link.label}
                 </Link>
               ))}
               <Link
                 href={user ? "/jobs/new" : "/login?redirect=/jobs/new"}
-                className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors"
+                className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium text-brand-600 hover:bg-brand-50 transition-colors"
               >
                 <Plus className="h-4 w-4" />
                 Postează o lucrare
               </Link>
-              <div className="pt-3 pb-1 border-t border-zinc-100 dark:border-zinc-800 flex gap-2">
+              <div className="pt-3 pb-1 border-t border-slate-100 flex gap-2">
                 {user ? (
                   <>
                     <Link href="/dashboard/my-jobs" className="flex-1">

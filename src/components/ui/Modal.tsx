@@ -52,7 +52,7 @@ export function Modal({
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <motion.div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -60,7 +60,7 @@ export function Modal({
           />
           <motion.div
             className={cn(
-              "relative w-full rounded-2xl bg-white dark:bg-zinc-900 shadow-2xl border border-zinc-200 dark:border-zinc-800",
+              "relative w-full rounded-2xl bg-white shadow-2xl border border-slate-200",
               sizes[size]
             )}
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -69,16 +69,16 @@ export function Modal({
             transition={{ duration: 0.2, ease: "easeOut" }}
           >
             {(title || showClose) && (
-              <div className="flex items-center justify-between p-5 border-b border-zinc-100 dark:border-zinc-800">
+              <div className="flex items-center justify-between p-5 border-b border-slate-100">
                 {title && (
-                  <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
+                  <h2 className="text-lg font-semibold text-slate-900">
                     {title}
                   </h2>
                 )}
                 {showClose && (
                   <button
                     onClick={onClose}
-                    className="ml-auto p-1.5 rounded-lg text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                    className="ml-auto p-1.5 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors"
                   >
                     <X className="h-4 w-4" />
                   </button>

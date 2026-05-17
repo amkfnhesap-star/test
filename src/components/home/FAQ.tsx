@@ -44,7 +44,7 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="py-20 md:py-28 bg-zinc-50 dark:bg-zinc-900/50">
+    <section className="py-20 md:py-28 bg-slate-50">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <motion.div
@@ -53,14 +53,14 @@ export function FAQ() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <p className="text-brand-500 font-semibold text-sm uppercase tracking-wider mb-3">
+          <p className="text-brand-600 font-semibold text-sm uppercase tracking-wider mb-3">
             Întrebări frecvente
           </p>
-          <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
             Cele mai frecvente{" "}
             <span className="gradient-text">întrebări</span>
           </h2>
-          <p className="text-zinc-500 dark:text-zinc-400">
+          <p className="text-slate-500">
             Tot ce trebuie să știi despre MesteRO.
           </p>
         </motion.div>
@@ -79,8 +79,8 @@ export function FAQ() {
               className={cn(
                 "rounded-2xl border overflow-hidden transition-all duration-200",
                 openIndex === i
-                  ? "border-brand-200 dark:border-brand-800/50 bg-white dark:bg-zinc-900 shadow-sm"
-                  : "border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900"
+                  ? "border-brand-200 bg-white shadow-sm"
+                  : "border-slate-100 bg-white"
               )}
             >
               <button
@@ -91,8 +91,8 @@ export function FAQ() {
                   className={cn(
                     "font-medium text-sm pr-4 leading-snug",
                     openIndex === i
-                      ? "text-brand-600 dark:text-brand-400"
-                      : "text-zinc-900 dark:text-white"
+                      ? "text-brand-600"
+                      : "text-slate-900"
                   )}
                 >
                   {faq.q}
@@ -121,7 +121,7 @@ export function FAQ() {
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.25, ease: "easeOut" }}
                   >
-                    <div className="px-5 pb-5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed border-t border-zinc-100 dark:border-zinc-800 pt-4">
+                    <div className="px-5 pb-5 text-sm text-slate-500 leading-relaxed border-t border-slate-100 pt-4">
                       {faq.a}
                     </div>
                   </motion.div>
@@ -138,11 +138,11 @@ export function FAQ() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          <p className="text-zinc-500 dark:text-zinc-400 text-sm">
+          <p className="text-slate-500 text-sm">
             Ai în continuare întrebări?{" "}
             <a
               href="/contact"
-              className="text-brand-600 dark:text-brand-400 font-medium hover:underline"
+              className="text-brand-600 font-medium hover:underline"
             >
               Contactează echipa de suport →
             </a>

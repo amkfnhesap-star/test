@@ -12,7 +12,7 @@ export function TopProviders() {
   const featured = providers.filter((p) => p.is_featured).slice(0, 6);
 
   return (
-    <section className="py-20 md:py-28 bg-white dark:bg-zinc-950">
+    <section className="py-20 md:py-28 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="flex items-end justify-between mb-12">
@@ -21,14 +21,14 @@ export function TopProviders() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <p className="text-brand-500 font-semibold text-sm uppercase tracking-wider mb-2">
+            <p className="text-brand-600 font-semibold text-sm uppercase tracking-wider mb-2">
               Cei mai buni
             </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-white">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
               Cunoaște cei mai buni{" "}
               <span className="gradient-text">meșteri</span>
             </h2>
-            <p className="text-zinc-500 dark:text-zinc-400 mt-3 max-w-md">
+            <p className="text-slate-500 mt-3 max-w-md">
               Experți verificați manual, cu istoric dovedit și mii de recenzii de 5 stele.
             </p>
           </motion.div>
@@ -41,7 +41,7 @@ export function TopProviders() {
           >
             <Link
               href="/search"
-              className="flex items-center gap-2 text-sm font-medium text-brand-600 dark:text-brand-400 hover:gap-3 transition-all"
+              className="flex items-center gap-2 text-sm font-medium text-brand-600 hover:text-brand-700 hover:gap-3 transition-all"
             >
               Vezi toți meșterii
               <ArrowRight className="h-4 w-4" />
@@ -60,9 +60,9 @@ export function TopProviders() {
               transition={{ delay: i * 0.1 }}
             >
               <Link href={`/providers/${provider.id}`}>
-                <div className="group relative rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden hover:shadow-xl hover:border-transparent hover:-translate-y-1 transition-all duration-300">
+                <div className="group relative rounded-2xl border border-slate-200 bg-white overflow-hidden hover:shadow-xl hover:border-transparent hover:-translate-y-1 transition-all duration-300">
                   {/* Cover image */}
-                  <div className="relative h-28 bg-gradient-to-br from-brand-500/20 to-violet-500/20">
+                  <div className="relative h-28 bg-brand-50">
                     {provider.cover_url && (
                       <Image
                         src={provider.cover_url}
@@ -101,10 +101,10 @@ export function TopProviders() {
                           alt={provider.full_name}
                           width={56}
                           height={56}
-                          className="h-14 w-14 rounded-xl object-cover ring-3 ring-white dark:ring-zinc-900 shadow-md"
+                          className="h-14 w-14 rounded-xl object-cover ring-3 ring-white shadow-md"
                         />
                         {provider.verification_status === "verified" && (
-                          <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-emerald-500 flex items-center justify-center ring-2 ring-white dark:ring-zinc-900">
+                          <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-emerald-500 flex items-center justify-center ring-2 ring-white">
                             <svg className="h-2.5 w-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
                               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                             </svg>
@@ -113,18 +113,18 @@ export function TopProviders() {
                       </div>
                       {/* Price */}
                       <div className="text-right">
-                        <div className="text-lg font-bold text-zinc-900 dark:text-white">
+                        <div className="text-lg font-bold text-slate-900">
                           {formatCurrency(provider.hourly_rate)}
-                          <span className="text-xs font-normal text-zinc-400">/oră</span>
+                          <span className="text-xs font-normal text-slate-400">/oră</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Name & tagline */}
-                    <h3 className="font-semibold text-zinc-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                    <h3 className="font-semibold text-slate-900 group-hover:text-brand-600 transition-colors">
                       {provider.full_name}
                     </h3>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5 mb-3">
+                    <p className="text-xs text-slate-500 mt-0.5 mb-3">
                       {provider.tagline}
                     </p>
 
@@ -138,10 +138,10 @@ export function TopProviders() {
                     </div>
 
                     {/* Stats row */}
-                    <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+                    <div className="flex items-center justify-between text-xs text-slate-500">
                       <div className="flex items-center gap-1">
                         <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
-                        <span className="font-medium text-zinc-700 dark:text-zinc-300">{provider.rating}</span>
+                        <span className="font-medium text-slate-700">{provider.rating}</span>
                         <span>({provider.review_count})</span>
                       </div>
                       <div className="flex items-center gap-1">
@@ -164,7 +164,7 @@ export function TopProviders() {
         <div className="mt-8 flex justify-center md:hidden">
           <Link
             href="/search"
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-brand-500 to-violet-600 text-white text-sm font-semibold"
+            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold transition-colors"
           >
             Vezi toți meșterii
             <ArrowRight className="h-4 w-4" />

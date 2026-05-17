@@ -18,7 +18,7 @@ const itemVariants = {
 
 export function Categories() {
   return (
-    <section className="py-20 md:py-28 bg-white dark:bg-zinc-950">
+    <section className="py-20 md:py-28 bg-white">
       {/* Heading — constrained to max-w-7xl */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-end justify-between mb-10">
@@ -28,10 +28,10 @@ export function Categories() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <p className="text-brand-500 font-semibold text-sm uppercase tracking-wider mb-2">
+            <p className="text-brand-600 font-semibold text-sm uppercase tracking-wider mb-2">
               14 CATEGORII
             </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-white">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
               Toate serviciile,
               <br />
               <span className="gradient-text">într-un singur loc</span>
@@ -45,7 +45,7 @@ export function Categories() {
           >
             <Link
               href="/search"
-              className="hidden md:flex items-center gap-2 text-sm font-medium text-brand-600 dark:text-brand-400 hover:gap-3 transition-all duration-200"
+              className="hidden md:flex items-center gap-2 text-sm font-medium text-brand-600 hover:text-brand-700 hover:gap-3 transition-all duration-200"
             >
               Toate serviciile
               <ArrowRight className="h-4 w-4" />
@@ -80,9 +80,9 @@ export function Categories() {
       <div className="mt-8 flex justify-center md:hidden">
         <Link
           href="/search"
-          className="flex items-center gap-2 text-sm font-medium text-brand-600 dark:text-brand-400"
+          className="flex items-center gap-2 text-sm font-medium text-brand-600 hover:text-brand-700"
         >
-          Browse all services
+          Toate serviciile
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>

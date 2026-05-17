@@ -37,7 +37,7 @@ export default function ProviderPage({ params }: { params: Promise<{ id: string 
   const providerReviews = reviews.filter((r) => r.provider_id === provider.id);
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 pt-16">
+    <div className="min-h-screen bg-slate-50 pt-16">
       {/* Cover image */}
       <div className="relative h-48 md:h-64 bg-gradient-to-br from-brand-500/20 to-violet-500/20">
         {provider.cover_url && (
@@ -84,7 +84,7 @@ export default function ProviderPage({ params }: { params: Promise<{ id: string 
           {/* Main content */}
           <div className="flex-1 min-w-0">
             {/* Profile header card */}
-            <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-6 mb-5 shadow-sm">
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 mb-5 shadow-sm">
               <div className="flex items-start gap-4">
                 <div className="relative -mt-12 flex-shrink-0">
                   <Image
@@ -92,11 +92,11 @@ export default function ProviderPage({ params }: { params: Promise<{ id: string 
                     alt={provider.full_name}
                     width={72}
                     height={72}
-                    className="h-18 w-18 rounded-2xl object-cover ring-4 ring-white dark:ring-zinc-900 shadow-lg"
+                    className="h-18 w-18 rounded-2xl object-cover ring-4 ring-white shadow-lg"
                     style={{ height: 72, width: 72 }}
                   />
                   {provider.is_available && (
-                    <span className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-zinc-900" />
+                    <span className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-emerald-500 ring-2 ring-white" />
                   )}
                 </div>
 
@@ -104,23 +104,23 @@ export default function ProviderPage({ params }: { params: Promise<{ id: string 
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h1 className="text-xl font-bold text-zinc-900 dark:text-white">
+                        <h1 className="text-xl font-bold text-slate-900">
                           {provider.full_name}
                         </h1>
                         {provider.verification_status === "verified" && (
-                          <span className="flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded-full">
+                          <span className="flex items-center gap-1 text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
                             <CheckCircle2 className="h-3 w-3" />
                             Verified
                           </span>
                         )}
                       </div>
-                      <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-0.5">
+                      <p className="text-slate-500text-sm mt-0.5">
                         {provider.tagline}
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-zinc-500 dark:text-zinc-400">
+                  <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-slate-500">
                     <StarRating
                       rating={provider.rating}
                       showValue
@@ -152,7 +152,7 @@ export default function ProviderPage({ params }: { params: Promise<{ id: string 
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-1 p-1 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-100 dark:border-zinc-800 mb-5">
+            <div className="flex gap-1 p-1 bg-white rounded-xl border border-slate-200 mb-5">
               {(["overview", "portfolio", "reviews"] as const).map((tab) => (
                 <button
                   key={tab}
@@ -160,7 +160,7 @@ export default function ProviderPage({ params }: { params: Promise<{ id: string 
                   className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium capitalize transition-all ${
                     activeTab === tab
                       ? "bg-brand-500 text-white shadow-sm"
-                      : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
+                      : "text-slate-500 hover:text-slate-700"
                   }`}
                 >
                   {tab}
@@ -177,25 +177,25 @@ export default function ProviderPage({ params }: { params: Promise<{ id: string 
                 className="space-y-5"
               >
                 {/* About */}
-                <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-5">
-                  <h2 className="font-semibold text-zinc-900 dark:text-white mb-3">
+                <div className="bg-white rounded-2xl border border-slate-200 p-5">
+                  <h2 className="font-semibold text-slate-900mb-3">
                     About
                   </h2>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                  <p className="text-sm text-slate-600 leading-relaxed">
                     {provider.bio}
                   </p>
                 </div>
 
                 {/* Skills */}
-                <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-5">
-                  <h2 className="font-semibold text-zinc-900 dark:text-white mb-3">
+                <div className="bg-white rounded-2xl border border-slate-200 p-5">
+                  <h2 className="font-semibold text-slate-900mb-3">
                     Skills & Expertise
                   </h2>
                   <div className="flex flex-wrap gap-2">
                     {provider.skills.map((skill) => (
                       <span
                         key={skill}
-                        className="px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-medium"
+                        className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-medium"
                       >
                         {skill}
                       </span>
@@ -205,28 +205,28 @@ export default function ProviderPage({ params }: { params: Promise<{ id: string 
 
                 {/* Services */}
                 {providerServices.length > 0 && (
-                  <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-5">
-                    <h2 className="font-semibold text-zinc-900 dark:text-white mb-4">
+                  <div className="bg-white rounded-2xl border border-slate-200 p-5">
+                    <h2 className="font-semibold text-slate-900mb-4">
                       Services Offered
                     </h2>
                     <div className="space-y-3">
                       {providerServices.map((svc) => (
                         <div
                           key={svc.id}
-                          className="flex items-start justify-between gap-4 p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-100 dark:border-zinc-800"
+                          className="flex items-start justify-between gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200"
                         >
                           <div className="flex-1">
-                            <h3 className="font-medium text-zinc-900 dark:text-white text-sm mb-1">
+                            <h3 className="font-medium text-slate-900text-sm mb-1">
                               {svc.title}
                             </h3>
-                            <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-2">
+                            <p className="text-xs text-slate-500mb-2">
                               {svc.description}
                             </p>
                             <div className="flex flex-wrap gap-1">
                               {svc.includes.map((item) => (
                                 <span
                                   key={item}
-                                  className="flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400"
+                                  className="flex items-center gap-1 text-[10px] text-emerald-600"
                                 >
                                   <CheckCircle2 className="h-2.5 w-2.5" />
                                   {item}
@@ -235,13 +235,13 @@ export default function ProviderPage({ params }: { params: Promise<{ id: string 
                             </div>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            <div className="font-bold text-zinc-900 dark:text-white text-sm">
+                            <div className="font-bold text-slate-900text-sm">
                               {formatCurrency(svc.price)}
                             </div>
-                            <div className="text-xs text-zinc-400">
+                            <div className="text-xs text-slate-400">
                               {svc.price_type === "hourly" ? "/hr" : svc.price_type === "fixed" ? "fixed" : "quote"}
                             </div>
-                            <div className="text-xs text-zinc-400 mt-0.5">
+                            <div className="text-xs text-slate-400 mt-0.5">
                               ~{svc.duration_estimate}
                             </div>
                           </div>
@@ -258,16 +258,16 @@ export default function ProviderPage({ params }: { params: Promise<{ id: string 
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-5"
+                className="bg-white rounded-2xl border border-slate-200 p-5"
               >
-                <h2 className="font-semibold text-zinc-900 dark:text-white mb-4">
+                <h2 className="font-semibold text-slate-900mb-4">
                   Portfolio
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {provider.portfolio.map((item) => (
                     <div
                       key={item.id}
-                      className="group relative aspect-square rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800"
+                      className="group relative aspect-square rounded-xl overflow-hidden bg-slate-100"
                     >
                       <Image
                         src={item.image_url}
@@ -283,7 +283,7 @@ export default function ProviderPage({ params }: { params: Promise<{ id: string 
                     </div>
                   ))}
                   {provider.portfolio.length === 0 && (
-                    <p className="col-span-3 text-center text-zinc-400 py-12">
+                    <p className="col-span-3 text-center text-slate-400 py-12">
                       No portfolio items yet.
                     </p>
                   )}
@@ -299,14 +299,14 @@ export default function ProviderPage({ params }: { params: Promise<{ id: string 
                 className="space-y-3"
               >
                 {providerReviews.length === 0 ? (
-                  <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-8 text-center">
-                    <p className="text-zinc-400">No reviews yet.</p>
+                  <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center">
+                    <p className="text-slate-400">No reviews yet.</p>
                   </div>
                 ) : (
                   providerReviews.map((review) => (
                     <div
                       key={review.id}
-                      className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-5"
+                      className="bg-white rounded-2xl border border-slate-200 p-5"
                     >
                       <div className="flex items-start gap-3 mb-3">
                         <Avatar
@@ -316,17 +316,17 @@ export default function ProviderPage({ params }: { params: Promise<{ id: string 
                         />
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
-                            <span className="font-medium text-zinc-900 dark:text-white text-sm">
+                            <span className="font-medium text-slate-900text-sm">
                               {review.customer_name}
                             </span>
                             <StarRating rating={review.rating} size="sm" />
                           </div>
-                          <p className="text-xs text-zinc-400 mt-0.5">
+                          <p className="text-xs text-slate-400 mt-0.5">
                             {new Date(review.created_at).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                      <p className="text-sm text-slate-600 leading-relaxed">
                         {review.comment}
                       </p>
                     </div>
@@ -339,55 +339,55 @@ export default function ProviderPage({ params }: { params: Promise<{ id: string 
           {/* Sticky booking sidebar */}
           <div className="lg:w-80 flex-shrink-0">
             <div className="sticky top-24">
-              <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-6 shadow-sm">
+              <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <span className="text-2xl font-bold text-zinc-900 dark:text-white">
+                    <span className="text-2xl font-bold text-slate-900">
                       {formatCurrency(provider.hourly_rate)}
                     </span>
-                    <span className="text-zinc-400 text-sm">/hr</span>
+                    <span className="text-slate-400 text-sm">/hr</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
-                    <span className="font-semibold text-zinc-900 dark:text-white">
+                    <span className="font-semibold text-slate-900">
                       {provider.rating}
                     </span>
                   </div>
                 </div>
 
                 <div className="space-y-3 mb-5 text-sm">
-                  <div className="flex items-center justify-between text-zinc-500 dark:text-zinc-400">
+                  <div className="flex items-center justify-between text-slate-500">
                     <span>Response time</span>
-                    <span className="font-medium text-zinc-700 dark:text-zinc-300">
+                    <span className="font-medium text-slate-700">
                       {provider.response_time}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between text-zinc-500 dark:text-zinc-400">
+                  <div className="flex items-center justify-between text-slate-500">
                     <span>Jobs completed</span>
-                    <span className="font-medium text-zinc-700 dark:text-zinc-300">
+                    <span className="font-medium text-slate-700">
                       {provider.job_count}+
                     </span>
                   </div>
-                  <div className="flex items-center justify-between text-zinc-500 dark:text-zinc-400">
+                  <div className="flex items-center justify-between text-slate-500">
                     <span>Status</span>
                     <span
                       className={`font-medium flex items-center gap-1 ${
                         provider.is_available
-                          ? "text-emerald-600 dark:text-emerald-400"
-                          : "text-zinc-400"
+                          ? "text-emerald-600"
+                          : "text-slate-400"
                       }`}
                     >
                       <span
                         className={`w-1.5 h-1.5 rounded-full ${
-                          provider.is_available ? "bg-emerald-500" : "bg-zinc-400"
+                          provider.is_available ? "bg-emerald-500" : "bg-slate-400"
                         }`}
                       />
                       {provider.is_available ? "Available" : "Busy"}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between text-zinc-500 dark:text-zinc-400">
+                  <div className="flex items-center justify-between text-slate-500">
                     <span>Languages</span>
-                    <span className="font-medium text-zinc-700 dark:text-zinc-300">
+                    <span className="font-medium text-slate-700">
                       {provider.languages.join(", ")}
                     </span>
                   </div>
@@ -404,7 +404,7 @@ export default function ProviderPage({ params }: { params: Promise<{ id: string 
                   Message
                 </Button>
 
-                <p className="text-center text-xs text-zinc-400 mt-4">
+                <p className="text-center text-xs text-slate-400 mt-4">
                   Free to contact · No booking fee
                 </p>
               </div>

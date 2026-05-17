@@ -23,17 +23,17 @@ function timeframeLabel(t: string) {
 
 function SkeletonCard() {
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-5 animate-pulse">
+    <div className="bg-white rounded-2xl border border-slate-200 p-5 animate-pulse">
       <div className="flex justify-between mb-3">
-        <div className="h-3.5 bg-zinc-100 dark:bg-zinc-800 rounded-full w-24" />
-        <div className="h-3.5 bg-zinc-100 dark:bg-zinc-800 rounded-full w-16" />
+        <div className="h-3.5 bg-slate-100 rounded-full w-24" />
+        <div className="h-3.5 bg-slate-100 rounded-full w-16" />
       </div>
-      <div className="h-5 bg-zinc-100 dark:bg-zinc-800 rounded w-3/4 mb-2" />
-      <div className="h-4 bg-zinc-100 dark:bg-zinc-800 rounded w-full mb-1" />
-      <div className="h-4 bg-zinc-100 dark:bg-zinc-800 rounded w-2/3 mb-5" />
-      <div className="flex gap-3 pt-3 border-t border-zinc-50 dark:border-zinc-800">
-        <div className="h-3 bg-zinc-100 dark:bg-zinc-800 rounded w-20" />
-        <div className="h-3 bg-zinc-100 dark:bg-zinc-800 rounded w-16" />
+      <div className="h-5 bg-slate-100 rounded w-3/4 mb-2" />
+      <div className="h-4 bg-slate-100 rounded w-full mb-1" />
+      <div className="h-4 bg-slate-100 rounded w-2/3 mb-5" />
+      <div className="flex gap-3 pt-3 border-t border-slate-100">
+        <div className="h-3 bg-slate-100 rounded w-20" />
+        <div className="h-3 bg-slate-100 rounded w-16" />
       </div>
     </div>
   );
@@ -94,15 +94,15 @@ export default function JobsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 pt-24 pb-16">
+    <div className="min-h-screen bg-slate-50 pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Page header */}
         <div className="flex items-start justify-between mb-8 gap-4 flex-wrap">
           <div>
-            <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
+            <h1 className="text-3xl font-bold text-slate-900">
               Lucrări disponibile
             </h1>
-            <p className="text-zinc-500 dark:text-zinc-400 mt-1 text-sm">
+            <p className="text-slate-500 mt-1 text-sm">
               Explorează cererile clienților — găsește lucrări care ți se potrivesc.
             </p>
           </div>
@@ -114,7 +114,7 @@ export default function JobsPage() {
         </div>
 
         {/* City search */}
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-4 mb-5 flex flex-col sm:flex-row gap-3">
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 mb-5 flex flex-col sm:flex-row gap-3">
           <form onSubmit={handleCitySearch} className="flex gap-2 flex-1">
             <Input
               placeholder="Filtrează după oraș..."
@@ -148,8 +148,8 @@ export default function JobsPage() {
             className={cn(
               "px-3 py-1.5 rounded-full text-sm font-medium border transition-all",
               !categoryFilter
-                ? "border-brand-500 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300"
-                : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-600"
+                ? "border-brand-500 bg-brand-50 text-brand-700"
+                : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50"
             )}
           >
             Toate
@@ -165,8 +165,8 @@ export default function JobsPage() {
               className={cn(
                 "px-3 py-1.5 rounded-full text-sm font-medium border transition-all flex items-center gap-1.5",
                 categoryFilter === cat.slug
-                  ? "border-brand-500 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300"
-                  : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-600"
+                  ? "border-brand-500 bg-brand-50 text-brand-700"
+                  : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50"
               )}
             >
               <span className="leading-none">{cat.icon}</span>
@@ -184,8 +184,8 @@ export default function JobsPage() {
           </div>
         ) : jobs.length === 0 ? (
           <div className="text-center py-24">
-            <p className="text-zinc-400 text-lg mb-1">Nicio lucrare disponibilă</p>
-            <p className="text-zinc-400 text-sm mb-6">
+            <p className="text-slate-400 text-lg mb-1">Nicio lucrare disponibilă</p>
+            <p className="text-slate-400 text-sm mb-6">
               {categoryFilter || cityFilter
                 ? "Încearcă să ștergi filtrele."
                 : "Fii primul care postează una!"}
@@ -208,11 +208,11 @@ export default function JobsPage() {
                     className="relative"
                   >
                     <Link href={`/jobs/${job.id}`} className="block h-full">
-                      <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col">
+                      <div className="bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col">
                         {/* Category */}
                         <div className="flex items-center mb-3 pr-10">
                           {cat ? (
-                            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500">
                               <span className="leading-none">{cat.icon}</span>
                               {cat.name}
                             </span>
@@ -223,20 +223,20 @@ export default function JobsPage() {
 
                         {/* Title + status */}
                         <div className="flex items-start gap-2 mb-2">
-                          <h3 className="font-semibold text-zinc-900 dark:text-white line-clamp-2 text-sm leading-snug flex-1">
+                          <h3 className="font-semibold text-slate-900 line-clamp-2 text-sm leading-snug flex-1">
                             {job.title}
                           </h3>
                           <JobStatusBadge status={job.status} />
                         </div>
 
                         {/* Description excerpt */}
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-3 mb-4 flex-1 leading-relaxed">
+                        <p className="text-xs text-slate-500 line-clamp-3 mb-4 flex-1 leading-relaxed">
                           {job.description}
                         </p>
 
                         {/* Footer */}
-                        <div className="flex items-center justify-between pt-3 border-t border-zinc-50 dark:border-zinc-800/60">
-                          <div className="flex items-center gap-3 text-xs text-zinc-400">
+                        <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+                          <div className="flex items-center gap-3 text-xs text-slate-400">
                             <span className="flex items-center gap-1">
                               <MapPin className="h-3 w-3" />
                               {job.city}
@@ -246,10 +246,10 @@ export default function JobsPage() {
                               {timeframeLabel(job.timeframe)}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2 text-xs text-zinc-400">
+                          <div className="flex items-center gap-2 text-xs text-slate-400">
                             <span>{formatRelativeTime(job.created_at)}</span>
                             {job.budget && (
-                              <span className="font-semibold text-sm text-zinc-900 dark:text-white">
+                              <span className="font-semibold text-sm text-slate-900">
                                 {job.budget.toLocaleString()} RON
                               </span>
                             )}

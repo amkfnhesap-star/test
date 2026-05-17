@@ -123,7 +123,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right panel — form */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-white dark:bg-zinc-950">
+      <div className="flex-1 flex items-center justify-center p-6 bg-white">
         <motion.div
           className="w-full max-w-md"
           initial={{ opacity: 0, y: 20 }}
@@ -135,19 +135,19 @@ export default function LoginPage() {
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-brand-500 to-violet-600 flex items-center justify-center">
               <Zap className="h-4 w-4 text-white" />
             </div>
-            <span className="font-bold text-lg text-zinc-900 dark:text-white">
+            <span className="font-bold text-lg text-slate-900">
               Meste<span className="text-brand-500">RO</span>
             </span>
           </Link>
 
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-1">
+          <h1 className="text-2xl font-bold text-slate-900 mb-1">
             Bun venit înapoi
           </h1>
-          <p className="text-zinc-500 dark:text-zinc-400 text-sm mb-8">
+          <p className="text-slate-500 text-sm mb-8">
             Nu ai cont?{" "}
             <Link
               href="/register"
-              className="text-brand-600 dark:text-brand-400 font-medium hover:underline"
+              className="text-brand-600 font-medium hover:underline"
             >
               Înregistrează-te gratuit
             </Link>
@@ -157,7 +157,7 @@ export default function LoginPage() {
           <div className="grid grid-cols-2 gap-3 mb-6">
             <button
               onClick={handleGoogleSignIn}
-              className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+              className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -169,7 +169,7 @@ export default function LoginPage() {
             </button>
             <button
               onClick={handleGithubSignIn}
-              className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+              className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors"
             >
               <Github className="h-4 w-4" />
               GitHub
@@ -177,9 +177,9 @@ export default function LoginPage() {
           </div>
 
           <div className="relative flex items-center gap-3 mb-6">
-            <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-700" />
-            <span className="text-xs text-zinc-400">sau continuă cu email</span>
-            <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-700" />
+            <div className="flex-1 h-px bg-slate-200" />
+            <span className="text-xs text-slate-400">sau continuă cu email</span>
+            <div className="flex-1 h-px bg-slate-200" />
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -204,7 +204,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="hover:text-zinc-600 dark:hover:text-zinc-300"
+                  className="hover:text-slate-600"
                 >
                   {showPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -219,22 +219,22 @@ export default function LoginPage() {
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  className="h-4 w-4 rounded border-zinc-300 text-brand-500 focus:ring-brand-500"
+                  className="h-4 w-4 rounded border-slate-300 text-brand-500 focus:ring-brand-500"
                 />
-                <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                <span className="text-sm text-slate-600">
                   Ține-mă minte
                 </span>
               </label>
               <Link
                 href="/forgot-password"
-                className="text-sm text-brand-600 dark:text-brand-400 hover:underline"
+                className="text-sm text-brand-600 hover:underline"
               >
                 Ai uitat parola?
               </Link>
             </div>
 
             {error && (
-              <p className="text-sm text-red-500 dark:text-red-400 text-center">
+              <p className="text-sm text-red-500 text-center">
                 {error}
               </p>
             )}
@@ -250,13 +250,13 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-xs text-zinc-400">
+          <p className="mt-6 text-center text-xs text-slate-400">
             Prin conectare, confirmați că sunteți de acord cu{" "}
-            <Link href="/terms" className="underline hover:text-zinc-600">
+            <Link href="/terms" className="underline hover:text-slate-600">
               Termenii de utilizare
             </Link>{" "}
             și{" "}
-            <Link href="/privacy" className="underline hover:text-zinc-600">
+            <Link href="/privacy" className="underline hover:text-slate-600">
               Politica de confidențialitate
             </Link>
             .

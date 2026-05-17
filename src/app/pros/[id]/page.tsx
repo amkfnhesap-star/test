@@ -83,10 +83,10 @@ export default function ProviderProfilePage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center pt-16 px-4 text-center">
         <div className="text-6xl mb-4">🔍</div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">
+        <h1 className="text-2xl font-bold text-slate-900 mb-2">
           Meșter negăsit
         </h1>
-        <p className="text-zinc-500 dark:text-zinc-400 mb-6 text-sm">
+        <p className="text-slate-500 mb-6 text-sm">
           Acest profil nu există sau nu mai este activ.
         </p>
         <Link href="/pros">
@@ -106,7 +106,6 @@ export default function ProviderProfilePage() {
       router.push(`/login?redirect=/pros/${id}`);
       return;
     }
-    // Can't contact yourself
     if (session.user.id === profile.user_id) return;
 
     setContacting(true);
@@ -134,16 +133,13 @@ export default function ProviderProfilePage() {
 
   return (
     <>
-      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 pt-16">
-        {/* Hero banner */}
-        <div className="relative bg-gradient-to-br from-brand-600 via-brand-500 to-violet-600 overflow-hidden">
-          {/* subtle texture overlay */}
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white to-transparent" />
-
-          <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-10 pb-20">
+      <div className="min-h-screen bg-slate-50 pt-16">
+        {/* Hero — light card */}
+        <div className="bg-white border-b border-slate-200 shadow-sm">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 pb-16">
             <Link
               href="/pros"
-              className="inline-flex items-center gap-1.5 text-sm text-white/70 hover:text-white mb-8 transition-colors"
+              className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 mb-8 transition-colors"
             >
               <ChevronLeft className="h-4 w-4" />
               Descoperă meșteri
@@ -152,7 +148,7 @@ export default function ProviderProfilePage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-end gap-6">
               {/* Avatar */}
               <div className="relative flex-shrink-0">
-                <div className="h-24 w-24 sm:h-28 sm:w-28 rounded-2xl overflow-hidden border-4 border-white/25 shadow-2xl">
+                <div className="h-24 w-24 sm:h-28 sm:w-28 rounded-2xl overflow-hidden ring-2 ring-brand-100 shadow-md">
                   {avatarSrc ? (
                     <Image
                       src={avatarSrc}
@@ -177,13 +173,13 @@ export default function ProviderProfilePage() {
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                   <div className="flex flex-wrap items-center gap-2">
                     {cat && (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm text-white text-xs font-medium border border-white/20">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-medium border border-brand-100">
                         <span>{cat.icon}</span>
                         {cat.name}
                       </span>
                     )}
                     {profile.is_verified && (
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-200 text-xs font-medium border border-emerald-400/20">
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-medium border border-emerald-200">
                         <CheckCircle className="h-3 w-3" />
                         Verificat
                       </span>
@@ -192,22 +188,21 @@ export default function ProviderProfilePage() {
                   <FavoriteButton
                     targetType="provider"
                     targetId={id}
-                    className="bg-white/15 border-white/25 text-white hover:bg-white/25 hover:border-white/40"
                   />
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl font-bold text-white mb-1 leading-tight">
+                <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-1 leading-tight">
                   {name}
                 </h1>
-                <p className="text-white/75 text-base mb-4 leading-snug">
+                <p className="text-slate-700 text-base mb-4 leading-snug">
                   {profile.headline}
                 </p>
 
-                <div className="flex flex-wrap items-center gap-5 text-sm text-white/65">
+                <div className="flex flex-wrap items-center gap-5 text-sm text-slate-500">
                   {profile.average_rating > 0 && (
                     <span className="flex items-center gap-1.5">
                       <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
-                      <span className="text-white font-semibold">
+                      <span className="text-slate-900 font-semibold">
                         {profile.average_rating.toFixed(1)}
                       </span>
                       <span>({profile.review_count} recenzii)</span>
@@ -215,7 +210,7 @@ export default function ProviderProfilePage() {
                   )}
                   {profile.jobs_completed > 0 && (
                     <span className="flex items-center gap-1.5">
-                      <Briefcase className="h-4 w-4" />
+                      <Briefcase className="h-4 w-4 text-brand-500" />
                       {profile.jobs_completed} lucrări finalizate
                     </span>
                   )}
@@ -240,16 +235,16 @@ export default function ProviderProfilePage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.05 }}
-                  className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-6"
+                  className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
                 >
-                  <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4">
+                  <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">
                     Competențe și specialități
                   </h2>
                   <div className="flex flex-wrap gap-2">
                     {profile.skills.map((skill) => (
                       <span
                         key={skill}
-                        className="px-3 py-1.5 rounded-xl bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-sm text-zinc-700 dark:text-zinc-300"
+                        className="px-3 py-1.5 rounded-xl bg-brand-50 border border-brand-200 text-sm text-brand-700"
                       >
                         {skill}
                       </span>
@@ -264,12 +259,12 @@ export default function ProviderProfilePage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
-                  className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-6"
+                  className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
                 >
-                  <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4">
+                  <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">
                     Despre
                   </h2>
-                  <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed whitespace-pre-line">
+                  <p className="text-slate-600 text-sm leading-relaxed whitespace-pre-line">
                     {profile.bio}
                   </p>
                 </motion.div>
@@ -281,9 +276,9 @@ export default function ProviderProfilePage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.15 }}
-                  className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-6"
+                  className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
                 >
-                  <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4">
+                  <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">
                     Portofoliu
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -291,7 +286,7 @@ export default function ProviderProfilePage() {
                       <button
                         key={i}
                         onClick={() => setLightboxUrl(url)}
-                        className="relative aspect-square rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-700 hover:opacity-90 hover:scale-[1.02] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+                        className="relative aspect-square rounded-xl overflow-hidden border border-slate-200 hover:opacity-90 hover:scale-[1.02] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
                       >
                         <Image
                           src={url}
@@ -313,21 +308,21 @@ export default function ProviderProfilePage() {
               transition={{ delay: 0.05 }}
               className="space-y-4"
             >
-              <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-6 lg:sticky lg:top-24">
+              <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm lg:sticky lg:top-24">
                 {/* Pricing */}
-                <div className="mb-5 pb-5 border-b border-zinc-100 dark:border-zinc-800">
+                <div className="mb-5 pb-5 border-b border-slate-200">
                   {profile.hourly_rate != null && (
                     <div className="flex items-baseline gap-1 mb-1">
-                      <span className="text-3xl font-bold text-zinc-900 dark:text-white">
+                      <span className="text-3xl font-bold text-slate-900">
                         {profile.hourly_rate.toLocaleString()}
                       </span>
-                      <span className="text-zinc-500 dark:text-zinc-400 text-sm">RON / oră</span>
+                      <span className="text-slate-500 text-sm">RON / oră</span>
                     </div>
                   )}
                   {profile.fixed_price_from != null && (
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                    <p className="text-sm text-slate-500">
                       De la{" "}
-                      <span className="font-semibold text-zinc-800 dark:text-zinc-200">
+                      <span className="font-semibold text-slate-800">
                         {profile.fixed_price_from.toLocaleString()} RON
                       </span>
                     </p>
@@ -344,14 +339,14 @@ export default function ProviderProfilePage() {
                 {/* Details list */}
                 <div className="space-y-3.5">
                   <div className="flex items-start gap-3 text-sm">
-                    <MapPin className="h-4 w-4 text-zinc-400 mt-0.5 flex-shrink-0" />
-                    <span className="text-zinc-600 dark:text-zinc-400">
+                    <MapPin className="h-4 w-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                    <span className="text-slate-600">
                       Deservește până la{" "}
-                      <span className="font-medium text-zinc-800 dark:text-zinc-200">
+                      <span className="font-medium text-slate-800">
                         {profile.service_radius_km} km
                       </span>{" "}
                       în jurul{" "}
-                      <span className="font-medium text-zinc-800 dark:text-zinc-200">
+                      <span className="font-medium text-slate-800">
                         {profile.home_city}
                       </span>
                     </span>
@@ -359,10 +354,10 @@ export default function ProviderProfilePage() {
 
                   {profile.response_time && (
                     <div className="flex items-center gap-3 text-sm">
-                      <Clock className="h-4 w-4 text-zinc-400 flex-shrink-0" />
-                      <span className="text-zinc-600 dark:text-zinc-400">
+                      <Clock className="h-4 w-4 text-slate-400 flex-shrink-0" />
+                      <span className="text-slate-600">
                         Răspunde{" "}
-                        <span className="font-medium text-zinc-800 dark:text-zinc-200">
+                        <span className="font-medium text-slate-800">
                           {profile.response_time.toLowerCase()}
                         </span>
                       </span>
@@ -371,9 +366,9 @@ export default function ProviderProfilePage() {
 
                   {profile.years_experience != null && (
                     <div className="flex items-center gap-3 text-sm">
-                      <Briefcase className="h-4 w-4 text-zinc-400 flex-shrink-0" />
-                      <span className="text-zinc-600 dark:text-zinc-400">
-                        <span className="font-medium text-zinc-800 dark:text-zinc-200">
+                      <Briefcase className="h-4 w-4 text-slate-400 flex-shrink-0" />
+                      <span className="text-slate-600">
+                        <span className="font-medium text-slate-800">
                           {profile.years_experience}{" "}
                           {profile.years_experience === 1 ? "an" : "ani"}
                         </span>{" "}
@@ -384,9 +379,9 @@ export default function ProviderProfilePage() {
 
                   {profile.review_count > 0 && (
                     <div className="flex items-center gap-3 text-sm">
-                      <Star className="h-4 w-4 text-zinc-400 flex-shrink-0" />
-                      <span className="text-zinc-600 dark:text-zinc-400">
-                        <span className="font-medium text-zinc-800 dark:text-zinc-200">
+                      <Star className="h-4 w-4 text-slate-400 flex-shrink-0" />
+                      <span className="text-slate-600">
+                        <span className="font-medium text-slate-800">
                           {profile.average_rating.toFixed(1)} stele
                         </span>{" "}
                         · {profile.review_count} recenzii
@@ -396,9 +391,9 @@ export default function ProviderProfilePage() {
 
                   {profile.jobs_completed > 0 && (
                     <div className="flex items-center gap-3 text-sm">
-                      <CheckCircle className="h-4 w-4 text-zinc-400 flex-shrink-0" />
-                      <span className="text-zinc-600 dark:text-zinc-400">
-                        <span className="font-medium text-zinc-800 dark:text-zinc-200">
+                      <CheckCircle className="h-4 w-4 text-slate-400 flex-shrink-0" />
+                      <span className="text-slate-600">
+                        <span className="font-medium text-slate-800">
                           {profile.jobs_completed}
                         </span>{" "}
                         lucrări finalizate

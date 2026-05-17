@@ -82,32 +82,26 @@ function SearchContent() {
   const [allJobs, setAllJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // "?type=providers" or "?type=jobs" from URL locks the feed to one type
   const forceType = (searchParams.get("type") ?? "") as "" | "providers" | "jobs";
 
-  // Universal filters
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     searchParams.get("category")
   );
   const [cityFilter, setCityFilter] = useState("");
 
-  // Sort + view
   const [selectedSort, setSelectedSort] = useState("best_match");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
 
-  // Provider-only filters
   const [availableOnly, setAvailableOnly] = useState(false);
   const [minRating, setMinRating] = useState(0);
   const [maxRate, setMaxRate] = useState(MAX_RATE);
 
-  // Job-only filters
   const [maxBudget, setMaxBudget] = useState(MAX_BUDGET);
   const [timeframeFilter, setTimeframeFilter] = useState("");
   const [hasPhotos, setHasPhotos] = useState(false);
 
-  // Pagination
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
 
   useEffect(() => {
@@ -216,28 +210,28 @@ function SearchContent() {
   const hasMore = displayCount < filtered.length;
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 pt-16">
+    <div className="min-h-screen bg-slate-50 pt-16">
       {/* Sticky search header */}
-      <div className="bg-white dark:bg-zinc-900 border-b border-zinc-100 dark:border-zinc-800 sticky top-16 z-20">
+      <div className="bg-white border-b border-slate-200 sticky top-16 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex flex-col sm:flex-row gap-3">
-            <div className="flex-1 flex items-center gap-3 bg-zinc-50 dark:bg-zinc-800 rounded-xl px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500/20 transition-all">
-              <Search className="h-4 w-4 text-zinc-400 flex-shrink-0" />
+            <div className="flex-1 flex items-center gap-3 bg-white rounded-xl px-4 py-2.5 border border-slate-300 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500/20 transition-all">
+              <Search className="h-4 w-4 text-slate-400 flex-shrink-0" />
               <input
                 type="text"
                 placeholder="Caută lucrări, meșteri, competențe..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="flex-1 bg-transparent text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-none"
+                className="flex-1 bg-transparent text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
               />
               {query && (
                 <button onClick={() => setQuery("")}>
-                  <X className="h-4 w-4 text-zinc-400 hover:text-zinc-600" />
+                  <X className="h-4 w-4 text-slate-400 hover:text-slate-600" />
                 </button>
               )}
-              <div className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-brand-100 dark:bg-brand-900/30">
-                <Sparkles className="h-3 w-3 text-brand-600 dark:text-brand-400" />
-                <span className="text-xs text-brand-600 dark:text-brand-400 font-medium">AI</span>
+              <div className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-brand-50">
+                <Sparkles className="h-3 w-3 text-brand-600" />
+                <span className="text-xs text-brand-600 font-medium">AI</span>
               </div>
             </div>
 
@@ -245,23 +239,23 @@ function SearchContent() {
               <select
                 value={selectedSort}
                 onChange={(e) => setSelectedSort(e.target.value)}
-                className="appearance-none pl-4 pr-8 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm text-zinc-700 dark:text-zinc-300 focus:outline-none focus:border-brand-500 cursor-pointer"
+                className="appearance-none pl-4 pr-8 py-2.5 rounded-xl border border-slate-300 bg-white text-sm text-slate-700 focus:outline-none focus:border-brand-500 cursor-pointer"
               >
                 {SORT_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>{o.label}</option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400 pointer-events-none" />
+              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
             </div>
 
-            <div className="flex items-center gap-1 p-1 rounded-xl bg-zinc-100 dark:bg-zinc-800">
+            <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100">
               <button
                 onClick={() => setViewMode("grid")}
                 className={cn(
                   "p-2 rounded-lg transition-all",
                   viewMode === "grid"
-                    ? "bg-white dark:bg-zinc-700 shadow-sm text-zinc-900 dark:text-white"
-                    : "text-zinc-400"
+                    ? "bg-white shadow-sm text-slate-900"
+                    : "text-slate-400"
                 )}
               >
                 <Grid2X2 className="h-4 w-4" />
@@ -271,8 +265,8 @@ function SearchContent() {
                 className={cn(
                   "p-2 rounded-lg transition-all",
                   viewMode === "list"
-                    ? "bg-white dark:bg-zinc-700 shadow-sm text-zinc-900 dark:text-white"
-                    : "text-zinc-400"
+                    ? "bg-white shadow-sm text-slate-900"
+                    : "text-slate-400"
                 )}
               >
                 <List className="h-4 w-4" />
@@ -281,7 +275,7 @@ function SearchContent() {
 
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 transition-colors md:hidden"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm text-slate-700 hover:bg-slate-50 transition-colors md:hidden"
             >
               <Filter className="h-4 w-4" />
               Filtre
@@ -296,7 +290,7 @@ function SearchContent() {
                 "flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all",
                 !selectedCategory
                   ? "bg-brand-500 text-white shadow-sm"
-                  : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               )}
             >
               Toate categoriile
@@ -309,7 +303,7 @@ function SearchContent() {
                   "flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all",
                   selectedCategory === cat.slug
                     ? "bg-brand-500 text-white shadow-sm"
-                    : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                 )}
               >
                 <span>{cat.icon}</span>
@@ -325,29 +319,29 @@ function SearchContent() {
           {/* Sidebar */}
           <aside className={cn("w-64 flex-shrink-0", showFilters ? "block" : "hidden md:block")}>
             <div className="sticky top-36 space-y-5">
-              <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-5 space-y-5">
-                <h3 className="font-semibold text-zinc-900 dark:text-white text-sm flex items-center gap-2">
+              <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-5">
+                <h3 className="font-semibold text-slate-900 text-sm flex items-center gap-2">
                   <SlidersHorizontal className="h-4 w-4" />
                   Filtre
                 </h3>
 
                 {/* City — universal */}
                 <div>
-                  <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">
                     Oraș
                   </p>
-                  <div className="flex items-center gap-2 bg-zinc-50 dark:bg-zinc-800 rounded-lg px-3 py-2 border border-zinc-200 dark:border-zinc-700 focus-within:border-brand-500 transition-all">
-                    <MapPin className="h-3.5 w-3.5 text-zinc-400 flex-shrink-0" />
+                  <div className="flex items-center gap-2 bg-white rounded-lg px-3 py-2 border border-slate-300 focus-within:border-brand-500 transition-all">
+                    <MapPin className="h-3.5 w-3.5 text-slate-400 flex-shrink-0" />
                     <input
                       type="text"
                       placeholder="ex. București"
                       value={cityFilter}
                       onChange={(e) => setCityFilter(e.target.value)}
-                      className="flex-1 bg-transparent text-xs text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-none"
+                      className="flex-1 bg-transparent text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none"
                     />
                     {cityFilter && (
                       <button onClick={() => setCityFilter("")}>
-                        <X className="h-3 w-3 text-zinc-400" />
+                        <X className="h-3 w-3 text-slate-400" />
                       </button>
                     )}
                   </div>
@@ -355,18 +349,18 @@ function SearchContent() {
 
                 {/* Provider-only filters */}
                 <div className={cn("space-y-4 transition-opacity duration-200", jobOnlyActive && "opacity-40 pointer-events-none")}>
-                  <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
                     <span className="h-1.5 w-1.5 rounded-full bg-brand-500 inline-block" />
                     Filtre meșteri
                   </p>
 
                   <label className="flex items-center justify-between cursor-pointer">
-                    <span className="text-sm text-zinc-700 dark:text-zinc-300">Doar disponibili acum</span>
+                    <span className="text-sm text-slate-700">Doar disponibili acum</span>
                     <button
                       onClick={() => setAvailableOnly(!availableOnly)}
                       className={cn(
                         "relative h-5 w-9 rounded-full transition-colors",
-                        availableOnly ? "bg-brand-500" : "bg-zinc-200 dark:bg-zinc-700"
+                        availableOnly ? "bg-brand-500" : "bg-slate-200"
                       )}
                     >
                       <span
@@ -379,7 +373,7 @@ function SearchContent() {
                   </label>
 
                   <div>
-                    <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Evaluare minimă</p>
+                    <p className="text-sm font-medium text-slate-700 mb-2">Evaluare minimă</p>
                     <div className="flex gap-1.5">
                       {[0, 4, 4.5, 4.8].map((r) => (
                         <button
@@ -388,8 +382,8 @@ function SearchContent() {
                           className={cn(
                             "flex-1 py-1.5 rounded-lg text-xs font-medium transition-all",
                             minRating === r
-                              ? "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-700"
-                              : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                              ? "bg-amber-100 text-amber-700 border border-amber-300"
+                              : "bg-slate-100 text-slate-500 hover:bg-slate-200"
                           )}
                         >
                           {r === 0 ? "Orice" : `${r}+`}
@@ -399,9 +393,9 @@ function SearchContent() {
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+                    <p className="text-sm font-medium text-slate-700 mb-2">
                       Tarif maxim:{" "}
-                      <span className="text-brand-500">
+                      <span className="text-brand-600">
                         {maxRate >= MAX_RATE ? "Orice" : `${maxRate} RON/oră`}
                       </span>
                     </p>
@@ -411,26 +405,26 @@ function SearchContent() {
                       onChange={(e) => setMaxRate(+e.target.value)}
                       className="w-full accent-brand-500"
                     />
-                    <div className="flex justify-between text-xs text-zinc-400 mt-1">
+                    <div className="flex justify-between text-xs text-slate-400 mt-1">
                       <span>20 RON</span>
                       <span>300+ RON</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="border-t border-zinc-100 dark:border-zinc-800" />
+                <div className="border-t border-slate-200" />
 
                 {/* Job-only filters */}
                 <div className={cn("space-y-4 transition-opacity duration-200", providerOnlyActive && "opacity-40 pointer-events-none")}>
-                  <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-cyan-500 inline-block" />
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-brand-500 inline-block" />
                     Filtre lucrări
                   </p>
 
                   <div>
-                    <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+                    <p className="text-sm font-medium text-slate-700 mb-2">
                       Buget maxim:{" "}
-                      <span className="text-cyan-600 dark:text-cyan-400">
+                      <span className="text-brand-600">
                         {maxBudget >= MAX_BUDGET ? "Orice" : `${maxBudget} RON`}
                       </span>
                     </p>
@@ -438,16 +432,16 @@ function SearchContent() {
                       type="range" min={100} max={MAX_BUDGET} step={100}
                       value={maxBudget}
                       onChange={(e) => setMaxBudget(+e.target.value)}
-                      className="w-full accent-cyan-500"
+                      className="w-full accent-brand-500"
                     />
-                    <div className="flex justify-between text-xs text-zinc-400 mt-1">
+                    <div className="flex justify-between text-xs text-slate-400 mt-1">
                       <span>100 RON</span>
                       <span>10k+ RON</span>
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Perioadă</p>
+                    <p className="text-sm font-medium text-slate-700 mb-2">Perioadă</p>
                     <div className="grid grid-cols-2 gap-1.5">
                       {TIMEFRAME_OPTIONS.map((t) => (
                         <button
@@ -456,8 +450,8 @@ function SearchContent() {
                           className={cn(
                             "py-1.5 rounded-lg text-xs font-medium transition-all",
                             timeframeFilter === t.value
-                              ? "bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400 border border-cyan-300 dark:border-cyan-700"
-                              : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                              ? "bg-brand-50 text-brand-700 border border-brand-200"
+                              : "bg-slate-100 text-slate-500 hover:bg-slate-200"
                           )}
                         >
                           {t.label}
@@ -467,12 +461,12 @@ function SearchContent() {
                   </div>
 
                   <label className="flex items-center justify-between cursor-pointer">
-                    <span className="text-sm text-zinc-700 dark:text-zinc-300">Cu fotografii</span>
+                    <span className="text-sm text-slate-700">Cu fotografii</span>
                     <button
                       onClick={() => setHasPhotos(!hasPhotos)}
                       className={cn(
                         "relative h-5 w-9 rounded-full transition-colors",
-                        hasPhotos ? "bg-cyan-500" : "bg-zinc-200 dark:bg-zinc-700"
+                        hasPhotos ? "bg-brand-500" : "bg-slate-200"
                       )}
                     >
                       <span
@@ -487,19 +481,19 @@ function SearchContent() {
               </div>
 
               {/* AI suggestion */}
-              <div className="bg-gradient-to-br from-brand-50 to-violet-50 dark:from-brand-900/20 dark:to-violet-900/20 rounded-2xl border border-brand-100 dark:border-brand-800/30 p-5">
+              <div className="bg-brand-50 rounded-2xl border border-brand-100 p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <Sparkles className="h-4 w-4 text-brand-500" />
-                  <span className="text-sm font-semibold text-brand-700 dark:text-brand-300">Sugestie AI</span>
+                  <span className="text-sm font-semibold text-brand-700">Sugestie AI</span>
                 </div>
-                <p className="text-xs text-brand-600 dark:text-brand-400 leading-relaxed mb-3">
+                <p className="text-xs text-brand-600 leading-relaxed mb-3">
                   Pe baza căutării tale, recomandăm filtrarea după{" "}
                   <strong>evaluare 4.8+</strong> și activarea{" "}
                   <strong>doar disponibili</strong> pentru cele mai bune rezultate.
                 </p>
                 <button
                   onClick={() => { setMinRating(4.8); setAvailableOnly(true); }}
-                  className="text-xs font-medium text-brand-600 dark:text-brand-400 hover:underline"
+                  className="text-xs font-medium text-brand-600 hover:underline"
                 >
                   Aplică sugestia →
                 </button>
@@ -510,26 +504,26 @@ function SearchContent() {
           {/* Results */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-5">
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                <span className="font-semibold text-zinc-900 dark:text-white">
+              <p className="text-sm text-slate-500">
+                <span className="font-semibold text-slate-900">
                   {loading ? "—" : filtered.length}
                 </span>{" "}
                 rezultate găsite
               </p>
-                {!loading && forceType === "providers" && (
-                <span className="text-xs px-2 py-0.5 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300">
+              {!loading && forceType === "providers" && (
+                <span className="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-700">
                   Doar meșteri —{" "}
                   <Link href="/search" className="underline">Toate</Link>
                 </span>
               )}
               {!loading && forceType === "jobs" && (
-                <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300">
+                <span className="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-700">
                   Doar lucrări —{" "}
                   <Link href="/search" className="underline">Toate</Link>
                 </span>
               )}
               {!loading && !forceType && (providerOnlyActive || jobOnlyActive) && (
-                <p className="text-xs text-zinc-400 italic">
+                <p className="text-xs text-slate-400 italic">
                   {providerOnlyActive
                     ? "Filtre meșteri active — lucrările sunt ascunse"
                     : "Filtre lucrări active — meșterii sunt ascuși"}
@@ -542,26 +536,26 @@ function SearchContent() {
                 viewMode === "grid" ? "grid sm:grid-cols-2 lg:grid-cols-3 gap-4" : "space-y-3"
               )}>
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-5 animate-pulse">
+                  <div key={i} className="bg-white rounded-2xl border border-slate-200 p-5 animate-pulse">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="h-12 w-12 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex-shrink-0" />
+                      <div className="h-12 w-12 rounded-xl bg-slate-100 flex-shrink-0" />
                       <div className="flex-1">
-                        <div className="h-4 bg-zinc-100 dark:bg-zinc-800 rounded w-3/4 mb-2" />
-                        <div className="h-3 bg-zinc-100 dark:bg-zinc-800 rounded w-1/2" />
+                        <div className="h-4 bg-slate-100 rounded w-3/4 mb-2" />
+                        <div className="h-3 bg-slate-100 rounded w-1/2" />
                       </div>
                     </div>
-                    <div className="h-3 bg-zinc-100 dark:bg-zinc-800 rounded mb-2" />
-                    <div className="h-3 bg-zinc-100 dark:bg-zinc-800 rounded w-3/4" />
+                    <div className="h-3 bg-slate-100 rounded mb-2" />
+                    <div className="h-3 bg-slate-100 rounded w-3/4" />
                   </div>
                 ))}
               </div>
             ) : filtered.length === 0 ? (
               <div className="text-center py-20">
                 <div className="text-4xl mb-4">🔍</div>
-                <h3 className="text-lg font-semibold text-zinc-700 dark:text-zinc-300 mb-2">
+                <h3 className="text-lg font-semibold text-slate-700 mb-2">
                   Niciun rezultat găsit
                 </h3>
-                <p className="text-zinc-400 text-sm">
+                <p className="text-slate-400 text-sm">
                   Încearcă să ajustezi filtrele sau termenul de căutare.
                 </p>
               </div>
@@ -595,7 +589,7 @@ function SearchContent() {
                   <div className="mt-8 flex justify-center">
                     <button
                       onClick={() => setDisplayCount((c) => c + PAGE_SIZE)}
-                      className="px-6 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+                      className="px-6 py-2.5 rounded-xl border border-slate-300 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
                     >
                       Încarcă încă {Math.min(PAGE_SIZE, filtered.length - displayCount)}
                     </button>
@@ -643,13 +637,18 @@ function ProviderCard({
       <Link href={`/pros/${provider.user_id}`}>
         <div
           className={cn(
-            "group relative rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:shadow-lg hover:border-transparent hover:-translate-y-0.5 transition-all duration-300 overflow-hidden",
+            "group relative rounded-2xl border border-slate-200 bg-white hover:shadow-lg hover:border-brand-200 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden",
             viewMode === "list" && "flex gap-4 p-4"
           )}
         >
+          {/* Brand top stripe to distinguish provider cards from job cards */}
+          {viewMode === "grid" && (
+            <div className="absolute top-0 left-0 right-0 h-1 bg-brand-500" />
+          )}
+
           {viewMode === "grid" && (
             <div className="absolute top-3 left-3 z-10">
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-700/50">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-brand-100 text-brand-700 border border-brand-200">
                 <span className="h-1.5 w-1.5 rounded-full bg-brand-500 inline-block" />
                 Meșter
               </span>
@@ -667,10 +666,10 @@ function ProviderCard({
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-zinc-900 dark:text-white text-sm group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors truncate">
+                  <h3 className="font-semibold text-slate-900 text-sm group-hover:text-brand-600 transition-colors truncate">
                     {name}
                   </h3>
-                  <p className="text-xs text-zinc-400 truncate mt-0.5">{provider.headline}</p>
+                  <p className="text-xs text-slate-400 truncate mt-0.5">{provider.headline}</p>
                 </div>
                 {provider.is_verified && (
                   <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
@@ -679,20 +678,20 @@ function ProviderCard({
 
               {cat && (
                 <div className="mb-3">
-                  <span className="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 text-[10px]">
+                  <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px]">
                     {cat.icon} {cat.name}
                   </span>
                 </div>
               )}
 
               <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-3 text-zinc-500">
+                <div className="flex items-center gap-3 text-slate-500">
                   <div className="flex items-center gap-0.5">
                     <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
-                    <span className="font-medium text-zinc-700 dark:text-zinc-300">
+                    <span className="font-medium text-slate-700">
                       {provider.average_rating.toFixed(1)}
                     </span>
-                    <span className="text-zinc-400">({provider.review_count})</span>
+                    <span className="text-slate-400">({provider.review_count})</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <MapPin className="h-3 w-3" />
@@ -700,9 +699,9 @@ function ProviderCard({
                   </div>
                 </div>
                 {provider.hourly_rate != null && (
-                  <div className="font-bold text-zinc-900 dark:text-white">
+                  <div className="font-bold text-slate-900">
                     {provider.hourly_rate}
-                    <span className="text-xs font-normal text-zinc-400"> RON/oră</span>
+                    <span className="text-xs font-normal text-slate-400"> RON/oră</span>
                   </div>
                 )}
               </div>
@@ -718,30 +717,30 @@ function ProviderCard({
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <h3 className="font-semibold text-zinc-900 dark:text-white text-sm group-hover:text-brand-600 transition-colors truncate">
+                      <h3 className="font-semibold text-slate-900 text-sm group-hover:text-brand-600 transition-colors truncate">
                         {name}
                       </h3>
-                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-700/50 flex-shrink-0">
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-brand-100 text-brand-700 border border-brand-200 flex-shrink-0">
                         Provider
                       </span>
                     </div>
-                    <p className="text-xs text-zinc-400 line-clamp-2">{provider.bio}</p>
+                    <p className="text-xs text-slate-400 line-clamp-2">{provider.bio}</p>
                   </div>
                   <div className="text-right flex-shrink-0">
                     {provider.hourly_rate != null && (
-                      <div className="font-bold text-zinc-900 dark:text-white text-sm">
+                      <div className="font-bold text-slate-900 text-sm">
                         {provider.hourly_rate} RON/oră
                       </div>
                     )}
                     <div className="flex items-center gap-1 mt-0.5 justify-end">
                       <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
-                      <span className="text-xs text-zinc-600 dark:text-zinc-400">
+                      <span className="text-xs text-slate-600">
                         {provider.average_rating.toFixed(1)} ({provider.review_count})
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 mt-2 text-xs text-zinc-400">
+                <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
                   <span className="flex items-center gap-1">
                     <MapPin className="h-3 w-3" />
                     {provider.home_city}
@@ -800,13 +799,13 @@ function JobCard({
       <Link href={`/jobs/${job.id}`}>
         <div
           className={cn(
-            "group relative rounded-2xl border border-cyan-100 dark:border-cyan-900/40 bg-white dark:bg-zinc-900 hover:shadow-lg hover:border-transparent hover:-translate-y-0.5 transition-all duration-300 overflow-hidden",
+            "group relative rounded-2xl border border-slate-200 bg-white hover:shadow-lg hover:border-transparent hover:-translate-y-0.5 transition-all duration-300 overflow-hidden",
             viewMode === "list" && "flex gap-4 p-4"
           )}
         >
           {viewMode === "grid" && (
             <div className="absolute top-3 left-3 z-10">
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-cyan-100 dark:bg-cyan-900/40 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-700/50">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
                 <Briefcase className="h-2.5 w-2.5" />
                 Job
               </span>
@@ -817,26 +816,26 @@ function JobCard({
             <div className="p-5 pt-8">
               <div className="mb-2">
                 <div className="flex items-start gap-2 mb-1">
-                  <h3 className="font-semibold text-zinc-900 dark:text-white text-sm group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors line-clamp-2 leading-snug flex-1">
+                  <h3 className="font-semibold text-slate-900 text-sm group-hover:text-brand-600 transition-colors line-clamp-2 leading-snug flex-1">
                     {job.title}
                   </h3>
                   <JobStatusBadge status={job.status} />
                 </div>
-                <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
                   {job.description}
                 </p>
               </div>
 
               {cat && (
                 <div className="mb-3">
-                  <span className="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 text-[10px]">
+                  <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px]">
                     {cat.icon} {cat.name}
                   </span>
                 </div>
               )}
 
               <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-3 text-zinc-500">
+                <div className="flex items-center gap-3 text-slate-500">
                   <div className="flex items-center gap-1">
                     <MapPin className="h-3 w-3" />
                     {job.city}
@@ -847,16 +846,16 @@ function JobCard({
                   </div>
                 </div>
                 {job.budget != null ? (
-                  <div className="font-bold text-cyan-700 dark:text-cyan-400">
+                  <div className="font-bold text-brand-600">
                     {job.budget}
-                    <span className="text-xs font-normal text-zinc-400"> RON</span>
+                    <span className="text-xs font-normal text-slate-400"> RON</span>
                   </div>
                 ) : (
-                  <span className="text-zinc-400 text-[10px]">Buget deschis</span>
+                  <span className="text-slate-400 text-[10px]">Buget deschis</span>
                 )}
               </div>
 
-              <div className="mt-2 pt-2 border-t border-zinc-50 dark:border-zinc-800 text-[10px] text-zinc-400 flex items-center gap-2">
+              <div className="mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-400 flex items-center gap-2">
                 <span>Postat {timeAgo(job.created_at)}</span>
                 {job.photo_urls.length > 0 && (
                   <span className="flex items-center gap-0.5">
@@ -868,37 +867,37 @@ function JobCard({
             </div>
           ) : (
             <>
-              <div className="flex-shrink-0 h-14 w-14 rounded-xl bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-100 dark:border-cyan-800/30 flex items-center justify-center">
-                <Briefcase className="h-6 w-6 text-cyan-500" />
+              <div className="flex-shrink-0 h-14 w-14 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
+                <Briefcase className="h-6 w-6 text-slate-400" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <h3 className="font-semibold text-zinc-900 dark:text-white text-sm group-hover:text-cyan-600 transition-colors truncate">
+                      <h3 className="font-semibold text-slate-900 text-sm group-hover:text-brand-600 transition-colors truncate">
                         {job.title}
                       </h3>
-                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-cyan-100 dark:bg-cyan-900/40 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-700/50 flex-shrink-0">
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 flex-shrink-0">
                         <Briefcase className="h-2.5 w-2.5" />
                         Job
                       </span>
                     </div>
-                    <p className="text-xs text-zinc-400 line-clamp-2">{job.description}</p>
+                    <p className="text-xs text-slate-400 line-clamp-2">{job.description}</p>
                   </div>
                   <div className="text-right flex-shrink-0">
                     {job.budget != null ? (
-                      <div className="font-bold text-cyan-700 dark:text-cyan-400 text-sm">
+                      <div className="font-bold text-brand-600 text-sm">
                         {job.budget} RON
                       </div>
                     ) : (
-                      <span className="text-zinc-400 text-xs">Open budget</span>
+                      <span className="text-slate-400 text-xs">Open budget</span>
                     )}
-                    <div className="text-[10px] text-zinc-400 mt-0.5">
+                    <div className="text-[10px] text-slate-400 mt-0.5">
                       {timeAgo(job.created_at)}
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 mt-2 text-xs text-zinc-400">
+                <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
                   <span className="flex items-center gap-1">
                     <MapPin className="h-3 w-3" />
                     {job.city}
