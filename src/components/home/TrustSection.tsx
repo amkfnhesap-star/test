@@ -95,7 +95,7 @@ function BenefitCard({
       className="group flex flex-row rounded-2xl overflow-hidden bg-white ring-1 ring-slate-200 hover:bg-slate-50 transition-colors shadow-sm"
     >
       {/* Photo strip */}
-      <div className="w-32 md:w-40 flex-shrink-0 overflow-hidden relative">
+      <div className="w-24 sm:w-32 md:w-40 flex-shrink-0 overflow-hidden relative">
         <img
           src={card.photo}
           alt={card.title}
@@ -116,12 +116,12 @@ function BenefitCard({
       </div>
 
       {/* Content */}
-      <div className="flex-1 p-6 flex flex-col justify-center">
-        <span className="inline-block h-2 w-2 rounded-full bg-brand-500 mb-3" />
-        <h3 className="text-base font-bold text-slate-900 leading-snug">
+      <div className="flex-1 p-4 md:p-6 flex flex-col justify-center">
+        <span className="inline-block h-2 w-2 rounded-full bg-brand-500 mb-2 md:mb-3" />
+        <h3 className="text-sm md:text-base font-bold text-slate-900 leading-snug">
           {card.title}
         </h3>
-        <p className="text-sm text-slate-600 leading-relaxed mt-2">
+        <p className="text-xs md:text-sm text-slate-600 leading-relaxed mt-1 md:mt-2">
           {card.description}
         </p>
       </div>
@@ -131,7 +131,7 @@ function BenefitCard({
 
 export function TrustSection() {
   return (
-    <section className="py-20 md:py-28 bg-slate-50 relative overflow-hidden">
+    <section className="py-12 md:py-28 bg-slate-50 relative overflow-hidden">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <motion.div
@@ -169,13 +169,13 @@ export function TrustSection() {
           <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider mb-6">
             Bazat pe principii reale
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap sm:items-center sm:justify-center gap-3 sm:gap-6 md:gap-10">
             {trustSignals.map(({ icon: Icon, label }) => (
               <div
                 key={label}
                 className="flex items-center gap-2 text-slate-500 hover:text-slate-700 transition-colors"
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-4 w-4 flex-shrink-0" />
                 <span className="text-sm">{label}</span>
               </div>
             ))}

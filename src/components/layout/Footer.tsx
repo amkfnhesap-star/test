@@ -77,9 +77,9 @@ export function Footer() {
 
       {/* Main footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6 md:gap-8">
           {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
+          <div className="sm:col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
               <div className="h-8 w-8 rounded-lg bg-brand-500 flex items-center justify-center">
                 <Zap className="h-4 w-4 text-white" />
@@ -132,7 +132,7 @@ export function Footer() {
           <p className="text-xs text-zinc-600">
             © {new Date().getFullYear()} MesteRO — Versiune beta
           </p>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center gap-4">
             <span className="text-xs text-zinc-600">
               🔒 Criptare SSL 256 biți
             </span>

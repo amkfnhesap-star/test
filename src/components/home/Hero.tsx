@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Search, MapPin, ChevronDown, Sparkles, Star, Shield, Zap } from "lucide-react";
 import { formatNumber } from "@/lib/utils";
+import Image from "next/image";
 import { Avatar } from "@/components/ui/Avatar";
 import { platformStats } from "@/data/dummy";
 
@@ -38,6 +39,8 @@ const stats = [
   { label: "Lucrări finalizate", value: formatNumber(platformStats.total_bookings), icon: Zap },
   { label: "Evaluare medie", value: `${platformStats.avg_rating}★`, icon: Star },
 ];
+
+const HERO_PHOTO = "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1920&h=1080&fit=crop&q=80";
 
 export function Hero() {
   const router = useRouter();
@@ -77,7 +80,19 @@ export function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden hero-bg">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background photo + gradient overlay */}
+      <div className="absolute inset-0">
+        <Image
+          src={HERO_PHOTO}
+          alt=""
+          fill
+          priority
+          className="object-cover object-right"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/98 via-white/92 to-white/75 md:bg-gradient-to-r md:from-white/95 md:via-white/80 md:to-white/40" />
+      </div>
+
       {/* Subtle green tint orbs */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
@@ -136,7 +151,8 @@ export function Hero() {
 
         {/* Headline */}
         <motion.h1
-          className="text-5xl sm:text-6xl md:text-7xl font-bold text-slate-900 leading-[1.05] tracking-tight mb-6 text-balance"
+          className="text-3xl sm:text-5xl md:text-7xl font-bold text-slate-900 leading-[1.05] tracking-tight mb-4 md:mb-6 text-balance"
+          style={{ textShadow: '0 1px 3px rgba(255,255,255,0.8)' }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -157,7 +173,7 @@ export function Hero() {
         </motion.h1>
 
         <motion.p
-          className="text-lg sm:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed"
+          className="text-sm sm:text-lg md:text-xl text-slate-600 mb-6 md:mb-10 max-w-2xl mx-auto leading-relaxed"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -183,7 +199,7 @@ export function Hero() {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 placeholder={isTyping ? displayText : displayText + "|"}
-                className="flex-1 bg-transparent text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
+                className="flex-1 bg-transparent text-base text-slate-900 placeholder:text-slate-400 focus:outline-none min-w-0"
               />
               <div className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-lg bg-brand-50">
                 <Sparkles className="h-3 w-3 text-brand-500" />
@@ -199,7 +215,7 @@ export function Hero() {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="Oraș sau cod poștal"
-                className="flex-1 bg-transparent text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none min-w-0"
+                className="flex-1 bg-transparent text-base text-slate-900 placeholder:text-slate-400 focus:outline-none min-w-0"
               />
             </div>
 
@@ -214,9 +230,9 @@ export function Hero() {
             </button>
           </div>
 
-          {/* Popular searches */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
-            <span className="text-slate-500 text-xs">Popular:</span>
+          {/* Popular searches — horizontal scroll on mobile */}
+          <div className="flex overflow-x-auto no-scrollbar gap-2 mt-4 pb-1 items-center">
+            <span className="flex-shrink-0 text-slate-500 text-xs">Popular:</span>
             {popularSearches.map((term) => (
               <button
                 key={term}
@@ -224,7 +240,7 @@ export function Hero() {
                   setQuery(term);
                   router.push(`/search?q=${encodeURIComponent(term)}`);
                 }}
-                className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-600 text-xs hover:bg-slate-200 hover:text-slate-900 transition-all duration-200"
+                className="flex-shrink-0 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-600 text-xs hover:bg-slate-200 hover:text-slate-900 transition-all duration-200"
               >
                 {term}
               </button>
@@ -234,7 +250,7 @@ export function Hero() {
 
         {/* Stats */}
         <motion.div
-          className="flex flex-wrap items-center justify-center gap-8 mt-14"
+          className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 mt-10 md:mt-14"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}

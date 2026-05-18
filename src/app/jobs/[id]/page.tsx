@@ -117,7 +117,7 @@ export default function JobDetailPage() {
   // Wait for both job and auth to resolve before deciding access
   if (loading || currentUserId === undefined) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="w-full min-h-screen flex items-center justify-center">
         <div className="h-8 w-8 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -125,7 +125,7 @@ export default function JobDetailPage() {
 
   if (!job) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 pt-16">
+      <div className="w-full min-h-screen flex flex-col items-center justify-center gap-4 pt-16">
         <p className="text-slate-500">Lucrarea nu a fost găsită.</p>
         <Link href="/jobs">
           <Button variant="ghost" size="sm">
@@ -142,7 +142,7 @@ export default function JobDetailPage() {
 
   if (job.status !== "open" && !isParticipant) {
     return (
-      <div className="min-h-screen bg-slate-50 pt-24 pb-16">
+      <div className="w-full min-h-screen bg-slate-50 pt-24 pb-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <Link
             href="/jobs"
@@ -170,7 +170,7 @@ export default function JobDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-24 pb-16">
+    <div className="w-full min-h-screen bg-slate-50 pt-24 pb-24 sm:pb-16">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
         {/* Back */}
         <Link
@@ -298,14 +298,16 @@ export default function JobDetailPage() {
               </div>
             )}
 
-            {/* CTA — shown for open jobs (non-poster) or awarded provider */}
+            {/* CTA — shown for open jobs (non-poster) or awarded provider; hidden on mobile (see sticky bar below) */}
             {(job.status === "open" || job.awarded_provider_id === currentUserId) && (
-              <ContactButton
-                jobClientId={job.client_id}
-                currentUserId={currentUserId}
-                onContact={handleContact}
-                isLoading={contacting}
-              />
+              <div className="hidden sm:block">
+                <ContactButton
+                  jobClientId={job.client_id}
+                  currentUserId={currentUserId}
+                  onContact={handleContact}
+                  isLoading={contacting}
+                />
+              </div>
             )}
           </motion.div>
 
@@ -337,6 +339,18 @@ export default function JobDetailPage() {
           )}
         </div>
       </div>
+
+      {/* Sticky mobile CTA */}
+      {(job.status === "open" || job.awarded_provider_id === currentUserId) && (
+        <div className="sm:hidden fixed bottom-0 left-0 right-0 z-20 bg-white border-t border-slate-200 p-3 shadow-lg">
+          <ContactButton
+            jobClientId={job.client_id}
+            currentUserId={currentUserId}
+            onContact={handleContact}
+            isLoading={contacting}
+          />
+        </div>
+      )}
 
       {/* Lightbox */}
       {lightbox && (

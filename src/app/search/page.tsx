@@ -210,10 +210,10 @@ function SearchContent() {
   const hasMore = displayCount < filtered.length;
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-16">
+    <div className="w-full min-h-screen bg-slate-50 pt-16">
       {/* Sticky search header */}
-      <div className="bg-white border-b border-slate-200 sticky top-16 z-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+      <div className="w-full bg-white border-b border-slate-200 sticky top-16 z-20">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="flex-1 flex items-center gap-3 bg-white rounded-xl px-4 py-2.5 border border-slate-300 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500/20 transition-all">
               <Search className="h-4 w-4 text-slate-400 flex-shrink-0" />
@@ -222,7 +222,7 @@ function SearchContent() {
                 placeholder="Caută lucrări, meșteri, competențe..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="flex-1 bg-transparent text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
+                className="flex-1 bg-transparent text-base text-slate-900 placeholder:text-slate-400 focus:outline-none min-w-0"
               />
               {query && (
                 <button onClick={() => setQuery("")}>
@@ -235,11 +235,11 @@ function SearchContent() {
               </div>
             </div>
 
-            <div className="relative">
+            <div className="relative w-full sm:w-auto">
               <select
                 value={selectedSort}
                 onChange={(e) => setSelectedSort(e.target.value)}
-                className="appearance-none pl-4 pr-8 py-2.5 rounded-xl border border-slate-300 bg-white text-sm text-slate-700 focus:outline-none focus:border-brand-500 cursor-pointer"
+                className="w-full sm:w-auto appearance-none pl-4 pr-8 py-2.5 rounded-xl border border-slate-300 bg-white text-sm text-slate-700 focus:outline-none focus:border-brand-500 cursor-pointer"
               >
                 {SORT_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>{o.label}</option>
@@ -314,11 +314,30 @@ function SearchContent() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <div className="flex gap-6">
-          {/* Sidebar */}
-          <aside className={cn("w-64 flex-shrink-0", showFilters ? "block" : "hidden md:block")}>
-            <div className="sticky top-36 space-y-5">
+          {/* Sidebar — desktop: sticky column; mobile: fixed full-screen overlay */}
+          <aside className={cn(
+            "flex-shrink-0",
+            showFilters
+              ? "fixed inset-0 z-50 w-full bg-white overflow-y-auto md:static md:inset-auto md:z-auto md:overflow-visible md:w-64"
+              : "hidden md:block md:w-64"
+          )}>
+            {/* Mobile overlay header */}
+            <div className="md:hidden flex items-center justify-between px-4 py-3 border-b border-slate-200 sticky top-0 bg-white z-10">
+              <h2 className="font-semibold text-slate-900 text-sm flex items-center gap-2">
+                <SlidersHorizontal className="h-4 w-4" />
+                Filtre
+              </h2>
+              <button
+                onClick={() => setShowFilters(false)}
+                className="h-9 w-9 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="md:sticky md:top-36 space-y-5 px-4 py-4 md:px-0 md:py-0 pb-24 md:pb-0">
               <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-5">
                 <h3 className="font-semibold text-slate-900 text-sm flex items-center gap-2">
                   <SlidersHorizontal className="h-4 w-4" />
@@ -498,6 +517,16 @@ function SearchContent() {
                   Aplică sugestia →
                 </button>
               </div>
+            </div>
+
+            {/* Mobile apply button — fixed at bottom of overlay */}
+            <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-slate-200 shadow-lg z-10">
+              <button
+                onClick={() => setShowFilters(false)}
+                className="w-full py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm transition-colors"
+              >
+                Aplică filtrele
+              </button>
             </div>
           </aside>
 

@@ -94,8 +94,8 @@ export default function JobsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-24 pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+    <div className="w-full min-h-screen bg-slate-50 pt-24 pb-16">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6">
         {/* Page header */}
         <div className="flex items-start justify-between mb-8 gap-4 flex-wrap">
           <div>

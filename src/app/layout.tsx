@@ -80,7 +80,7 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col">
         <ThemeProvider>
           <ConditionalNavbar />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 w-full min-w-0">{children}</main>
           <ConditionalFooter />
           <CookieBanner />
           <Toaster

@@ -77,6 +77,12 @@ export function Navbar() {
     setMobileOpen(false);
   }, [pathname]);
 
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+
   return (
     <>
       <header
@@ -187,75 +193,126 @@ export function Navbar() {
                 </div>
               )}
 
-              {/* Mobile hamburger */}
+              {/* Mobile hamburger — 44×44px tap target */}
               <button
-                className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
-                onClick={() => setMobileOpen(!mobileOpen)}
+                className="md:hidden h-11 w-11 flex items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
+                onClick={() => setMobileOpen(true)}
                 aria-label="Deschide meniu"
               >
-                {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                <Menu className="h-5 w-5" />
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu */}
+      {/* Mobile drawer + backdrop */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
-            className="fixed top-16 inset-x-0 z-30 bg-white border-b border-slate-200 overflow-hidden md:hidden"
-          >
-            <div className="px-4 py-4 space-y-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className="block px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors"
-                >
-                  {link.label}
+          <>
+            {/* Backdrop */}
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-40 bg-black/40 md:hidden"
+              onClick={() => setMobileOpen(false)}
+            />
+
+            {/* Drawer */}
+            <motion.div
+              key="drawer"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "tween", duration: 0.25 }}
+              className="fixed top-0 right-0 bottom-0 z-50 w-72 bg-white shadow-2xl flex flex-col md:hidden overflow-y-auto"
+            >
+              {/* Drawer header */}
+              <div className="flex items-center justify-between px-4 py-4 border-b border-slate-100 flex-shrink-0">
+                <Link href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
+                  <div className="h-8 w-8 rounded-lg bg-brand-500 flex items-center justify-center">
+                    <Zap className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-lg font-bold text-slate-900">
+                    Meste<span className="text-brand-500">RO</span>
+                  </span>
                 </Link>
-              ))}
-              <Link
-                href={user ? "/jobs/new" : "/login?redirect=/jobs/new"}
-                className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium text-brand-600 hover:bg-brand-50 transition-colors"
-              >
-                <Plus className="h-4 w-4" />
-                Postează o lucrare
-              </Link>
-              <div className="pt-3 pb-1 border-t border-slate-100 flex gap-2">
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="h-11 w-11 flex items-center justify-center rounded-xl text-slate-500 hover:bg-slate-100 transition-colors"
+                  aria-label="Închide meniu"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              {/* Nav links */}
+              <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className="flex items-center gap-2 px-3 py-3 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-brand-600 transition-colors min-h-[44px]"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+
+                <div className="pt-1">
+                  <Link
+                    href={user ? "/jobs/new" : "/login?redirect=/jobs/new"}
+                    className="flex items-center gap-2 px-3 py-3 rounded-xl text-sm font-medium text-brand-600 hover:bg-brand-50 transition-colors min-h-[44px]"
+                  >
+                    <Plus className="h-4 w-4 flex-shrink-0" />
+                    Postează o lucrare
+                  </Link>
+                </div>
+              </nav>
+
+              {/* User section */}
+              <div className="p-4 border-t border-slate-100 flex-shrink-0 space-y-2">
                 {user ? (
                   <>
-                    <Link href="/dashboard/my-jobs" className="flex-1">
+                    <div className="flex items-center gap-3 px-1 mb-3">
+                      <Avatar
+                        name={user.user_metadata?.full_name ?? user.email ?? ""}
+                        size="sm"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-slate-900 truncate">
+                          {user.user_metadata?.full_name ?? user.email}
+                        </p>
+                      </div>
+                    </div>
+                    <Link href="/dashboard/my-jobs" className="block">
                       <Button variant="secondary" size="md" fullWidth>
                         Lucrările mele
                       </Button>
                     </Link>
-                    <Button size="md" fullWidth onClick={handleSignOut}>
+                    <Button size="md" fullWidth variant="ghost" onClick={handleSignOut}>
                       Deconectează-te
                     </Button>
                   </>
                 ) : (
-                  <>
-                    <Link href="/login" className="flex-1">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link href="/login">
                       <Button variant="secondary" size="md" fullWidth>
                         Conectează-te
                       </Button>
                     </Link>
-                    <Link href="/register" className="flex-1">
+                    <Link href="/register">
                       <Button size="md" fullWidth>
                         Începe acum
                       </Button>
                     </Link>
-                  </>
+                  </div>
                 )}
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>

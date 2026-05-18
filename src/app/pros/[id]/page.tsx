@@ -61,6 +61,13 @@ export default function ProviderProfilePage() {
   const [notFound, setNotFound] = useState(false);
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
   const [contacting, setContacting] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setCurrentUserId(session?.user.id ?? null);
+    });
+  }, []);
 
   useEffect(() => {
     if (!id) return;
@@ -76,7 +83,7 @@ export default function ProviderProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center pt-16">
+      <div className="w-full min-h-screen flex items-center justify-center pt-16">
         <div className="h-8 w-8 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -84,7 +91,7 @@ export default function ProviderProfilePage() {
 
   if (notFound || !profile) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center pt-16 px-4 text-center">
+      <div className="w-full min-h-screen flex flex-col items-center justify-center pt-16 px-4 text-center">
         <div className="text-6xl mb-4">🔍</div>
         <h1 className="text-2xl font-bold text-slate-900 mb-2">
           Meșter negăsit
@@ -136,7 +143,7 @@ export default function ProviderProfilePage() {
 
   return (
     <>
-      <div className="min-h-screen bg-slate-50 pt-16">
+      <div className="w-full min-h-screen bg-slate-50 pt-16 pb-20 lg:pb-0">
         {/* Hero — light card */}
         <div className="bg-white border-b border-slate-200 shadow-sm">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 pb-16">
@@ -411,6 +418,19 @@ export default function ProviderProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* Sticky mobile contact CTA — shown below lg breakpoint when viewer isn't the provider */}
+      {currentUserId !== profile.user_id && (
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-20 bg-white border-t border-slate-200 p-3 shadow-lg">
+          <button
+            onClick={handleContact}
+            disabled={contacting}
+            className="w-full py-3.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-semibold text-base transition-colors disabled:opacity-60"
+          >
+            {contacting ? "Se încarcă..." : `Contact ${name.split(" ")[0]}`}
+          </button>
+        </div>
+      )}
 
       {/* Lightbox */}
       <AnimatePresence>

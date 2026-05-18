@@ -26,8 +26,8 @@ export function CookieBanner() {
 
   return (
     <div className="fixed bottom-0 inset-x-0 z-50 bg-slate-900 border-t border-slate-700">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-        <p className="text-sm text-slate-300 flex-1 leading-relaxed">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <p className="text-xs sm:text-sm text-slate-300 flex-1 leading-relaxed">
           Folosim cookie-uri esențiale pentru funcționarea platformei și, opțional, cookie-uri pentru a
           îmbunătăți experiența. Vezi{" "}
           <Link
@@ -38,16 +38,16 @@ export function CookieBanner() {
           </Link>
           .
         </p>
-        <div className="flex gap-2 flex-shrink-0">
+        <div className="flex gap-2 w-full sm:w-auto flex-shrink-0">
           <button
             onClick={reject}
-            className="px-4 py-2 rounded-xl text-sm font-medium bg-slate-700 hover:bg-slate-600 text-white transition-colors"
+            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium bg-slate-700 hover:bg-slate-600 text-white transition-colors"
           >
             Refuză opționalele
           </button>
           <button
             onClick={accept}
-            className="px-4 py-2 rounded-xl text-sm font-medium bg-brand-500 hover:bg-brand-600 text-white transition-colors"
+            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium bg-brand-500 hover:bg-brand-600 text-white transition-colors"
           >
             Accept toate
           </button>

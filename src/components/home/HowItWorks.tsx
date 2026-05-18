@@ -85,8 +85,8 @@ function StepCard({ step, index }: { step: Step; index: number }) {
         </div>
 
         {/* Text content */}
-        <div className="p-6">
-          <h3 className="text-xl font-bold text-slate-900 mb-3">{step.title}</h3>
+        <div className="p-4 md:p-6">
+          <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-2 md:mb-3">{step.title}</h3>
           <p className="text-slate-600 leading-relaxed text-sm">{step.description}</p>
         </div>
       </div>
@@ -98,14 +98,14 @@ export function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="py-20 md:py-28 bg-slate-50 relative overflow-hidden"
+      className="py-12 md:py-28 bg-slate-50 relative overflow-hidden"
     >
       <div className="absolute inset-0 bg-dots opacity-40" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-10 md:mb-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
